@@ -1,0 +1,12 @@
+.*
+!.gitignore
+
+*.mod
+*.o
+
+*.in
+!example.in
+*.out
+
+dos
+eb

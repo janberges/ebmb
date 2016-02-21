@@ -1,0 +1,18 @@
+10.000 K     temperature
+
+ 0.020 eV    Einstein frequency
+ 0.200 eV    electron-phonon coupling
+ 1.000 eV    on-site Coulomb repulsion
+
+ 0.437 1/eV  density of states per spin and unit cell
+
+ 0.200 eV    overall cutoff frequency
+ 0.100 eV    Coulomb cutoff frequency (absent if -1)
+
+    -1       Coulomb pseudo-potential (fitted if -1)
+
+  true       continue to real axis?
+   300       real axis resolution
+
+100000       maximum number of steps
+ 1e-15 a.u.  negligible difference
