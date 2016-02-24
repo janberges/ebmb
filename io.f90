@@ -86,6 +86,7 @@ contains
 
       write (unit) i%mu, i%status, size(i%omega)
       write (unit) i%omega, i%Z, i%Delta
+      write (unit) merge('T', 'F', i%continue)
 
       if (i%continue) then
          write (unit) i%Delta0, i%statusDelta0, i%resolution

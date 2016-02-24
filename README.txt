@@ -13,15 +13,17 @@ utility are installed. Compiler preferences may be adjusted in the Makefile.
 
 M a n u a l
 
-     double  mu*               |     double  Delta0 (eV)
-    integer  status(Z, Delta)  |    integer  status(Delta0)
-    integer  n                 |    integer  N
-                               |
-  n doubles  omega (eV)        |  N doubles  omega (eV)
-  n doubles  Z                 |  N doubles  Re[Delta] (eV)
-  n doubles  Delta (eV)        |  N doubles  Im[Delta] (eV)
+Format of the bare (.dat) output files:
 
-  Format of the bare (.dat) output files. The right column is optional.
+     double  mu*               |  Only if c is T:
+    integer  status(Z, Delta)  |
+    integer  n                 |     double  Delta0 (eV)
+                               |    integer  status(Delta0)
+  n doubles  omega (eV)        |    integer  N
+  n doubles  Z                 |
+  n doubles  Delta (eV)        |  N doubles  omega (eV)
+                               |  N doubles  Re[Delta] (eV)
+  character  c (T or F)        |  N doubles  Im[Delta] (eV)
 
 
 A c k n o w l e d g m e n t
