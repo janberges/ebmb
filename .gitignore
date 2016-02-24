@@ -7,6 +7,7 @@
 *.in
 !example.in
 *.out
+*.dat
 
 dos
 eb

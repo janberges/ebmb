@@ -4,7 +4,7 @@ module io
    implicit none
 
    private
-   public :: load, store
+   public :: load, save_text, save_data
 
    integer, parameter :: unit = 11
 
@@ -39,10 +39,12 @@ contains
       read (unit, *) i%limit ! maximum number of steps
       read (unit, *) i%tiny ! negligible difference (a.u.)
 
+      read (unit, *) i%form ! output format
+
       close (unit)
    end subroutine load
 
-   subroutine store(i)
+   subroutine save_text(i)
       type(info), intent(in) :: i
 
       integer :: n
@@ -74,5 +76,22 @@ contains
       end if
 
       close (unit)
-   end subroutine store
+   end subroutine save_text
+
+   subroutine save_data(i)
+      type(info), intent(in) :: i
+
+      open (unit, file=i%name // '.dat', action='write', status='replace', &
+         form='unformatted', access='stream')
+
+      write (unit) i%mu, i%status, size(i%omega)
+      write (unit) i%omega, i%Z, i%Delta
+
+      if (i%continue) then
+         write (unit) i%Delta0, i%statusDelta0, i%resolution
+         write (unit) i%energy, real(i%gap), aimag(i%gap)
+      end if
+
+      close (unit)
+   end subroutine save_data
 end module io

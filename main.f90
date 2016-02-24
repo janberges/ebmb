@@ -15,6 +15,7 @@ program eb
       call solve(i)
       if (i%continue) call realize(i)
 
-      call store(i)
+      if (i%form .eq. 'text' .or. i%form .eq. 'both') call save_text(i)
+      if (i%form .eq. 'data' .or. i%form .eq. 'both') call save_data(i)
    end do
 end program eb

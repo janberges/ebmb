@@ -16,3 +16,5 @@
 
 100000       maximum number of steps
  1e-15 a.u.  negligible difference
+
+  both       output format (text, data or both)

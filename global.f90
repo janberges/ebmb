@@ -30,6 +30,8 @@ module global
       integer :: limit ! maximum number of steps
       real(dp) :: tiny ! negligible difference (a.u.)
 
+      character(4) :: form ! output format
+
       real(dp), allocatable :: omega(:) ! Matsubara frequencies (eV)
       real(dp), allocatable :: Delta(:) ! imaginary-axis gap (eV)
 
