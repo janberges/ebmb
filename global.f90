@@ -5,8 +5,8 @@ module global
    integer, parameter :: qp = selected_real_kind(30)
 
    real(dp), parameter :: pi = 4 * atan(1.0_dp)
-   real(dp), parameter :: qe = 1.60217662e-19 ! elementary charge (C)
-   real(dp), parameter :: kB = 1.38064852e-23 ! Boltzmann constant (J/K)
+   real(dp), parameter :: qe = 1.60217662e-19_dp ! elementary charge (C)
+   real(dp), parameter :: kB = 1.38064852e-23_dp ! Boltzmann constant (J/K)
 
    type info
       character(:), allocatable :: name
