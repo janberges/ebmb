@@ -3,6 +3,7 @@ program eb
    use eliashberg
    use global
    use io
+   use mcmillan
    use realaxis
    implicit none
 
@@ -12,6 +13,7 @@ program eb
    do n = 1, command_argument_count()
       call load(argument(n), i)
 
+      call estimate(i)
       call solve(i)
       if (i%continue) call realize(i)
 

@@ -15,7 +15,7 @@ M a n u a l
 
 Format of the bare (.dat) output files:
 
-     double  mu*               |  Only if c is T:
+     double  Tc (K)            |  Only if c is T:
     integer  status(Z, Delta)  |
     integer  n                 |     double  Delta0 (eV)
                                |    integer  status(Delta0)

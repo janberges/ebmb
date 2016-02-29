@@ -22,16 +22,12 @@ contains
 
       i%kT = i%kT * kB / qe ! (eV)
 
-      read (unit, *) i%omega_E ! Einstein frequency (eV)
-      read (unit, *) i%g ! electron-phonon coupling (eV)
-      read (unit, *) i%U ! on-site Coulomb repulsion (eV)
-
-      read (unit, *) i%DOS ! density of states per spin and unit cell (1/eV)
+      read (unit, *) i%omegaE ! Einstein frequency (eV)
+      read (unit, *) i%lambda ! Electron-phonon coupling
+      read (unit, *) i%muStar ! Coulomb pseudo-potential
 
       read (unit, *) i%upper ! general cutoff frequency (eV)
       read (unit, *) i%lower ! Coulomb cutoff frequency (eV)
-
-      read (unit, *) i%mu ! Coulomb pseudo-potential
 
       read (unit, *) i%continue ! continue to real axis?
       read (unit, *) i%resolution ! real axis resolution
@@ -51,8 +47,8 @@ contains
 
       open (unit, file=i%name // '.out', action='write', status='replace')
 
-      write (unit, '(A23)') 'mu*'
-      write (unit, '(ES23.14E3)') i%mu
+      write (unit, '(A23)') 'Tc/K'
+      write (unit, '(ES23.14E3)') i%Tc
 
       write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") i%status
 
@@ -84,7 +80,7 @@ contains
       open (unit, file=i%name // '.dat', action='write', status='replace', &
          form='unformatted', access='stream')
 
-      write (unit) i%mu, i%status, size(i%omega)
+      write (unit) i%Tc, i%status, size(i%omega)
       write (unit) i%omega, i%Z, i%Delta
       write (unit) merge('T', 'F', i%continue)
 

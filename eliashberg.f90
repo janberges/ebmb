@@ -30,18 +30,12 @@ contains
       allocate(lambda(1 - u:2 * u - 1))
 
       do n = 1 - u, 2 * u - 1
-         lambda(n) = 2 * i%omega_E * i%DOS * i%g ** 2 &
-            / ((2 * n * pi * i%kT) ** 2 + i%omega_E ** 2)
+         lambda(n) = i%lambda / (1 + (2 * n * pi * i%kT / i%omegaE) ** 2)
       end do
-
-      if (i%mu < 0) then
-         i%mu = i%DOS * i%U
-         i%mu = i%mu / (1 + i%mu * log(i%upper / i%lower))
-      end if
 
       allocate(mu(0:u - 1))
 
-      mu(:l - 1) = -2 * i%mu
+      mu(:l - 1) = -2 * i%muStar / (1 + i%muStar * log(i%omegaE / i%lower))
       mu(l:) = 0
 
       allocate(i%Z(0:u - 1))

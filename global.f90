@@ -13,16 +13,12 @@ module global
 
       real(dp) :: kT ! temperature (eV)
 
-      real(dp) :: omega_E ! Einstein frequency (eV)
-      real(dp) :: g ! electron-phonon coupling (eV)
-      real(dp) :: U ! on-site Coulomb repulsion (eV)
-
-      real(dp) :: DOS ! density of states per spin and unit cell (1/eV)
+      real(dp) :: omegaE ! Einstein frequency (eV)
+      real(dp) :: lambda ! electron-phonon coupling
+      real(dp) :: muStar ! Coulomb pseudo-potential
 
       real(dp) :: upper ! overall cutoff frequency (eV)
       real(dp) :: lower ! Coulomb cutoff frequency (eV)
-
-      real(dp) :: mu ! Coulomb pseudo-potential
 
       logical :: continue ! continue to real axis?
       integer :: resolution ! real axis resolution
@@ -34,8 +30,9 @@ module global
 
       real(dp), allocatable :: omega(:) ! Matsubara frequencies (eV)
       real(dp), allocatable :: Delta(:) ! imaginary-axis gap (eV)
-
       real(dp), allocatable :: Z(:) ! renormalization
+
+      real(dp) :: Tc ! McMillan's critical temperature (K)
 
       real(dp), allocatable :: energy(:) ! real-axis energies (eV)
       complex(dp), allocatable :: gap(:) ! real axis gap (eV)
