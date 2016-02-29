@@ -51,12 +51,12 @@ contains
 
       open (unit, file=i%name // '.out', action='write', status='replace')
 
-      write (unit, '(2A23)') 'mu*'
-      write (unit, '(2ES23.14E3)') i%mu
+      write (unit, '(A23)') 'mu*'
+      write (unit, '(ES23.14E3)') i%mu
 
       write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") i%status
 
-      write (unit, '(/, 4A23)') 'omega/eV', 'Z', 'Delta/eV'
+      write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
 
       do n = lbound(i%omega, 1), ubound(i%omega, 1)
          write (unit, '(3ES23.14E3)') i%omega(n), i%Z(n), i%Delta(n)
