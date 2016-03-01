@@ -32,6 +32,8 @@ module global
       real(dp), allocatable :: Delta(:) ! imaginary-axis gap (eV)
       real(dp), allocatable :: Z(:) ! renormalization
 
+      real(dp) :: phiC ! constant Coulomb contribution (eV)
+
       real(dp) :: Tc ! McMillan's critical temperature (K)
 
       real(dp), allocatable :: energy(:) ! real-axis energies (eV)

@@ -15,15 +15,16 @@ M a n u a l
 
 Format of the bare (.dat) output files:
 
-     double  Tc (K)            |  Only if c is T:
-    integer  status(Z, Delta)  |
-    integer  n                 |     double  Delta0 (eV)
-                               |    integer  status(Delta0)
-  n doubles  omega (eV)        |    integer  N
-  n doubles  Z                 |
-  n doubles  Delta (eV)        |  N doubles  omega (eV)
-                               |  N doubles  Re[Delta] (eV)
-  character  c (T or F)        |  N doubles  Im[Delta] (eV)
+    integer  status(Z, Delta)  |  character  'T' (continue) or 'F' (EOF)
+    integer  n                 |
+                               |    integer  N
+  n doubles  omega (eV)        |
+  n doubles  Z                 |  N doubles  omega (eV)
+  n doubles  Delta (eV)        |  N doubles  Re[Delta] (eV)
+                               |  N doubles  Im[Delta] (eV)
+     double  phiC (eV)         |
+                               |     double  Delta0 (eV)
+     double  Tc (K)            |    integer  status(Delta0)
 
 
 A c k n o w l e d g m e n t

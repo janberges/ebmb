@@ -47,8 +47,8 @@ contains
 
       open (unit, file=i%name // '.out', action='write', status='replace')
 
-      write (unit, '(A23)') 'Tc/K'
-      write (unit, '(ES23.14E3)') i%Tc
+      write (unit, '(2A23)') 'phiC/eV', 'Tc/K'
+      write (unit, '(2ES23.14E3)') i%phiC, i%Tc
 
       write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") i%status
 
@@ -80,13 +80,16 @@ contains
       open (unit, file=i%name // '.dat', action='write', status='replace', &
          form='unformatted', access='stream')
 
-      write (unit) i%Tc, i%status, size(i%omega)
+      write (unit) i%status, size(i%omega)
       write (unit) i%omega, i%Z, i%Delta
+      write (unit) i%phiC, i%Tc
+
       write (unit) merge('T', 'F', i%continue)
 
       if (i%continue) then
-         write (unit) i%Delta0, i%statusDelta0, i%resolution
+         write (unit) i%resolution
          write (unit) i%energy, real(i%gap), aimag(i%gap)
+         write (unit) i%Delta0, i%statusDelta0
       end if
 
       close (unit)

@@ -84,5 +84,7 @@ contains
       end do
 
       if (i%Delta(0) .lt. 0) i%Delta = -i%Delta
+
+      i%phiC = pi * i%kT * sum(i%Delta / E * mu)
    end subroutine solve
 end module eliashberg
