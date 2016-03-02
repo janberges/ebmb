@@ -3,6 +3,7 @@
 compiler = gfortran
 optional = -std=f2003 -Wall -pedantic
 external = 
+needless = *.dat *.out *.pyc .DS_Store
 programs = dos eb
 
 .PHONY: all clean cleaner
@@ -10,7 +11,7 @@ programs = dos eb
 all: $(programs)
 
 clean:
-	@rm -f arguments.mod arguments.o dos.o eliashberg.mod eliashberg.o filenames.mod filenames.o global.mod global.o intervals.mod intervals.o io.mod io.o main.o mcmillan.mod mcmillan.o pade.mod pade.o realaxis.mod realaxis.o
+	@rm -f $(needless) arguments.mod arguments.o dos.o eliashberg.mod eliashberg.o filenames.mod filenames.o global.mod global.o intervals.mod intervals.o io.mod io.o main.o mcmillan.mod mcmillan.o pade.mod pade.o realaxis.mod realaxis.o
 
 cleaner: clean
 	@rm -f $(programs)
