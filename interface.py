@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 from numpy import fromfile, int32, float64
+from os.path import abspath, dirname, join
+from subprocess import call
 
 def load(filename):
-    with open(filename) as file:
+    with open(filename, 'rb') as file:
         data = {}
 
         data['status(Z, Delta)'], n = fromfile(file, int32, 2)
@@ -29,5 +31,28 @@ def load(filename):
 
     return data
 
+def run(executable=join(dirname(abspath(__file__)), 'eb'), **parameters):
+
+    with open('~temporary.in', 'w') as file:
+
+        for parameter, default in [
+            ('T', 10.0),
+            ('omegaE', 0.02),
+            ('lambda', 1.748),
+            ('muStar', 0.1),
+            ('upper', 0.2),
+            ('lower', 0.1),
+            ('continue', True),
+            ('resolution', 300),
+            ('limit', 100000),
+            ('tiny', 1e-15),
+            ('form', 'data')]:
+
+            print >> file, parameters.get(parameter, default)
+
+    call([executable, '~temporary.in'])
+
+    return load('~temporary.dat')
+
 if __name__ == '__main__':
-    print load('example.dat')
+    print run()
