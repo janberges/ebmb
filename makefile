@@ -4,14 +4,14 @@ compiler = gfortran
 optional = -std=f2003 -Wall -pedantic
 external = 
 needless = *.dat *.out *.pyc ~temporary.* .DS_Store
-programs = dos eb
+programs = dos eb tc
 
 .PHONY: all clean cleaner
 
 all: $(programs)
 
 clean:
-	@rm -f $(needless) arguments.mod arguments.o dos.o eliashberg.mod eliashberg.o filenames.mod filenames.o global.mod global.o intervals.mod intervals.o io.mod io.o main.o mcmillan.mod mcmillan.o pade.mod pade.o realaxis.mod realaxis.o
+	@rm -f $(needless) arguments.mod arguments.o dos.o eliashberg.mod eliashberg.o filenames.mod filenames.o global.mod global.o intervals.mod intervals.o io.mod io.o main.o mcmillan.mod mcmillan.o pade.mod pade.o realaxis.mod realaxis.o tc.o
 
 cleaner: clean
 	@rm -f $(programs)
@@ -26,6 +26,7 @@ $(programs):
 
 dos: arguments.o dos.o global.o intervals.o
 eb: arguments.o eliashberg.o filenames.o global.o intervals.o io.o main.o mcmillan.o pade.o realaxis.o
+tc: arguments.o eliashberg.o filenames.o global.o io.o mcmillan.o tc.o
 
 dos.o: arguments.o global.o intervals.o
 eliashberg.o: global.o
@@ -35,3 +36,4 @@ main.o: arguments.o eliashberg.o global.o io.o mcmillan.o realaxis.o
 mcmillan.o: global.o
 pade.o: global.o
 realaxis.o: global.o intervals.o pade.o
+tc.o: arguments.o eliashberg.o global.o io.o mcmillan.o
