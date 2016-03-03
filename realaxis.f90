@@ -14,6 +14,9 @@ contains
 
       call coefficients(i%omega, i%Delta)
 
+      if (allocated(i%omega_)) deallocate(i%omega_)
+      if (allocated(i%Delta_)) deallocate(i%Delta_)
+
       allocate(i%omega_(i%resolution))
       allocate(i%Delta_(i%resolution))
 
@@ -38,6 +41,7 @@ contains
 
       call coefficients(i%omega, i%Z)
 
+      if (allocated(i%Z_)) deallocate(i%Z_)
       allocate(i%Z_(i%resolution))
 
       do n = 1, i%resolution

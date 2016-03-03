@@ -21,6 +21,7 @@ contains
       i%upper = (2 * u + 1) * pi * i%kT
       i%lower = (2 * l + 1) * pi * i%kT
 
+      if (allocated(i%omega)) deallocate(i%omega)
       allocate(i%omega(0:u - 1))
 
       do n = 0, u - 1
@@ -39,6 +40,9 @@ contains
 
       mu(:l - 1) = -2 * i%muStarEB
       mu(l:) = 0
+
+      if (allocated(i%Z)) deallocate(i%Z)
+      if (allocated(i%Delta)) deallocate(i%Delta)
 
       allocate(i%Z(0:u - 1))
       allocate(i%Delta(0:u - 1))
