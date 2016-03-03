@@ -19,6 +19,7 @@ contains
 
       n = size(z)
 
+      if (allocated(c)) deallocate(c)
       allocate(c(n, n))
 
       c(1, :) = u
@@ -32,6 +33,7 @@ contains
          c(p, p - 1) = -i * z(p - 1) * c(p, p)
       end do
 
+      if (allocated(d)) deallocate(d)
       allocate(d(2, 0:n))
 
       d(1, 0) = 0

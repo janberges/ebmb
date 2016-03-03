@@ -22,7 +22,7 @@ def load(filename):
 
             data['real axis'] = {}
 
-            for key in 'omega', 'Re[Delta]', 'Im[Delta]':
+            for key in 'omega', 'Re[Z]', 'Im[Z]', 'Re[Delta]', 'Im[Delta]':
                 data['real axis'][key] = fromfile(file, float64, N)
 
             data['Delta0'] = fromfile(file, float64, 1)

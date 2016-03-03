@@ -28,16 +28,17 @@ module global
 
       character(4) :: form ! output format
 
-      real(dp), allocatable :: omega(:) ! Matsubara frequencies (eV)
-      real(dp), allocatable :: Delta(:) ! imaginary-axis gap (eV)
-      real(dp), allocatable :: Z(:) ! renormalization
+      real(dp), allocatable :: omega(:) ! Matsubara frequency (eV)
+      real(dp), allocatable :: Delta(:) ! Matsubara gap (eV)
+      real(dp), allocatable :: Z(:) ! Matsubara renormalization
 
       real(dp) :: phiC ! constant Coulomb contribution (eV)
       real(dp) :: muStarEB ! rescaled Coulomb pseudo-potential
       real(dp) :: Tc ! McMillan's critical temperature (K)
 
-      real(dp), allocatable :: energy(:) ! real-axis energies (eV)
-      complex(dp), allocatable :: gap(:) ! real axis gap (eV)
+      real(dp), allocatable :: omega_(:) ! frequency (eV)
+      complex(dp), allocatable :: Delta_(:) ! gap (eV)
+      complex(dp), allocatable :: Z_(:) ! renormalization
 
       real(dp) :: Delta0 ! leading gap (eV)
 

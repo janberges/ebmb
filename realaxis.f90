@@ -14,13 +14,13 @@ contains
 
       call coefficients(i%omega, i%Delta)
 
-      allocate(i%energy(i%resolution))
-      allocate(i%gap(i%resolution))
+      allocate(i%omega_(i%resolution))
+      allocate(i%Delta_(i%resolution))
 
-      call interval(i%energy, 0.0_dp, i%upper, lower=.true., upper=.true.)
+      call interval(i%omega_, 0.0_dp, i%upper, lower=.true., upper=.true.)
 
       do n = 1, i%resolution
-         i%gap(n) = continuation(i%energy(n))
+         i%Delta_(n) = continuation(i%omega_(n))
       end do
 
       i%Delta0 = 1
@@ -34,6 +34,14 @@ contains
          i%Delta0 = Delta0
 
          if (n .eq. i%statusDelta0) exit
+      end do
+
+      call coefficients(i%omega, i%Z)
+
+      allocate(i%Z_(i%resolution))
+
+      do n = 1, i%resolution
+         i%Z_(n) = continuation(i%omega_(n))
       end do
    end subroutine realize
 end module realaxis

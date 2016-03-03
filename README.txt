@@ -25,16 +25,18 @@ according to McMillan (1968) and Dynes (1972).
 
 Format of the bare (.dat) output files:
 
-    integer  status(Z, Delta)  |  character  'T' (continue) or 'F' (EOF)
+    integer  status(Z, Delta)  |  Only if c is 'T':
     integer  n                 |
                                |    integer  N
   n doubles  omega (eV)        |
   n doubles  Z                 |  N doubles  omega (eV)
-  n doubles  Delta (eV)        |  N doubles  Re[Delta] (eV)
-                               |  N doubles  Im[Delta] (eV)
-     double  phiC (eV)         |
-     double  mu*EB             |     double  Delta0 (eV)
-     double  Tc (K)            |    integer  status(Delta0)
+  n doubles  Delta (eV)        |  N doubles  Re[Z]
+                               |  N doubles  Im[Z]
+     double  phiC (eV)         |  N doubles  Re[Delta] (eV)
+     double  mu*EB             |  N doubles  Im[Delta] (eV)
+     double  Tc (K)            |
+                               |     double  Delta0 (eV)
+  character  c ('T' or 'F')    |    integer  status(Delta0)
 
 
 A c k n o w l e d g m e n t

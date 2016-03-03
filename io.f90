@@ -61,13 +61,14 @@ contains
       if (i%continue) then
          write (unit, "(/, 'Real-axis solution:')")
 
-         write (unit, '(/, A23)') 'Delta0/eV'
-         write (unit, "(ES23.14E3, ' (', I0, ')')") i%Delta0, i%statusDelta0
+         write (unit, '(/, A15)') 'Delta0/eV'
+         write (unit, "(ES15.6E3, ' (', I0, ')')") i%Delta0, i%statusDelta0
 
-         write (unit, '(/, 3A23)') 'omega/eV', 'Re[Delta]/eV', 'Im[Delta]/eV'
+         write (unit, '(/, 5A15)') &
+            'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
 
          do n = 1, i%resolution
-            write (unit, '(3ES23.14E3)') i%energy(n), i%gap(n)
+            write (unit, '(5ES15.6E3)') i%omega_(n), i%Z_(n), i%Delta_(n)
          end do
       end if
 
@@ -88,7 +89,11 @@ contains
 
       if (i%continue) then
          write (unit) i%resolution
-         write (unit) i%energy, real(i%gap), aimag(i%gap)
+
+         write (unit) i%omega_
+         write (unit) real(i%Z_), aimag(i%Z_)
+         write (unit) real(i%Delta_), aimag(i%Delta_)
+
          write (unit) i%Delta0, i%statusDelta0
       end if
 
