@@ -47,8 +47,8 @@ contains
 
       open (unit, file=i%name // '.out', action='write', status='replace')
 
-      write (unit, '(2A23)') 'phiC/eV', 'Tc/K'
-      write (unit, '(2ES23.14E3)') i%phiC, i%Tc
+      write (unit, '(3A23)') 'phiC/eV', 'mu*EB', 'Tc/K'
+      write (unit, '(3ES23.14E3)') i%phiC, i%muStarEB, i%Tc
 
       write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") i%status
 
@@ -82,7 +82,7 @@ contains
 
       write (unit) i%status, size(i%omega)
       write (unit) i%omega, i%Z, i%Delta
-      write (unit) i%phiC, i%Tc
+      write (unit) i%phiC, i%muStarEB, i%Tc
 
       write (unit) merge('T', 'F', i%continue)
 

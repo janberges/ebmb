@@ -15,7 +15,7 @@ def load(filename):
         for key in 'omega', 'Z', 'Delta':
             data['imag. axis'][key] = fromfile(file, float64, n)
 
-        data['phiC'], data['Tc'] = fromfile(file, float64, 2)
+        data['phiC'], data['mu*EB'], data['Tc'] = fromfile(file, float64, 3)
 
         if file.read(1) == 'T':
             N = fromfile(file, int32, 1)

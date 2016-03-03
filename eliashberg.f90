@@ -35,7 +35,9 @@ contains
 
       allocate(mu(0:u - 1))
 
-      mu(:l - 1) = -2 * i%muStar / (1 + i%muStar * log(i%omegaE / i%lower))
+      i%muStarEB = i%muStar / (1 + i%muStar * log(i%omegaE / i%lower))
+
+      mu(:l - 1) = -2 * i%muStarEB
       mu(l:) = 0
 
       allocate(i%Z(0:u - 1))

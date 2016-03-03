@@ -33,7 +33,7 @@ module global
       real(dp), allocatable :: Z(:) ! renormalization
 
       real(dp) :: phiC ! constant Coulomb contribution (eV)
-
+      real(dp) :: muStarEB ! rescaled Coulomb pseudo-potential
       real(dp) :: Tc ! McMillan's critical temperature (K)
 
       real(dp), allocatable :: energy(:) ! real-axis energies (eV)

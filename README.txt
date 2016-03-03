@@ -33,7 +33,7 @@ Format of the bare (.dat) output files:
   n doubles  Delta (eV)        |  N doubles  Re[Delta] (eV)
                                |  N doubles  Im[Delta] (eV)
      double  phiC (eV)         |
-                               |     double  Delta0 (eV)
+     double  mu*EB             |     double  Delta0 (eV)
      double  Tc (K)            |    integer  status(Delta0)
 
 
