@@ -26,8 +26,11 @@ contains
       read (unit, *) i%lambda ! Electron-phonon coupling
       read (unit, *) i%muStar ! Coulomb pseudo-potential
 
-      read (unit, *) i%upper ! general cutoff frequency (eV)
-      read (unit, *) i%lower ! Coulomb cutoff frequency (eV)
+      read (unit, *) i%upper ! general cutoff frequency (omegaE)
+      read (unit, *) i%lower ! Coulomb cutoff frequency (omegaE)
+
+      i%upper = i%upper * i%omegaE ! (eV)
+      i%lower = i%lower * i%omegaE ! (eV)
 
       read (unit, *) i%continue ! continue to real axis?
       read (unit, *) i%resolution ! real axis resolution

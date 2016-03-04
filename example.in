@@ -1,11 +1,11 @@
 10.000 K     temperature
 
- 0.020 eV    Einstein frequency
+ 0.020 eV    Einstein frequency (*)
  1.748       Electron-phonon coupling
  0.100       Coulomb pseudo-potential
 
- 0.200 eV    overall cutoff frequency
- 0.100 eV    Coulomb cutoff frequency (absent if -1)
+    10 (*)   overall cutoff frequency
+     5 (*)   Coulomb cutoff frequency (absent if -1)
 
   true       continue to real axis?
    300       real axis resolution
