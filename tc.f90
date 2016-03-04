@@ -49,8 +49,8 @@ program tc
             if ((upper - lower) / 2 .le. error) exit
          end do
 
-         write (*, "(ES21.14E3, ' (McMillan)')") i%Tc
-         write (*, "(ES21.14E3, ' (Eliashberg)')") i%kT * qe / kB
+         write (*, "(ES22.14E3, ' (McMillan)')") i%Tc
+         write (*, "(ES22.14E3, ' (Eliashberg)')") i%kT * qe / kB
       else
          m = index(arg, '=')
 

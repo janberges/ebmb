@@ -45,5 +45,5 @@ program dos
       end do
    end do
 
-   write (*, '(ES23.14E3)') count / (2 * dE * N ** 2)
+   write (*, '(ES22.14E3)') count / (2 * dE * N ** 2)
 end program dos
