@@ -34,13 +34,14 @@ contains
       i%upper = i%upper * i%omegaE ! (eV)
       i%lower = i%lower * i%omegaE ! (eV)
 
+      read (unit, *) i%limit ! maximum number of fixed-point steps
+
       read (unit, *) i%continue ! continue to real axis?
       read (unit, *) i%resolution ! real axis resolution
 
-      read (unit, *) i%limit ! maximum number of steps
-      read (unit, *) i%tiny ! negligible difference (a.u.)
-
       read (unit, *) i%form ! output format
+
+      read (unit, *) negligible_difference ! negligible float difference
 
       close (unit)
    end subroutine load

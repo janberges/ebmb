@@ -71,8 +71,7 @@ contains
             Z = 1 + pi * i%kT * Z / i%omega(n)
             Delta = pi * i%kT * Delta / Z
 
-            if (abs(i%Delta(n) - Delta) .gt. i%tiny &
-               .or. abs(i%Z(n) - Z) .gt. i%tiny) done = .false.
+            if ((i%Z(n) .na. Z) .or. (i%Delta(n) .na. Delta)) done = .false.
 
             i%Z(n) = Z
             i%Delta(n) = Delta

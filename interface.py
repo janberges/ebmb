@@ -42,11 +42,11 @@ def run(executable=join(dirname(abspath(__file__)), 'eb'), **parameters):
             ('muStar', 0.1),
             ('upper', 10.0),
             ('lower', 5.0),
+            ('limit', 100000),
             ('continue', True),
             ('resolution', 300),
-            ('limit', 100000),
-            ('tiny', 1e-15),
-            ('form', 'data')]:
+            ('form', 'data'),
+            ('epsilon', 1e-15)]:
 
             print >> file, parameters.get(parameter, default)
 

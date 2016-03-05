@@ -20,11 +20,10 @@ module global
       real(dp) :: upper ! overall cutoff frequency (eV)
       real(dp) :: lower ! Coulomb cutoff frequency (eV)
 
+      integer :: limit ! maximum number of fixed-point steps
+
       logical :: continue ! continue to real axis?
       integer :: resolution ! real axis resolution
-
-      integer :: limit ! maximum number of steps
-      real(dp) :: tiny ! negligible difference (a.u.)
 
       character(4) :: form ! output format
 
@@ -44,4 +43,30 @@ module global
 
       integer :: status, statusDelta0 ! convergence status
    end type info
+
+   real(dp) :: negligible_difference = 1e-15_dp
+
+   interface operator(.ap.)
+      module procedure ap
+   end interface
+
+   interface operator(.na.)
+      module procedure na
+   end interface
+
+contains
+
+   elemental function ap(lhs, rhs)
+      logical :: ap
+      real(dp), intent(in) :: lhs, rhs
+
+      ap = abs(lhs - rhs) .le. negligible_difference
+   end function ap
+
+   elemental function na(lhs, rhs)
+      logical :: na
+      real(dp), intent(in) :: lhs, rhs
+
+      na = abs(lhs - rhs) .gt. negligible_difference
+   end function na
 end module global

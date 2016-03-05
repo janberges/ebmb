@@ -7,10 +7,11 @@
     10 (*)   overall cutoff frequency
      5 (*)   Coulomb cutoff frequency (absent if -1)
 
+100000       maximum number of fixed-point steps
+
   true       continue to real axis?
    300       real axis resolution
 
-100000       maximum number of steps
- 1e-15 a.u.  negligible difference
-
   both       output format (text, data or both)
+
+ 1e-15 a.u.  negligible float difference

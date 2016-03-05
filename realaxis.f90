@@ -32,7 +32,7 @@ contains
       do n = 1, i%limit
          Delta0 = real(continuation(i%Delta0), dp)
 
-         if (abs(i%Delta0 - Delta0) .le. i%tiny) i%statusDelta0 = n
+         if (i%Delta0 .ap. Delta0) i%statusDelta0 = n
 
          i%Delta0 = Delta0
 
