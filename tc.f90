@@ -10,7 +10,7 @@ program tc
 
    real(dp) :: small = 1e-10_dp
    real(dp) :: error = 1e-10_dp
-   real(dp) :: ratio = 2
+   real(dp) :: ratio = 0.1_dp
 
    character(:), allocatable :: arg, lhs, rhs
 
@@ -32,21 +32,40 @@ program tc
 
          i%kT = i%Tc * kB / qe
 
-         lower = i%kT / ratio
-         upper = ratio * i%kT
+         call solve(i)
+
+         if (i%Delta(0) .gt. small) then
+            lower = i%kT
+
+            do while (i%Delta(0) .gt. small)
+               i%kT = i%kT * (1 + ratio)
+               call solve(i)
+            end do
+
+            upper = i%kT
+         else
+            upper = i%kT
+
+            do while (i%Delta(0) .le. small)
+               i%kT = i%kT * (1 - ratio)
+               call solve(i)
+            end do
+
+            lower = i%kT
+         end if
 
          do
-            call solve(i)
-
-            if (i%Delta(0) .le. small) then
-               upper = i%kT
-            else
-               lower = i%kT
-            end if
-
             i%kT = (lower + upper) / 2
 
             if ((upper - lower) / 2 .le. error) exit
+
+            call solve(i)
+
+            if (i%Delta(0) .gt. small) then
+               lower = i%kT
+            else
+               upper = i%kT
+            end if
          end do
 
          write (*, "(ES22.14E3, ' (McMillan)')") i%Tc
