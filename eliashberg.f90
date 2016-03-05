@@ -8,18 +8,13 @@ contains
       type(info), intent(inout) :: i
 
       real(dp), allocatable :: E(:), lambda(:), mu(:)
-      real(dp) :: Z, Delta
+      real(dp) :: omegaC, Z, Delta
 
       integer :: step, n, m, u, l
       logical :: done
 
-      if (i%lower .lt. 0) i%lower = i%upper
-
       u = nint((i%upper / (pi * i%kT) - 1) / 2)
       l = nint((i%lower / (pi * i%kT) - 1) / 2)
-
-      i%upper = (2 * u + 1) * pi * i%kT
-      i%lower = (2 * l + 1) * pi * i%kT
 
       if (allocated(i%omega)) deallocate(i%omega)
       allocate(i%omega(0:u - 1))
@@ -36,7 +31,9 @@ contains
 
       allocate(mu(0:u - 1))
 
-      i%muStarEB = i%muStar / (1 + i%muStar * log(i%omegaE / i%lower))
+      omegaC = (2 * l + 1) * pi * i%kT
+
+      i%muStarEB = i%muStar / (1 + i%muStar * log(i%omegaE / omegaC))
 
       mu(:l - 1) = -2 * i%muStarEB
       mu(l:) = 0

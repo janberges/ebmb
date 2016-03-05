@@ -29,6 +29,8 @@ contains
       read (unit, *) i%upper ! general cutoff frequency (omegaE)
       read (unit, *) i%lower ! Coulomb cutoff frequency (omegaE)
 
+      if (i%lower .lt. 0) i%lower = i%upper
+
       i%upper = i%upper * i%omegaE ! (eV)
       i%lower = i%lower * i%omegaE ! (eV)
 
