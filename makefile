@@ -11,7 +11,7 @@ programs = dos eb
 all: $(programs)
 
 clean:
-	@rm -f $(needless) arguments.mod arguments.o dos.o eliashberg.mod eliashberg.o filenames.mod filenames.o global.mod global.o intervals.mod intervals.o io.mod io.o main.o mcmillan.o pade.mod pade.o realaxis.mod realaxis.o tc.mod
+	@rm -f $(needless) arguments.mod arguments.o dos.o eliashberg.mod eliashberg.o filenames.mod filenames.o global.mod global.o intervals.mod intervals.o io.mod io.o main.o pade.mod pade.o realaxis.mod realaxis.o tc.mod tc.o
 
 cleaner: clean
 	@rm -f $(programs)
@@ -25,13 +25,13 @@ $(programs):
 	@$(compiler) $(optional) -c $< -o $@
 
 dos: arguments.o dos.o global.o intervals.o
-eb: arguments.o eliashberg.o filenames.o global.o intervals.o io.o main.o mcmillan.o pade.o realaxis.o
+eb: arguments.o eliashberg.o filenames.o global.o intervals.o io.o main.o pade.o realaxis.o tc.o
 
 dos.o: arguments.o global.o intervals.o
 eliashberg.o: global.o
 intervals.o: global.o
 io.o: filenames.o global.o
-main.o: arguments.o eliashberg.o global.o io.o mcmillan.o realaxis.o
-mcmillan.o: eliashberg.o global.o
+main.o: arguments.o eliashberg.o global.o io.o realaxis.o tc.o
 pade.o: global.o
 realaxis.o: global.o intervals.o pade.o
+tc.o: eliashberg.o global.o
