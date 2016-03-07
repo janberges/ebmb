@@ -3,8 +3,8 @@ program eb
    use eliashberg
    use global
    use io
-   use mcmillan
    use realaxis
+   use tc
    implicit none
 
    integer :: n
@@ -15,8 +15,12 @@ program eb
 
       call estimate(i)
 
-      call solve(i)
-      call realize(i)
+      if (i%critical) then
+         call bisection(i)
+      else
+         call solve(i)
+         call realize(i)
+      end if
 
       if (i%form .eq. 'text' .or. i%form .eq. 'both') call save_text(i)
       if (i%form .eq. 'data' .or. i%form .eq. 'both') call save_data(i)

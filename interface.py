@@ -11,6 +11,9 @@ def read():
     def TCMD(file, data):
         data['Tc'] = fromfile(file, float64, 1)
 
+    def TCEB(file, data):
+        data['TcEB'] = fromfile(file, float64, 1)
+
     def EDGE(file, data):
         data['status(Delta0)'] = fromfile(file, int32, 1)
         data['Delta0'] = fromfile(file, float64, 1)
@@ -57,6 +60,8 @@ def run(executable=join(dirname(abspath(__file__)), 'eb'), **parameters):
 
         for parameter, default in [
             ('T', 10.0),
+            ('small', 1e-10),
+            ('error', 1e-10),
             ('omegaE', 0.02),
             ('lambda', 1.748),
             ('muStar', 0.1),

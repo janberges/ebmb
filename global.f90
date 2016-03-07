@@ -13,6 +13,11 @@ module global
 
       real(dp) :: kT ! temperature (eV)
 
+      logical :: critical ! find critical temperature?
+
+      real(dp) :: small ! negligible gap (eV)
+      real(dp) :: error ! error of critical temperature (eV)
+
       real(dp) :: omegaE ! Einstein frequency (eV)
       real(dp) :: lambda ! electron-phonon coupling
       real(dp) :: muStar ! Coulomb pseudo-potential

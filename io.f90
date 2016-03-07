@@ -20,7 +20,14 @@ contains
 
       read (unit, *) i%kT ! temperature (K)
 
+      i%critical = i%kT .lt. 0 ! find critical temperature?
+
       i%kT = i%kT * kB / qe ! (eV)
+
+      read (unit, *) i%small ! negligible gap (eV)
+      read (unit, *) i%error ! error of critical temperature (K)
+
+      i%error = i%error * kB / qe ! (eV)
 
       read (unit, *) i%omegaE ! Einstein frequency (eV)
       read (unit, *) i%lambda ! Electron-phonon coupling
@@ -59,6 +66,13 @@ contains
       write (unit, "(/, 'McMillan and Dynes'' critical temperature:')")
       write (unit, "(/, ES23.14E3, ' K')") i%Tc
 
+      if (i%critical) then
+         write (unit, "(/, 'Eliashberg''s critical temperature:')")
+         write (unit, "(/, ES23.14E3, ' K')") i%kT * qe / kB
+         close (unit)
+         return
+      end if
+
       write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") i%status
       write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
 
@@ -96,6 +110,12 @@ contains
 
       write (unit) 'MUEB', i%muStarEB
       write (unit) 'TCMD', i%Tc
+
+      if (i%critical) then
+         write (unit) 'TCEB', i%kT * qe / kB
+         close (unit)
+         return
+      end if
 
       write (unit) 'IMAG'
       write (unit) i%status, size(i%omega), i%omega, i%Z, i%Delta, i%phiC

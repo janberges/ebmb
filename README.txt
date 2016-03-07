@@ -27,7 +27,7 @@ according to McMillan (1968) and Dynes (1972).
  |________MUEB__________|__________IMAG_________|__________REAL_____________|
  |   double  mu*        |    integer  status    |    integer  N             |
  |______________________|                       |  N doubles  omega/eV      |
- |________TCMD__________|    integer  n         |                           |
+ |_____TCMD__TCEB_______|    integer  n         |                           |
  |   double  Tc/K       |  n doubles  omega/eV  |  N doubles  Re[Z]         |
  |______________________|                       |  N doubles  Im[Z]         |
  |________EDGE__________|  n doubles  Z         |                           |
