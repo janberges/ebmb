@@ -23,20 +23,18 @@ understood as variables of the critical temperature
 
 according to McMillan (1968) and Dynes (1972).
 
-Format of the bare (.dat) output files:
-
-    integer  status(Z, Delta)  |  Only if c is 'T':
-    integer  n                 |
-                               |    integer  N
-  n doubles  omega (eV)        |
-  n doubles  Z                 |  N doubles  omega (eV)
-  n doubles  Delta (eV)        |  N doubles  Re[Z]
-                               |  N doubles  Im[Z]
-     double  phiC (eV)         |  N doubles  Re[Delta] (eV)
-     double  mu*EB             |  N doubles  Im[Delta] (eV)
-     double  Tc (K)            |
-                               |     double  Delta0 (eV)
-  character  c ('T' or 'F')    |    integer  status(Delta0)
+  __________________________________________________________________________
+ |________MUEB__________|__________IMAG_________|__________REAL_____________|
+ |   double  mu*        |    integer  status    |    integer  N             |
+ |______________________|                       |  N doubles  omega/eV      |
+ |________TCMD__________|    integer  n         |                           |
+ |   double  Tc/K       |  n doubles  omega/eV  |  N doubles  Re[Z]         |
+ |______________________|                       |  N doubles  Im[Z]         |
+ |________EDGE__________|  n doubles  Z         |                           |
+ |  integer  status     |  n doubles  Delta/eV  |  N doubles  Re[Delta]/eV  |
+ |   double  Delta0/eV  |     double  phiC/eV   |  N doubles  Im[Delta]/eV  |
+ |______________________|_______________________|___________________________|
+               Table 1: Chunks of the bare (.dat) output files.
 
 
 A c k n o w l e d g m e n t

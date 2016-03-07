@@ -4,10 +4,18 @@ from numpy import fromfile, int32, float64
 from os.path import abspath, dirname, join
 from subprocess import call
 
-def load(filename):
-    with open(filename, 'rb') as file:
-        data = {}
+def read():
+    def MUEB(file, data):
+        data['mu*EB'] = fromfile(file, float64, 1)
 
+    def TCMD(file, data):
+        data['Tc'] = fromfile(file, float64, 1)
+
+    def EDGE(file, data):
+        data['status(Delta0)'] = fromfile(file, int32, 1)
+        data['Delta0'] = fromfile(file, float64, 1)
+
+    def IMAG(file, data):
         data['status(Z, Delta)'], n = fromfile(file, int32, 2)
 
         data['imag. axis'] = {}
@@ -15,19 +23,31 @@ def load(filename):
         for key in 'omega', 'Z', 'Delta':
             data['imag. axis'][key] = fromfile(file, float64, n)
 
-        data['phiC'], data['mu*EB'], data['Tc'] = fromfile(file, float64, 3)
+        data['imag. axis']['phiC'] = fromfile(file, float64, 1)
 
-        if file.read(1) == 'T':
-            N = fromfile(file, int32, 1)
+    def REAL(file, data):
+        n = fromfile(file, int32, 1)
 
-            data['real axis'] = {}
+        data['real axis'] = {}
 
-            for key in 'omega', 'Re[Z]', 'Im[Z]', 'Re[Delta]', 'Im[Delta]':
-                data['real axis'][key] = fromfile(file, float64, N)
+        for key in 'omega', 'Re[Z]', 'Im[Z]', 'Re[Delta]', 'Im[Delta]':
+            data['real axis'][key] = fromfile(file, float64, n)
 
-            data['Delta0'] = fromfile(file, float64, 1)
+    return locals()
 
-            data['status(Delta0)'] = fromfile(file, int32, 1)
+read = read()
+
+def load(filename):
+    data = {}
+
+    with open(filename, 'rb') as file:
+        while True:
+            name = file.read(4)
+
+            if name:
+                read[name](file, data)
+            else:
+                break
 
     return data
 
