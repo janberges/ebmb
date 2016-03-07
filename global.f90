@@ -22,7 +22,7 @@ module global
 
       integer :: limit ! maximum number of fixed-point steps
 
-      logical :: continue ! continue to real axis?
+      logical :: measurable ! find measurable gap?
       integer :: resolution ! real axis resolution
 
       character(4) :: form ! output format

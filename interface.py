@@ -63,7 +63,7 @@ def run(executable=join(dirname(abspath(__file__)), 'eb'), **parameters):
             ('upper', 10.0),
             ('lower', 5.0),
             ('limit', 100000),
-            ('continue', True),
+            ('measurable', True),
             ('resolution', 300),
             ('form', 'data'),
             ('epsilon', 1e-15)]:

@@ -9,7 +9,7 @@
 
 100000       maximum number of fixed-point steps
 
-  true       continue to real axis?
+  true       find measurable gap?
    300       real axis resolution
 
   both       output format (text, data or both)

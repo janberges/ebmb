@@ -36,7 +36,7 @@ contains
 
       read (unit, *) i%limit ! maximum number of fixed-point steps
 
-      read (unit, *) i%continue ! continue to real axis?
+      read (unit, *) i%measurable ! find measurable gap?
       read (unit, *) i%resolution ! real axis resolution
 
       read (unit, *) i%form ! output format
@@ -69,10 +69,12 @@ contains
       write (unit, '(/, A23)') 'phiC/eV'
       write (unit, '(ES23.14E3)') i%phiC
 
-      if (i%continue) then
+      if (i%measurable) then
          write (unit, "(/, 'Measurable gap (', I0, '):')") i%statusDelta0
          write (unit, "(/, ES15.6E3, ' eV')") i%Delta0
+      end if
 
+      if (i%resolution .gt. 0) then
          write (unit, "(/, 'Real-axis solution:')")
 
          write (unit, '(/, 5A15)') &
@@ -98,9 +100,11 @@ contains
       write (unit) 'IMAG'
       write (unit) i%status, size(i%omega), i%omega, i%Z, i%Delta, i%phiC
 
-      if (i%continue) then
+      if (i%measurable) then
          write (unit) 'EDGE', i%statusDelta0, i%Delta0
+      end if
 
+      if (i%resolution .gt. 0) then
          write (unit) 'REAL'
          write (unit) i%resolution, i%omega_
          write (unit) real(i%Z_), aimag(i%Z_)
