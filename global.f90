@@ -12,6 +12,7 @@ module global
       character(:), allocatable :: name
 
       real(dp) :: kT ! temperature (eV)
+      real(dp) :: Tc ! McMillan's critical temperature (K)
 
       logical :: critical ! find critical temperature?
 
@@ -31,23 +32,28 @@ module global
       integer :: resolution ! real axis resolution
 
       character(4) :: form ! output format
+   end type info
 
-      real(dp), allocatable :: omega(:) ! Matsubara frequency (eV)
-      real(dp), allocatable :: Delta(:) ! Matsubara gap (eV)
-      real(dp), allocatable :: Z(:) ! Matsubara renormalization
+   type matsubara
+      real(dp) :: muStar ! rescaled Coulomb pseudo-potential
+
+      integer :: status ! convergence status
+
+      real(dp), allocatable :: omega(:) ! frequency (eV)
+      real(dp), allocatable :: Delta(:) ! gap (eV)
+      real(dp), allocatable :: Z(:) ! renormalization
 
       real(dp) :: phiC ! constant Coulomb contribution (eV)
-      real(dp) :: muStarEB ! rescaled Coulomb pseudo-potential
-      real(dp) :: Tc ! McMillan's critical temperature (K)
+   end type matsubara
 
-      real(dp), allocatable :: omega_(:) ! frequency (eV)
-      complex(dp), allocatable :: Delta_(:) ! gap (eV)
-      complex(dp), allocatable :: Z_(:) ! renormalization
+   type continued
+      real(dp), allocatable :: omega(:) ! frequency (eV)
+      complex(dp), allocatable :: Delta(:) ! gap (eV)
+      complex(dp), allocatable :: Z(:) ! renormalization
 
-      real(dp) :: Delta0 ! leading gap (eV)
-
-      integer :: status, statusDelta0 ! convergence status
-   end type info
+      real(dp) :: Delta0 ! measurable gap (eV)
+      integer :: status ! convergence status
+   end type continued
 
    real(dp) :: negligible_difference = 1e-15_dp
 

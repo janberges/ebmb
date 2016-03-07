@@ -53,15 +53,17 @@ contains
       close (unit)
    end subroutine load
 
-   subroutine save_text(i)
+   subroutine save_text(i, im, re)
       type(info), intent(in) :: i
+      type(matsubara), intent(in) :: im
+      type(continued), intent(in) :: re
 
       integer :: n
 
       open (unit, file=i%name // '.out', action='write', status='replace')
 
       write (unit, "('Rescaled Coulomb pseudo-potential:')")
-      write (unit, '(/, ES23.14E3)') i%muStarEB
+      write (unit, '(/, ES23.14E3)') im%muStar
 
       write (unit, "(/, 'McMillan and Dynes'' critical temperature:')")
       write (unit, "(/, ES23.14E3, ' K')") i%Tc
@@ -73,19 +75,19 @@ contains
          return
       end if
 
-      write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") i%status
+      write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") im%status
       write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
 
-      do n = lbound(i%omega, 1), ubound(i%omega, 1)
-         write (unit, '(3ES23.14E3)') i%omega(n), i%Z(n), i%Delta(n)
+      do n = lbound(im%omega, 1), ubound(im%omega, 1)
+         write (unit, '(3ES23.14E3)') im%omega(n), im%Z(n), im%Delta(n)
       end do
 
       write (unit, '(/, A23)') 'phiC/eV'
-      write (unit, '(ES23.14E3)') i%phiC
+      write (unit, '(ES23.14E3)') im%phiC
 
       if (i%measurable) then
-         write (unit, "(/, 'Measurable gap (', I0, '):')") i%statusDelta0
-         write (unit, "(/, ES15.6E3, ' eV')") i%Delta0
+         write (unit, "(/, 'Measurable gap (', I0, '):')") re%status
+         write (unit, "(/, ES15.6E3, ' eV')") re%Delta0
       end if
 
       if (i%resolution .gt. 0) then
@@ -95,20 +97,22 @@ contains
             'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
 
          do n = 1, i%resolution
-            write (unit, '(5ES15.6E3)') i%omega_(n), i%Z_(n), i%Delta_(n)
+            write (unit, '(5ES15.6E3)') re%omega(n), re%Z(n), re%Delta(n)
          end do
       end if
 
       close (unit)
    end subroutine save_text
 
-   subroutine save_data(i)
+   subroutine save_data(i, im, re)
       type(info), intent(in) :: i
+      type(matsubara), intent(in) :: im
+      type(continued), intent(in) :: re
 
       open (unit, file=i%name // '.dat', action='write', status='replace', &
          form='unformatted', access='stream')
 
-      write (unit) 'MUEB', i%muStarEB
+      write (unit) 'MUEB', im%muStar
       write (unit) 'TCMD', i%Tc
 
       if (i%critical) then
@@ -118,17 +122,17 @@ contains
       end if
 
       write (unit) 'IMAG'
-      write (unit) i%status, size(i%omega), i%omega, i%Z, i%Delta, i%phiC
+      write (unit) im%status, size(im%omega), im%omega, im%Z, im%Delta, im%phiC
 
       if (i%measurable) then
-         write (unit) 'EDGE', i%statusDelta0, i%Delta0
+         write (unit) 'EDGE', re%status, re%Delta0
       end if
 
       if (i%resolution .gt. 0) then
          write (unit) 'REAL'
-         write (unit) i%resolution, i%omega_
-         write (unit) real(i%Z_), aimag(i%Z_)
-         write (unit) real(i%Delta_), aimag(i%Delta_)
+         write (unit) i%resolution, re%omega
+         write (unit) real(re%Z), aimag(re%Z)
+         write (unit) real(re%Delta), aimag(re%Delta)
       end if
 
       close (unit)

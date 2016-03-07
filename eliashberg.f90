@@ -4,8 +4,9 @@ module eliashberg
 
 contains
 
-   subroutine solve(i)
+   subroutine solve(i, im)
       type(info), intent(inout) :: i
+      type(matsubara), intent(out) :: im
 
       real(dp), allocatable :: E(:), lambda(:), mu(:)
       real(dp) :: omegaC, Z, Delta
@@ -16,11 +17,10 @@ contains
       u = nint((i%upper / (pi * i%kT) - 1) / 2)
       l = nint((i%lower / (pi * i%kT) - 1) / 2)
 
-      if (allocated(i%omega)) deallocate(i%omega)
-      allocate(i%omega(0:u - 1))
+      allocate(im%omega(0:u - 1))
 
       do n = 0, u - 1
-         i%omega(n) = (2 * n + 1) * pi * i%kT
+         im%omega(n) = (2 * n + 1) * pi * i%kT
       end do
 
       allocate(lambda(1 - u:2 * u - 1))
@@ -33,25 +33,22 @@ contains
 
       omegaC = (2 * l + 1) * pi * i%kT
 
-      i%muStarEB = i%muStar / (1 + i%muStar * log(i%omegaE / omegaC))
+      im%muStar = i%muStar / (1 + i%muStar * log(i%omegaE / omegaC))
 
-      mu(:l - 1) = -2 * i%muStarEB
+      mu(:l - 1) = -2 * im%muStar
       mu(l:) = 0
 
-      if (allocated(i%Z)) deallocate(i%Z)
-      if (allocated(i%Delta)) deallocate(i%Delta)
+      allocate(im%Z(0:u - 1))
+      allocate(im%Delta(0:u - 1))
 
-      allocate(i%Z(0:u - 1))
-      allocate(i%Delta(0:u - 1))
-
-      i%Z(:) = 1
-      i%Delta(:) = 1
+      im%Z(:) = 1
+      im%Delta(:) = 1
 
       allocate(E(0:u - 1))
 
-      E(:) = sqrt(1 + i%omega ** 2)
+      E(:) = sqrt(1 + im%omega ** 2)
 
-      i%status = -1
+      im%status = -1
 
       do step = 1, i%limit
          done = .true.
@@ -61,32 +58,32 @@ contains
             Delta = 0
 
             do m = 0, u - 1
-               Z = Z + i%omega(m) / E(m) &
+               Z = Z + im%omega(m) / E(m) &
                   * (lambda(n - m) - lambda(n + m + 1))
 
-               Delta = Delta + i%Delta(m) / E(m) &
+               Delta = Delta + im%Delta(m) / E(m) &
                   * (lambda(n - m) + lambda(n + m + 1) + mu(m))
             end do
 
-            Z = 1 + pi * i%kT * Z / i%omega(n)
+            Z = 1 + pi * i%kT * Z / im%omega(n)
             Delta = pi * i%kT * Delta / Z
 
-            if ((i%Z(n) .na. Z) .or. (i%Delta(n) .na. Delta)) done = .false.
+            if ((im%Z(n) .na. Z) .or. (im%Delta(n) .na. Delta)) done = .false.
 
-            i%Z(n) = Z
-            i%Delta(n) = Delta
+            im%Z(n) = Z
+            im%Delta(n) = Delta
 
-            E(n) = sqrt(i%omega(n) ** 2 + Delta ** 2)
+            E(n) = sqrt(im%omega(n) ** 2 + Delta ** 2)
          end do
 
          if (done) then
-            i%status = step
+            im%status = step
             exit
          end if
       end do
 
-      if (i%Delta(0) .lt. 0) i%Delta = -i%Delta
+      if (im%Delta(0) .lt. 0) im%Delta = -im%Delta
 
-      i%phiC = pi * i%kT * sum(i%Delta / E * mu)
+      im%phiC = pi * i%kT * sum(im%Delta / E * mu)
    end subroutine solve
 end module eliashberg
