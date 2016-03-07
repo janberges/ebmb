@@ -56,19 +56,26 @@ def run(executable=join(dirname(abspath(__file__)), 'eb'), **parameters):
     with open('~temporary.in', 'w') as file:
 
         for parameter, default in [
-            ('T', 10.0),
-            ('small', 1e-10),
-            ('error', 1e-10),
-            ('omegaE', 0.02),
-            ('lambda', 1.748),
-            ('muStar', 0.1),
-            ('upper', 10.0),
-            ('lower', 5.0),
-            ('limit', 100000),
-            ('measurable', True),
-            ('resolution', 300),
-            ('form', 'data'),
-            ('epsilon', 1e-15)]:
+            ('T', 10.0), # temperature (K)
+
+            ('small', 1e-10), # negligible gap (eV)
+            ('error', 1e-10), # error of critical temperature (K)
+
+            ('omegaE', 0.020), # Einstein frequency (eV)
+            ('lambda', 1.748), # electron-phonon coupling
+            ('muStar', 0.100), # Coulomb pseudo-potential
+
+            ('upper', 10.0), # overall cutoff frequency (eV)
+            ('lower',  5.0), # Coulomb cutoff frequency (eV)
+
+            ('limit', 100000), # maximum number of fixed-point steps
+
+            ('measurable', True), # find measurable gap?
+            ('resolution',  300), # real axis resolution
+
+            ('form', 'data'), # output format
+
+            ('epsilon', 1e-15)]: # negligible float difference
 
             print >> file, parameters.get(parameter, default)
 
