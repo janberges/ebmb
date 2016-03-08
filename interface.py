@@ -51,9 +51,10 @@ def load(filename):
 
     return data
 
-def run(executable=join(dirname(abspath(__file__)), 'eb'), **parameters):
+def run(executable=join(dirname(abspath(__file__)), 'eb'),
+        filename='~temporary.in', **parameters):
 
-    with open('~temporary.in', 'w') as file:
+    with open(filename, 'w') as file:
 
         for parameter, default in [
             ('T', 10.0), # temperature (K)
@@ -79,9 +80,9 @@ def run(executable=join(dirname(abspath(__file__)), 'eb'), **parameters):
 
             print >> file, parameters.get(parameter, default)
 
-    call([executable, '~temporary.in'])
+    call([executable, filename])
 
-    return load('~temporary.dat')
+    return load(filename.rsplit('.', 1)[0] + '.dat')
 
 if __name__ == '__main__':
     print run()
