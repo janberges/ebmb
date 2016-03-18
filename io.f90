@@ -71,34 +71,32 @@ contains
       if (i%critical) then
          write (unit, "(/, 'Eliashberg''s critical temperature:')")
          write (unit, "(/, ES23.14E3, ' K')") i%kT * qe / kB
-         close (unit)
-         return
-      end if
+      else
+         write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") im%status
+         write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
 
-      write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") im%status
-      write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
-
-      do n = lbound(im%omega, 1), ubound(im%omega, 1)
-         write (unit, '(3ES23.14E3)') im%omega(n), im%Z(n), im%Delta(n)
-      end do
-
-      write (unit, '(/, A23)') 'phiC/eV'
-      write (unit, '(ES23.14E3)') im%phiC
-
-      if (i%measurable) then
-         write (unit, "(/, 'Measurable gap (', I0, '):')") re%status
-         write (unit, "(/, ES15.6E3, ' eV')") re%Delta0
-      end if
-
-      if (i%resolution .gt. 0) then
-         write (unit, "(/, 'Real-axis solution:')")
-
-         write (unit, '(/, 5A15)') &
-            'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
-
-         do n = 1, i%resolution
-            write (unit, '(5ES15.6E3)') re%omega(n), re%Z(n), re%Delta(n)
+         do n = lbound(im%omega, 1), ubound(im%omega, 1)
+            write (unit, '(3ES23.14E3)') im%omega(n), im%Z(n), im%Delta(n)
          end do
+
+         write (unit, '(/, A23)') 'phiC/eV'
+         write (unit, '(ES23.14E3)') im%phiC
+
+         if (i%measurable) then
+            write (unit, "(/, 'Measurable gap (', I0, '):')") re%status
+            write (unit, "(/, ES15.6E3, ' eV')") re%Delta0
+         end if
+
+         if (i%resolution .gt. 0) then
+            write (unit, "(/, 'Real-axis solution:')")
+
+            write (unit, '(/, 5A15)') &
+               'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
+
+            do n = 1, i%resolution
+               write (unit, '(5ES15.6E3)') re%omega(n), re%Z(n), re%Delta(n)
+            end do
+         end if
       end if
 
       close (unit)
@@ -117,22 +115,19 @@ contains
 
       if (i%critical) then
          write (unit) 'TCEB', i%kT * qe / kB
-         close (unit)
-         return
-      end if
+      else
+         write (unit) 'IMAG'
+         write (unit) im%status, size(im%omega)
+         write (unit) im%omega, im%Z, im%Delta, im%phiC
 
-      write (unit) 'IMAG'
-      write (unit) im%status, size(im%omega), im%omega, im%Z, im%Delta, im%phiC
+         if (i%measurable) write (unit) 'EDGE', re%status, re%Delta0
 
-      if (i%measurable) then
-         write (unit) 'EDGE', re%status, re%Delta0
-      end if
-
-      if (i%resolution .gt. 0) then
-         write (unit) 'REAL'
-         write (unit) i%resolution, re%omega
-         write (unit) real(re%Z), aimag(re%Z)
-         write (unit) real(re%Delta), aimag(re%Delta)
+         if (i%resolution .gt. 0) then
+            write (unit) 'REAL'
+            write (unit) i%resolution, re%omega
+            write (unit) real(re%Z), aimag(re%Z)
+            write (unit) real(re%Delta), aimag(re%Delta)
+         end if
       end if
 
       close (unit)
