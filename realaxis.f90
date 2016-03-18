@@ -51,6 +51,16 @@ contains
          do n = 1, i%resolution
             re%Z(n) = continuation(re%omega(n))
          end do
+
+         if (i%DOS) then
+            call coefficients(im%omega, im%chi)
+
+            allocate(re%chi(i%resolution))
+
+            do n = 1, i%resolution
+               re%chi(n) = continuation(re%omega(n))
+            end do
+         end if
       end if
    end subroutine realize
 end module realaxis

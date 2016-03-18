@@ -18,9 +18,14 @@ def read():
     def IMAG(file):
         data = {}
 
-        data['status'], n = fromfile(file, int32, 2)
+        data['status'], n, chi = fromfile(file, int32, 3)
 
-        for key in 'omega', 'Z', 'Delta':
+        keys = ['omega', 'Z', 'Delta']
+
+        if chi:
+            keys.insert(2, 'chi')
+
+        for key in keys:
             data[key] = fromfile(file, float64, n)
 
         data['phiC'], = fromfile(file, float64, 1)
@@ -28,10 +33,14 @@ def read():
         return data
 
     def REAL(file):
-        n, = fromfile(file, int32, 1)
+        n, chi = fromfile(file, int32, 2)
 
-        return {key: fromfile(file, float64, n)
-            for key in ('omega', 'Re[Z]', 'Im[Z]', 'Re[Delta]', 'Im[Delta]')}
+        keys = ['omega', 'Re[Z]', 'Im[Z]', 'Re[Delta]', 'Im[Delta]']
+
+        if chi:
+            keys[3:3] = ['Re[chi]', 'Im[chi]']
+
+        return {key: fromfile(file, float64, n) for key in keys}
 
     return locals()
 
@@ -54,6 +63,11 @@ def load(filename):
 def run(executable=join(dirname(abspath(__file__)), 'eb'),
         filename='~temporary.in', **parameters):
 
+    if 'DOSfile' in parameters:
+        if any(c in parameters['DOSfile'] for c in '/ '):
+            parameters['DOSfile'] = "'%s'" % parameters['DOSfile'].replace(
+                "'", "''")
+
     with open(filename, 'w') as file:
 
         for parameter, default in [
@@ -65,6 +79,8 @@ def run(executable=join(dirname(abspath(__file__)), 'eb'),
             ('omegaE', 0.020), # Einstein frequency (eV)
             ('lambda', 1.748), # electron-phonon coupling
             ('muStar', 0.100), # Coulomb pseudo-potential
+
+            ('DOSfile', 'none'), # file with density of states
 
             ('upper', 10.0), # overall cutoff frequency (eV)
             ('lower',  5.0), # Coulomb cutoff frequency (eV)
@@ -84,5 +100,28 @@ def run(executable=join(dirname(abspath(__file__)), 'eb'),
 
     return load(filename.rsplit('.', 1)[0] + '.dat')
 
+def squareDOS(name='dos.in', t=0.25, eF=0.5, n=401):
+    from scipy import linspace, pi
+    from scipy.special import ellipk
+
+    if not n % 2:
+        n += 1
+
+    e, de = linspace(-4 * t, 4 * t, n, retstep=True)
+
+    dos = ellipk(1 - (0.25 * e / t) ** 2) / (2 * pi ** 2 * t)
+
+    dos[n // 2] = 0.0
+    dos[n // 2] = 1 / de - (dos[0] + 2 * sum(dos[1:-1]) + dos[-1]) / 2
+
+    e += 4 * t - eF
+
+    with open(name, 'w') as file:
+        file.write('%d\n\n' % n)
+
+        for i in range(n):
+            file.write('% .10f %.10f\n' % (e[i], dos[i]))
+
 if __name__ == '__main__':
+    squareDOS()
     print run()

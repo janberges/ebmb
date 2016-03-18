@@ -1,11 +1,13 @@
 module io
    use filenames
    use global
+   use integration
    implicit none
 
    private
    public :: load, save_text, save_data
 
+   integer :: n, m
    integer, parameter :: unit = 11
 
 contains
@@ -13,6 +15,9 @@ contains
    subroutine load(file, i)
       character(*), intent(in) :: file
       type(universal), intent(out) :: i
+
+      character(50) :: DOSfile
+      real(dp), allocatable :: DOS(:)
 
       i%name = stem(file)
 
@@ -33,6 +38,10 @@ contains
       read (unit, *) i%lambda ! Electron-phonon coupling
       read (unit, *) i%muStar ! Coulomb pseudo-potential
 
+      read (unit, *) DOSfile ! file with density of states
+
+      i%DOS = DOSfile .ne. 'none' ! consider full density of states?
+
       read (unit, *) i%upper ! general cutoff frequency (omegaE)
       read (unit, *) i%lower ! Coulomb cutoff frequency (omegaE)
 
@@ -51,14 +60,35 @@ contains
       read (unit, *) negligible_difference ! negligible float difference
 
       close (unit)
+
+      if (i%DOS) then
+         open (unit, file=DOSfile, action='read', status='old')
+
+         read (unit, *) n ! density-of-states resolution
+
+         allocate(DOS(n)) ! density of states (a.u.)
+
+         allocate(i%energy(n)) ! free-electron energy (eV)
+         allocate(i%weight(n)) ! integration weight (eV)
+
+         do m = 1, n
+            read(unit, *) i%energy(m), DOS(m)
+         end do
+
+         close (unit)
+
+         call differential(i%energy, i%weight)
+
+         n = minloc(abs(i%energy), 1) ! index of Fermi level
+
+         i%weight = i%weight * DOS / DOS(n)
+      end if
    end subroutine load
 
    subroutine save_text(i, im, re)
       type(universal), intent(in) :: i
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
-
-      integer :: n
 
       open (unit, file=i%name // '.out', action='write', status='replace')
 
@@ -73,11 +103,21 @@ contains
          write (unit, "(/, ES23.14E3, ' K')") i%kT * qe / kB
       else
          write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") im%status
-         write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
 
-         do n = 0, im%n - 1
-            write (unit, '(3ES23.14E3)') im%omega(n), im%Z(n), im%Delta(n)
-         end do
+         if (i%DOS) then
+            write (unit, '(/, 4A23)') 'omega/eV', 'Z', 'chi/eV', 'Delta/eV'
+
+            do n = 0, im%n - 1
+               write (unit, '(4ES23.14E3)') &
+                  im%omega(n), im%Z(n), im%chi(n), im%Delta(n)
+            end do
+         else
+            write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
+
+            do n = 0, im%n - 1
+               write (unit, '(3ES23.14E3)') im%omega(n), im%Z(n), im%Delta(n)
+            end do
+         end if
 
          write (unit, '(/, A23)') 'phiC/eV'
          write (unit, '(ES23.14E3)') im%phiC
@@ -90,12 +130,22 @@ contains
          if (i%resolution .gt. 0) then
             write (unit, "(/, 'Real-axis solution:')")
 
-            write (unit, '(/, 5A15)') &
-               'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
+            if (i%DOS) then
+               write (unit, '(/, 7A15)') 'omega/eV', 'Re[Z]', 'Im[Z]', &
+                  'Re[chi]', 'Im[chi]', 'Re[Delta]/eV', 'Im[Delta]/eV'
 
-            do n = 1, i%resolution
-               write (unit, '(5ES15.6E3)') re%omega(n), re%Z(n), re%Delta(n)
-            end do
+               do n = 1, i%resolution
+                  write (unit, '(7ES15.6E3)') &
+                     re%omega(n), re%Z(n), re%chi(n), re%Delta(n)
+               end do
+            else
+               write (unit, '(/, 5A15)') &
+                  'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
+
+               do n = 1, i%resolution
+                  write (unit, '(5ES15.6E3)') re%omega(n), re%Z(n), re%Delta(n)
+               end do
+            end if
          end if
       end if
 
@@ -107,6 +157,8 @@ contains
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
 
+      integer :: chi
+
       open (unit, file=i%name // '.dat', action='write', status='replace', &
          form='unformatted', access='stream')
 
@@ -116,16 +168,23 @@ contains
       if (i%critical) then
          write (unit) 'TCEB', i%kT * qe / kB
       else
+         chi = merge(1, 0, i%DOS)
+
          write (unit) 'IMAG'
-         write (unit) im%status, im%n
-         write (unit) im%omega, im%Z, im%Delta, im%phiC
+         write (unit) im%status, im%n, chi
+
+         write (unit) im%omega, im%Z
+         if (i%DOS) write (unit) im%chi
+         write (unit) im%Delta, im%phiC
 
          if (i%measurable) write (unit) 'EDGE', re%status, re%Delta0
 
          if (i%resolution .gt. 0) then
             write (unit) 'REAL'
-            write (unit) i%resolution, re%omega
-            write (unit) real(re%Z), aimag(re%Z)
+            write (unit) i%resolution, chi
+
+            write (unit) re%omega, real(re%Z), aimag(re%Z)
+            if (i%DOS) write (unit) real(re%chi), aimag(re%chi)
             write (unit) real(re%Delta), aimag(re%Delta)
          end if
       end if
