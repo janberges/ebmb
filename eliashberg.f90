@@ -5,7 +5,7 @@ module eliashberg
 contains
 
    subroutine solve(i, im)
-      type(info), intent(inout) :: i
+      type(info), intent(in) :: i
       type(matsubara), intent(out) :: im
 
       real(dp), allocatable :: E(:), lambda(:), mu(:)
