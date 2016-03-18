@@ -75,7 +75,7 @@ contains
          write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") im%status
          write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
 
-         do n = lbound(im%omega, 1), ubound(im%omega, 1)
+         do n = 0, im%n - 1
             write (unit, '(3ES23.14E3)') im%omega(n), im%Z(n), im%Delta(n)
          end do
 
@@ -117,7 +117,7 @@ contains
          write (unit) 'TCEB', i%kT * qe / kB
       else
          write (unit) 'IMAG'
-         write (unit) im%status, size(im%omega)
+         write (unit) im%status, im%n
          write (unit) im%omega, im%Z, im%Delta, im%phiC
 
          if (i%measurable) write (unit) 'EDGE', re%status, re%Delta0

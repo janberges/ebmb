@@ -37,7 +37,11 @@ module global
    type matsubara
       real(dp) :: muStar ! rescaled Coulomb pseudo-potential
 
+      real(dp), allocatable :: lambda(:) ! electron-phonon coupling
+      real(dp), allocatable :: mu(:) ! Coulomb pseudo-potential
+
       integer :: status ! convergence status
+      integer :: n ! number of Matsubara frequencies
 
       real(dp), allocatable :: omega(:) ! frequency (eV)
       real(dp), allocatable :: Delta(:) ! gap (eV)
