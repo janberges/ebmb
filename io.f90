@@ -12,7 +12,7 @@ contains
 
    subroutine load(file, i)
       character(*), intent(in) :: file
-      type(info), intent(out) :: i
+      type(universal), intent(out) :: i
 
       i%name = stem(file)
 
@@ -54,7 +54,7 @@ contains
    end subroutine load
 
    subroutine save_text(i, im, re)
-      type(info), intent(in) :: i
+      type(universal), intent(in) :: i
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
 
@@ -105,7 +105,7 @@ contains
    end subroutine save_text
 
    subroutine save_data(i, im, re)
-      type(info), intent(in) :: i
+      type(universal), intent(in) :: i
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
 

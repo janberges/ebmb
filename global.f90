@@ -8,7 +8,7 @@ module global
    real(dp), parameter :: qe = 1.60217662e-19_dp ! elementary charge (C)
    real(dp), parameter :: kB = 1.38064852e-23_dp ! Boltzmann constant (J/K)
 
-   type info
+   type universal
       character(:), allocatable :: name
 
       real(dp) :: kT ! temperature (eV)
@@ -32,7 +32,7 @@ module global
       integer :: resolution ! real axis resolution
 
       character(4) :: form ! output format
-   end type info
+   end type universal
 
    type matsubara
       real(dp) :: muStar ! rescaled Coulomb pseudo-potential

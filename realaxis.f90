@@ -7,7 +7,7 @@ module realaxis
 contains
 
    subroutine realize(i, im, re)
-      type(info), intent(in) :: i
+      type(universal), intent(in) :: i
       type(matsubara), intent(in) :: im
       type(continued), intent(out) :: re
 

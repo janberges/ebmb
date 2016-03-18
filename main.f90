@@ -8,7 +8,7 @@ program eb
    implicit none
 
    integer :: n
-   type(info) :: i
+   type(universal) :: i
    type(matsubara) :: im
    type(continued) :: re
 
