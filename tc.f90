@@ -25,19 +25,23 @@ contains
       call solve(i, im)
 
       if (im%Delta(0) .gt. i%small) then
-         lower = i%kT
-
          do while (im%Delta(0) .gt. i%small)
+            lower = i%kT
+
             i%kT = i%kT * (1 + ratio)
+
             call solve(i, im)
          end do
 
          upper = i%kT
       else
-         upper = i%kT
-
          do while (im%Delta(0) .le. i%small)
+            if (i%kT .le. i%error) return
+
+            upper = i%kT
+
             i%kT = i%kT * (1 - ratio)
+
             call solve(i, im)
          end do
 
