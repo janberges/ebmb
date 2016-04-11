@@ -7,9 +7,6 @@ from subprocess import call
 def load(filename):
     data = {}
 
-    dtype = float64
-    shape = [1]
-
     with open(filename, 'rb') as file:
         while True:
             name = ''.join(iter(lambda: file.read(1) or ':', ':'))
