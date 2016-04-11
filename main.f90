@@ -21,8 +21,9 @@ program eb
          call bisection(i, im)
       else
          call solve(i, im)
-         call realize(i, im, re)
       end if
+
+      call realize(i, im, re)
 
       if (i%form .eq. 'text' .or. i%form .eq. 'both') call save_text(i, im, re)
       if (i%form .eq. 'data' .or. i%form .eq. 'both') call save_data(i, im, re)

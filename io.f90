@@ -101,51 +101,51 @@ contains
       if (i%critical) then
          write (unit, "(/, 'Eliashberg''s critical temperature:')")
          write (unit, "(/, ES23.14E3, ' K')") i%kT * qe / kB
+      end if
+
+      write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") im%status
+
+      if (i%DOS) then
+         write (unit, '(/, 4A23)') 'omega/eV', 'Z', 'chi/eV', 'Delta/eV'
+
+         do n = 0, im%n - 1
+            write (unit, '(4ES23.14E3)') &
+               im%omega(n), im%Z(n), im%chi(n), im%Delta(n)
+         end do
       else
-         write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") im%status
+         write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
+
+         do n = 0, im%n - 1
+            write (unit, '(3ES23.14E3)') im%omega(n), im%Z(n), im%Delta(n)
+         end do
+      end if
+
+      write (unit, '(/, A23)') 'phiC/eV'
+      write (unit, '(ES23.14E3)') im%phiC
+
+      if (i%measurable) then
+         write (unit, "(/, 'Measurable gap (', I0, '):')") re%status
+         write (unit, "(/, ES15.6E3, ' eV')") re%Delta0
+      end if
+
+      if (i%resolution .gt. 0) then
+         write (unit, "(/, 'Real-axis solution:')")
 
          if (i%DOS) then
-            write (unit, '(/, 4A23)') 'omega/eV', 'Z', 'chi/eV', 'Delta/eV'
+            write (unit, '(/, 7A15)') 'omega/eV', 'Re[Z]', 'Im[Z]', &
+               'Re[chi]', 'Im[chi]', 'Re[Delta]/eV', 'Im[Delta]/eV'
 
-            do n = 0, im%n - 1
-               write (unit, '(4ES23.14E3)') &
-                  im%omega(n), im%Z(n), im%chi(n), im%Delta(n)
+            do n = 1, i%resolution
+               write (unit, '(7ES15.6E3)') &
+                  re%omega(n), re%Z(n), re%chi(n), re%Delta(n)
             end do
          else
-            write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
+            write (unit, '(/, 5A15)') &
+               'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
 
-            do n = 0, im%n - 1
-               write (unit, '(3ES23.14E3)') im%omega(n), im%Z(n), im%Delta(n)
+            do n = 1, i%resolution
+               write (unit, '(5ES15.6E3)') re%omega(n), re%Z(n), re%Delta(n)
             end do
-         end if
-
-         write (unit, '(/, A23)') 'phiC/eV'
-         write (unit, '(ES23.14E3)') im%phiC
-
-         if (i%measurable) then
-            write (unit, "(/, 'Measurable gap (', I0, '):')") re%status
-            write (unit, "(/, ES15.6E3, ' eV')") re%Delta0
-         end if
-
-         if (i%resolution .gt. 0) then
-            write (unit, "(/, 'Real-axis solution:')")
-
-            if (i%DOS) then
-               write (unit, '(/, 7A15)') 'omega/eV', 'Re[Z]', 'Im[Z]', &
-                  'Re[chi]', 'Im[chi]', 'Re[Delta]/eV', 'Im[Delta]/eV'
-
-               do n = 1, i%resolution
-                  write (unit, '(7ES15.6E3)') &
-                     re%omega(n), re%Z(n), re%chi(n), re%Delta(n)
-               end do
-            else
-               write (unit, '(/, 5A15)') &
-                  'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
-
-               do n = 1, i%resolution
-                  write (unit, '(5ES15.6E3)') re%omega(n), re%Z(n), re%Delta(n)
-               end do
-            end if
          end if
       end if
 
@@ -165,45 +165,43 @@ contains
       write (unit) 'mu*EB:', im%muStar
       write (unit) 'TcMD:', i%Tc
 
-      if (i%critical) then
-         write (unit) 'TcEB:', i%kT * qe / kB
-      else
-         write (unit) 'INT:status:', im%status
+      if (i%critical) write (unit) 'TcEB:', i%kT * qe / kB
 
-         write (unit) 'REAL:DIM:', 1, im%n
+      write (unit) 'INT:status:', im%status
 
-         write (unit) 'iomega:', im%omega
-         write (unit) 'Z:', im%Z
+      write (unit) 'REAL:DIM:', 1, im%n
 
-         if (i%DOS) write (unit) 'chi:', im%chi
+      write (unit) 'iomega:', im%omega
+      write (unit) 'Z:', im%Z
 
-         write (unit) 'Delta:', im%Delta
+      if (i%DOS) write (unit) 'chi:', im%chi
 
-         write (unit) 'DIM:', 0
+      write (unit) 'Delta:', im%Delta
 
-         write (unit) 'phiC:', im%phiC
+      write (unit) 'DIM:', 0
 
-         if (i%measurable) then
-            write (unit) 'INT:status[Delta0]:', re%status
-            write (unit) 'REAL:Delta0:', re%Delta0
+      write (unit) 'phiC:', im%phiC
+
+      if (i%measurable) then
+         write (unit) 'INT:status[Delta0]:', re%status
+         write (unit) 'REAL:Delta0:', re%Delta0
+      end if
+
+      if (i%resolution .gt. 0) then
+         write (unit) 'DIM:', 1, i%resolution
+
+         write (unit) 'omega:', re%omega
+
+         write (unit) 'Re[Z]:', real(re%Z)
+         write (unit) 'Im[Z]:', aimag(re%Z)
+
+         if (i%DOS) then
+            write (unit) 'Re[chi]:', real(re%chi)
+            write (unit) 'Im[chi]:', aimag(re%chi)
          end if
 
-         if (i%resolution .gt. 0) then
-            write (unit) 'DIM:', 1, i%resolution
-
-            write (unit) 'omega:', re%omega
-
-            write (unit) 'Re[Z]:', real(re%Z)
-            write (unit) 'Im[Z]:', aimag(re%Z)
-
-            if (i%DOS) then
-               write (unit) 'Re[chi]:', real(re%chi)
-               write (unit) 'Im[chi]:', aimag(re%chi)
-            end if
-
-            write (unit) 'Re[Delta]:', real(re%Delta)
-            write (unit) 'Im[Delta]:', aimag(re%Delta)
-         end if
+         write (unit) 'Re[Delta]:', real(re%Delta)
+         write (unit) 'Im[Delta]:', aimag(re%Delta)
       end if
 
       close (unit)
