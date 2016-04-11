@@ -5,7 +5,7 @@ module io
    implicit none
 
    private
-   public :: load, save_text, save_data
+   public :: load, store
 
    integer :: n, m
    integer, parameter :: unit = 11
@@ -85,7 +85,16 @@ contains
       end if
    end subroutine load
 
-   subroutine save_text(i, im, re)
+   subroutine store(i, im, re)
+      type(universal), intent(in) :: i
+      type(matsubara), intent(in) :: im
+      type(continued), intent(in) :: re
+
+      if (i%form .eq. 'text' .or. i%form .eq. 'both') call store_text(i, im, re)
+      if (i%form .eq. 'data' .or. i%form .eq. 'both') call store_data(i, im, re)
+   end subroutine store
+
+   subroutine store_text(i, im, re)
       type(universal), intent(in) :: i
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
@@ -150,9 +159,9 @@ contains
       end if
 
       close (unit)
-   end subroutine save_text
+   end subroutine store_text
 
-   subroutine save_data(i, im, re)
+   subroutine store_data(i, im, re)
       type(universal), intent(in) :: i
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
@@ -205,5 +214,5 @@ contains
       end if
 
       close (unit)
-   end subroutine save_data
+   end subroutine store_data
 end module io

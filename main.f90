@@ -8,6 +8,7 @@ program eb
    implicit none
 
    integer :: n
+
    type(universal) :: i
    type(matsubara) :: im
    type(continued) :: re
@@ -25,7 +26,6 @@ program eb
 
       call realize(i, im, re)
 
-      if (i%form .eq. 'text' .or. i%form .eq. 'both') call save_text(i, im, re)
-      if (i%form .eq. 'data' .or. i%form .eq. 'both') call save_data(i, im, re)
+      call store(i, im, re)
    end do
 end program eb
