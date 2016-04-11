@@ -23,19 +23,6 @@ understood as variables of the critical temperature
 
 according to McMillan (1968) and Dynes (1972).
 
- ______________________________________________________________________________
-|________MUEB__________|__________IMAG____________|___________REAL_____________|
-|   double  mu*        |    integer  status       |  2 integers  n, chi?       |
-|______________________|    integer  n            |   n doubles  omega/eV      |
-|_____TCMD__TCEB_______|    integer  chi? 0 or 1  |   n doubles  Re[Z]         |
-|   double  Tc/K       |  n doubles  omega/eV     |   n doubles  Im[Z]         |
-|______________________|  n doubles  Z            |  (n doubles  Re[chi]/eV    |
-|________EDGE__________| (n doubles  chi/eV)      |   n doubles  Im[chi]/eV)   |
-|  integer  status     |  n doubles  Delta/eV     |   n doubles  Re[Delta]/eV  |
-|   double  Delta0/eV  |     double  phiC/eV      |   n doubles  Im[Delta]/eV  |
-|______________________|__________________________|____________________________|
-                Table 1: Chunks of the bare (.dat) output files.
-
 
 A c k n o w l e d g m e n t
 

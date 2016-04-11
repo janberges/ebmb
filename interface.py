@@ -4,61 +4,30 @@ from numpy import fromfile, int32, float64
 from os.path import abspath, dirname, join
 from subprocess import call
 
-def read():
-    def MUEB(file):
-        return fromfile(file, float64, 1)[0]
-
-    TCMD = TCEB = MUEB
-
-    def EDGE(file):
-        return {
-            'status': fromfile(file, int32, 1),
-            'Delta0': fromfile(file, float64, 1)}
-
-    def IMAG(file):
-        data = {}
-
-        data['status'], n, chi = fromfile(file, int32, 3)
-
-        keys = ['omega', 'Z', 'Delta']
-
-        if chi:
-            keys.insert(2, 'chi')
-
-        for key in keys:
-            data[key] = fromfile(file, float64, n)
-
-        data['phiC'], = fromfile(file, float64, 1)
-
-        return data
-
-    def REAL(file):
-        n, chi = fromfile(file, int32, 2)
-
-        keys = ['omega', 'Re[Z]', 'Im[Z]', 'Re[Delta]', 'Im[Delta]']
-
-        if chi:
-            keys[3:3] = ['Re[chi]', 'Im[chi]']
-
-        return {key: fromfile(file, float64, n) for key in keys}
-
-    return locals()
-
-read = read()
-
 def load(filename):
     data = {}
 
+    dtype = float64
+    shape = [1]
+
     with open(filename, 'rb') as file:
         while True:
-            name = file.read(4)
+            name = ''.join(iter(lambda: file.read(1) or ':', ':'))
 
-            if name:
-                data[name] = read[name](file)
+            if name == 'REAL':
+                dtype = float64
+
+            elif name == 'INT':
+                dtype = int32
+
+            elif name == 'DIM':
+                shape = fromfile(file, int32, *fromfile(file, int32, 1))
+
+            elif name:
+                data[name] = fromfile(file, dtype,
+                    shape.prod()).reshape(shape, order='Fortran')
             else:
-                break
-
-    return data
+                return data
 
 def run(executable=join(dirname(abspath(__file__)), 'eb'),
         filename='~temporary.in', **parameters):

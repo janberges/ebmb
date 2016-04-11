@@ -157,35 +157,52 @@ contains
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
 
-      integer :: chi
-
       open (unit, file=i%name // '.dat', action='write', status='replace', &
          form='unformatted', access='stream')
 
-      write (unit) 'MUEB', im%muStar
-      write (unit) 'TCMD', i%Tc
+      write (unit) 'REAL:DIM:', 0
+
+      write (unit) 'mu*EB:', im%muStar
+      write (unit) 'TcMD:', i%Tc
 
       if (i%critical) then
-         write (unit) 'TCEB', i%kT * qe / kB
+         write (unit) 'TcEB:', i%kT * qe / kB
       else
-         chi = merge(1, 0, i%DOS)
+         write (unit) 'INT:status:', im%status
 
-         write (unit) 'IMAG'
-         write (unit) im%status, im%n, chi
+         write (unit) 'REAL:DIM:', 1, im%n
 
-         write (unit) im%omega, im%Z
-         if (i%DOS) write (unit) im%chi
-         write (unit) im%Delta, im%phiC
+         write (unit) 'iomega:', im%omega
+         write (unit) 'Z:', im%Z
 
-         if (i%measurable) write (unit) 'EDGE', re%status, re%Delta0
+         if (i%DOS) write (unit) 'chi:', im%chi
+
+         write (unit) 'Delta:', im%Delta
+
+         write (unit) 'DIM:', 0
+
+         write (unit) 'phiC:', im%phiC
+
+         if (i%measurable) then
+            write (unit) 'INT:status[Delta0]:', re%status
+            write (unit) 'REAL:Delta0:', re%Delta0
+         end if
 
          if (i%resolution .gt. 0) then
-            write (unit) 'REAL'
-            write (unit) i%resolution, chi
+            write (unit) 'DIM:', 1, i%resolution
 
-            write (unit) re%omega, real(re%Z), aimag(re%Z)
-            if (i%DOS) write (unit) real(re%chi), aimag(re%chi)
-            write (unit) real(re%Delta), aimag(re%Delta)
+            write (unit) 'omega:', re%omega
+
+            write (unit) 'Re[Z]:', real(re%Z)
+            write (unit) 'Im[Z]:', aimag(re%Z)
+
+            if (i%DOS) then
+               write (unit) 'Re[chi]:', real(re%chi)
+               write (unit) 'Im[chi]:', aimag(re%chi)
+            end if
+
+            write (unit) 'Re[Delta]:', real(re%Delta)
+            write (unit) 'Im[Delta]:', aimag(re%Delta)
          end if
       end if
 
