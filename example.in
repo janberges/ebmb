@@ -4,7 +4,7 @@
  1e-10 K     error of critical temperature
 
  0.020 eV    Einstein frequency (*)
- 1.748       Electron-phonon coupling
+ 1.748       electron-phonon coupling
  0.100       Coulomb pseudo-potential
 
   none       file with density of states (or 'none')
@@ -18,5 +18,6 @@
    300       real axis resolution
 
   both       output format (text, data or both)
+  true       include parameters in output file?
 
  1e-15 a.u.  negligible float difference

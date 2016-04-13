@@ -34,8 +34,10 @@ module global
       integer :: resolution ! real axis resolution
 
       character(4) :: form ! output format
+      logical :: standalone ! include parameters in output file?
 
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
+      real(dp), allocatable :: density(:) ! density of Bloch states (a.u.)
       real(dp), allocatable :: weight(:) ! integration weight (eV)
    end type universal
 
@@ -46,7 +48,9 @@ module global
       real(dp), allocatable :: mu(:) ! Coulomb pseudo-potential
 
       integer :: status ! convergence status
+
       integer :: n ! number of Matsubara frequencies
+      integer :: m ! number of Coulomb terms
 
       real(dp), allocatable :: omega(:) ! frequency (eV)
       real(dp), allocatable :: Delta(:) ! gap (eV)

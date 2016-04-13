@@ -14,11 +14,10 @@ contains
       type(universal), intent(in) :: i
       type(matsubara), intent(out) :: im
 
-      integer :: n, cutC
       real(dp) :: omegaC
 
       im%n = nint((i%upper / (pi * i%kT) - 1) / 2)
-      cutC = nint((i%lower / (pi * i%kT) - 1) / 2)
+      im%m = nint((i%lower / (pi * i%kT) - 1) / 2)
 
       allocate(im%omega(0:im%n - 1))
 
@@ -34,12 +33,12 @@ contains
 
       allocate(im%mu(0:im%n - 1))
 
-      omegaC = (2 * cutC + 1) * pi * i%kT
+      omegaC = (2 * im%m + 1) * pi * i%kT
 
       im%muStar = i%muStar / (1 + i%muStar * log(i%omegaE / omegaC))
 
-      im%mu(:cutC - 1) = -2 * im%muStar
-      im%mu(cutC:) = 0
+      im%mu(:im%m - 1) = -2 * im%muStar
+      im%mu(im%m:) = 0
 
       if (i%DOS) then
          call variableDOS(i, im)

@@ -57,6 +57,7 @@ def run(executable=join(dirname(abspath(__file__)), 'eb'),
             ('resolution',  300), # real axis resolution
 
             ('form', 'data'), # output format
+            ('standalone', True), # include parameters in output file?
 
             ('epsilon', 1e-15)]: # negligible float difference
 

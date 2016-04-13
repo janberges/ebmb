@@ -17,7 +17,6 @@ contains
       type(universal), intent(out) :: i
 
       character(50) :: DOSfile
-      real(dp), allocatable :: DOS(:)
 
       i%name = stem(file)
 
@@ -56,6 +55,7 @@ contains
       read (unit, *) i%resolution ! real axis resolution
 
       read (unit, *) i%form ! output format
+      read (unit, *) i%standalone ! include parameters in output file?
 
       read (unit, *) negligible_difference ! negligible float difference
 
@@ -66,13 +66,12 @@ contains
 
          read (unit, *) n ! density-of-states resolution
 
-         allocate(DOS(n)) ! density of states (a.u.)
-
          allocate(i%energy(n)) ! free-electron energy (eV)
+         allocate(i%density(n)) ! density of states (a.u.)
          allocate(i%weight(n)) ! integration weight (eV)
 
          do m = 1, n
-            read(unit, *) i%energy(m), DOS(m)
+            read(unit, *) i%energy(m), i%density(m)
          end do
 
          close (unit)
@@ -81,7 +80,7 @@ contains
 
          n = minloc(abs(i%energy), 1) ! index of Fermi level
 
-         i%weight = i%weight * DOS / DOS(n)
+         i%weight = i%weight * i%density / i%density(n)
       end if
    end subroutine load
 
@@ -158,6 +157,40 @@ contains
          end if
       end if
 
+      if (i%standalone) then
+         write (unit, "(/, 'Parameters:', /)")
+
+         write (unit, "(F9.3, 2X, A, /)") i%kT * qe / kB, 'temperature (K)'
+
+         if (i%critical) then
+            write (unit, '(ES9.1E3, 2X, A)') i%small, 'negligible gap (eV)'
+            write (unit, '(ES9.1E3, 2X, A, /)') i%error * qe / kB, &
+               'error of critical temperature (K)'
+         end if
+
+         write (unit, '(F9.3, 2X, A)') i%omegaE, 'Einstein frequency (eV)'
+         write (unit, '(F9.3, 2X, A)') i%lambda, 'electron-phonon coupling'
+         write (unit, '(F9.3, 2X, A, /)') i%muStar, 'Coulomb pseudo-potential'
+
+         if (im%m .lt. im%n) write (unit, '(I9, 2X, A)') im%m, &
+            'number of Coulomb terms'
+
+         write (unit, '(I9, 2X, A, /)') i%limit, &
+            'maximum number of fixed-point steps'
+
+         write (unit, '(ES9.1E3, 2X, A)') negligible_difference, &
+            'negligible float difference (a.u.)'
+
+         if (i%DOS) then
+            write (unit, "(/, 'Density of Bloch states:')")
+            write (unit, '(/, 2A23)') 'E/eV', 'DOS/a.u.'
+
+            do n = 1, size(i%energy)
+               write (unit, '(2ES23.14E3)') i%energy(n), i%density(n)
+            end do
+         end if
+      end if
+
       close (unit)
    end subroutine store_text
 
@@ -211,6 +244,36 @@ contains
 
          write (unit) 'Re[Delta]:', real(re%Delta)
          write (unit) 'Im[Delta]:', aimag(re%Delta)
+      end if
+
+      if (i%standalone) then
+         write (unit) 'DIM:', 0
+
+         write (unit) 'T:', i%kT * qe / kB
+
+         if (i%critical) then
+            write (unit) 'Deltac:', i%small
+            write (unit) 'dTcEB:', i%error * qe / kB
+         end if
+
+         write (unit) 'omegaE:', i%omegaE
+         write (unit) 'lambda:', i%lambda
+         write (unit) 'mu*MD:', i%muStar
+
+         write (unit) 'INT:'
+
+         if (im%m .lt. im%n) write (unit) 'nCoulomb:', im%m
+
+         write (unit) 'limit:', i%limit
+
+         write (unit) 'REAL:epsilon:', negligible_difference
+
+         if (i%DOS) then
+            write (unit) 'DIM:', 1, size(i%energy)
+
+            write (unit) 'energy:', i%energy
+            write (unit) 'density:', i%density
+         end if
       end if
 
       close (unit)
