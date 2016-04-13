@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from numpy import fromfile, int32, float64
+from numpy import fromfile, int32, float64, set_printoptions
 from os.path import abspath, dirname, join
 from subprocess import call
 
@@ -90,5 +90,7 @@ def squareDOS(name='dos.in', t=0.25, eF=0.5, n=401):
             file.write('% .10f %.10f\n' % (e[i], dos[i]))
 
 if __name__ == '__main__':
-    squareDOS()
-    print run()
+    set_printoptions(threshold=3, edgeitems=1)
+
+    for item in sorted(run().items()):
+        print '%14s = %s' % item
