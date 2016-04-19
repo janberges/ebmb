@@ -26,7 +26,7 @@ def load(filename):
             else:
                 return data
 
-def run(executable=join(dirname(abspath(__file__)), 'eb'),
+def run(executable=join(dirname(abspath(__file__)), 'eb_local'),
         filename='~temporary.in', **parameters):
 
     if 'DOSfile' in parameters:

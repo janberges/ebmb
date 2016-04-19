@@ -1,27 +1,14 @@
-E B _ i s o
+E B _ l o c a l
 
-This  programs  solves  the  isotropic Eliashberg  equations  for  the  Hubbard-
-Holstein model. The names  of the parameter files to be  processed are passed as
-command-line arguments. The required file format is exemplified by 'example.in'.
+This program solves the Eliashberg equations for local self-energies.
+
+For further information typeset and read 'manual.tex'.
 
 
 I n s t a l l a t i o n
 
-Simply  run  'make', provided  recent  versions  of  Fortran compiler  and  Make
-utility are installed. Compiler preferences may be adjusted in the Makefile.
-
-
-M a n u a l
-
-The Einstein frequency  'omegaE', the Electron-phonon coupling  'lambda' and the
-Coulomb pseudo-potential 'mu*',  which must be given in the  parameter file, are
-understood as variables of the critical temperature
-
-       omegaE           1.04 (1 + lambda)
-  Tc = ------ exp ------------------------------
-       1.2 kB     mu* + 0.62 lambda mu* - lambda
-
-according to McMillan (1968) and Dynes (1972).
+Simply run 'make', provided recent versions of Fortran compiler and Make utility
+are installed. Compiler preferences may be adjusted in the Makefile.
 
 
 A c k n o w l e d g m e n t

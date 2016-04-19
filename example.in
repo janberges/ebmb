@@ -7,7 +7,7 @@
  1.748       electron-phonon coupling
  0.100       Coulomb pseudo-potential
 
-  none       file with density of states (or 'none')
+  none       file with density of Bloch states (or 'none')
 
     10 (*)   overall cutoff frequency
      5 (*)   Coulomb cutoff frequency (absent if -1)

@@ -11,6 +11,11 @@
 
 *.pyc
 
+*.aux
+*.log
+*.pdf
+*.synctex
+*.synctex.gz
+
 dos
-eb
-tc
+eb_local

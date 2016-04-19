@@ -1,4 +1,4 @@
-program eb
+program eb_local
    use arguments
    use eliashberg
    use global
@@ -28,4 +28,4 @@ program eb
 
       call store(i, im, re)
    end do
-end program eb
+end program eb_local

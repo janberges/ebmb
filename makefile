@@ -4,7 +4,7 @@ compiler = gfortran
 optional = -std=f2003 -Wall -pedantic
 external = 
 needless = *.dat *.out *.pyc ~temporary.* .DS_Store
-programs = dos eb
+programs = dos eb_local
 
 .PHONY: all clean cleaner
 
@@ -25,7 +25,7 @@ $(programs):
 	@$(compiler) $(optional) -c $< -o $@
 
 dos: arguments.o dos.o global.o intervals.o
-eb: arguments.o eliashberg.o filenames.o global.o integration.o intervals.o io.o main.o pade.o realaxis.o tc.o
+eb_local: arguments.o eliashberg.o filenames.o global.o integration.o intervals.o io.o main.o pade.o realaxis.o tc.o
 
 dos.o: arguments.o global.o intervals.o
 eliashberg.o: global.o
