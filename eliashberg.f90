@@ -16,8 +16,8 @@ contains
 
       real(dp) :: omegaC
 
-      im%n = nint((i%upper / (pi * i%kT) - 1) / 2)
-      im%m = nint((i%lower / (pi * i%kT) - 1) / 2)
+      im%n = ceiling((i%upper / (pi * i%kT) - 1) / 2)
+      im%m = ceiling((i%lower / (pi * i%kT) - 1) / 2)
 
       allocate(im%omega(0:im%n - 1))
 
