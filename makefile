@@ -3,7 +3,7 @@
 compiler = gfortran
 optional = -std=f2003 -Wall -pedantic
 external = 
-needless = *.dat *.out *.pyc ~temporary.* .DS_Store
+needless = *.aux *.dat .*.lb *.log *.out *.pyc *.synctex *.synctex.gz ~temporary.* .DS_Store
 programs = dos eb_local
 
 .PHONY: all clean cleaner
