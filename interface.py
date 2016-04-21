@@ -46,14 +46,14 @@ def run(executable='eb_local', filename='~temporary.in', **parameters):
             ('small', 1e-10), # negligible gap (eV)
             ('error', 1e-10), # error of critical temperature (K)
 
-            ('omegaE', 0.020), # Einstein frequency (eV)
-            ('lambda', 1.748), # electron-phonon coupling
-            ('muStar', 0.100), # Coulomb pseudo-potential
+            ('omegaE', 0.02), # Einstein frequency (eV)
+            ('lambda', 1.00), # electron-phonon coupling
+            ('muStar', 0.15), # Coulomb pseudo-potential
 
             ('DOSfile', 'none'), # file with density of states
 
             ('upper', 10.0), # overall cutoff frequency (eV)
-            ('lower',  5.0), # Coulomb cutoff frequency (eV)
+            ('lower', -1.0), # Coulomb cutoff frequency (eV)
 
             ('limit', 100000), # maximum number of fixed-point steps
 

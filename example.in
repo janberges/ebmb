@@ -1,16 +1,16 @@
-10.000 K     temperature (critical if -1)
+    10 K     temperature (critical if -1)
 
  1e-10 eV    negligible gap
  1e-10 K     error of critical temperature
 
- 0.020 eV    Einstein frequency (*)
- 1.748       electron-phonon coupling
- 0.100       Coulomb pseudo-potential
+  0.02 eV    Einstein frequency (*)
+  1.00       electron-phonon coupling
+  0.15       Coulomb pseudo-potential
 
   none       file with density of Bloch states (or 'none')
 
     10 (*)   overall cutoff frequency
-     5 (*)   Coulomb cutoff frequency (absent if -1)
+    -1 (*)   Coulomb cutoff frequency (absent if -1)
 
 100000       maximum number of fixed-point steps
 
