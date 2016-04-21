@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 
-from numpy import fromfile, int32, float64, set_printoptions
-from os.path import abspath, dirname, join
-from subprocess import call
+import numpy as np
+import subprocess
+
+try:
+    from scipy.special import ellipk
+except ImportError:
+    print 'Warning: squareDOS not available'
 
 def load(filename):
     data = {}
@@ -12,22 +16,22 @@ def load(filename):
             name = ''.join(iter(lambda: file.read(1) or ':', ':'))
 
             if name == 'REAL':
-                dtype = float64
+                dtype = np.float64
 
             elif name == 'INT':
-                dtype = int32
+                dtype = np.int32
 
             elif name == 'DIM':
-                shape = fromfile(file, int32, *fromfile(file, int32, 1))
+                shape = np.fromfile(file, np.int32,
+                    *np.fromfile(file, np.int32, 1))
 
             elif name:
-                data[name] = fromfile(file, dtype,
+                data[name] = np.fromfile(file, dtype,
                     shape.prod()).reshape(shape, order='Fortran')
             else:
                 return data
 
-def run(executable=join(dirname(abspath(__file__)), 'eb_local'),
-        filename='~temporary.in', **parameters):
+def run(executable='eb_local', filename='~temporary.in', **parameters):
 
     if 'DOSfile' in parameters:
         if any(c in parameters['DOSfile'] for c in '/ '):
@@ -63,20 +67,17 @@ def run(executable=join(dirname(abspath(__file__)), 'eb_local'),
 
             print >> file, parameters.get(parameter, default)
 
-    call([executable, filename])
+    subprocess.call([executable, filename])
 
     return load(filename.rsplit('.', 1)[0] + '.dat')
 
 def squareDOS(name='dos.in', t=0.25, eF=0.5, n=401):
-    from scipy import linspace, pi
-    from scipy.special import ellipk
-
     if not n % 2:
         n += 1
 
-    e, de = linspace(-4 * t, 4 * t, n, retstep=True)
+    e, de = np.linspace(-4 * t, 4 * t, n, retstep=True)
 
-    dos = ellipk(1 - (0.25 * e / t) ** 2) / (2 * pi ** 2 * t)
+    dos = ellipk(1 - (0.25 * e / t) ** 2) / (2 * np.pi ** 2 * t)
 
     dos[n // 2] = 0.0
     dos[n // 2] = 1 / de - (dos[0] + 2 * sum(dos[1:-1]) + dos[-1]) / 2
@@ -90,7 +91,7 @@ def squareDOS(name='dos.in', t=0.25, eF=0.5, n=401):
             file.write('% .10f %.10f\n' % (e[i], dos[i]))
 
 if __name__ == '__main__':
-    set_printoptions(threshold=3, edgeitems=1)
+    np.set_printoptions(threshold=3, edgeitems=1)
 
     for item in sorted(run().items()):
         print '%14s = %s' % item
