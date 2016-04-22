@@ -116,14 +116,14 @@ contains
       if (i%DOS) then
          write (unit, '(/, 4A23)') 'omega/eV', 'Z', 'chi/eV', 'Delta/eV'
 
-         do n = 0, im%n - 1
+         do n = 0, im%u - 1
             write (unit, '(4ES23.14E3)') &
                im%omega(n), im%Z(n), im%chi(n), im%Delta(n)
          end do
       else
          write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
 
-         do n = 0, im%n - 1
+         do n = 0, im%u - 1
             write (unit, '(3ES23.14E3)') im%omega(n), im%Z(n), im%Delta(n)
          end do
       end if
@@ -172,8 +172,8 @@ contains
          write (unit, '(F9.3, 2X, A)') i%lambda, 'electron-phonon coupling'
          write (unit, '(F9.3, 2X, A, /)') i%muStar, 'Coulomb pseudo-potential'
 
-         if (im%m .lt. im%n) write (unit, '(I9, 2X, A)') im%m, &
-            'number of Coulomb terms'
+         if (im%l .lt. im%u) write (unit, '(I9, 2X, A)') im%l, &
+            'index of Coulomb cutoff frequency'
 
          write (unit, '(I9, 2X, A, /)') i%limit, &
             'maximum number of fixed-point steps'
@@ -211,7 +211,7 @@ contains
 
       write (unit) 'INT:status:', im%status
 
-      write (unit) 'REAL:DIM:', 1, im%n
+      write (unit) 'REAL:DIM:', 1, im%u
 
       write (unit) 'iomega:', im%omega
       write (unit) 'Z:', im%Z
@@ -225,7 +225,7 @@ contains
       write (unit) 'phiC:', im%phiC
 
       if (i%measurable) then
-         write (unit) 'INT:status[Delta0]:', re%status
+         write (unit) 'INT:status0:', re%status
          write (unit) 'REAL:Delta0:', re%Delta0
       end if
 
@@ -252,8 +252,8 @@ contains
          write (unit) 'T:', i%kT * qe / kB
 
          if (i%critical) then
-            write (unit) 'Deltac:', i%small
-            write (unit) 'dTcEB:', i%error * qe / kB
+            write (unit) 'small:', i%small
+            write (unit) 'error:', i%error * qe / kB
          end if
 
          write (unit) 'omegaE:', i%omegaE
@@ -262,7 +262,7 @@ contains
 
          write (unit) 'INT:'
 
-         if (im%m .lt. im%n) write (unit) 'nCoulomb:', im%m
+         if (im%l .lt. im%u) write (unit) 'cutoff:', im%l
 
          write (unit) 'limit:', i%limit
 

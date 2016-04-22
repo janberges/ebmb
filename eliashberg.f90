@@ -16,29 +16,29 @@ contains
 
       real(dp) :: omegaC
 
-      im%n = ceiling((i%upper / (pi * i%kT) - 1) / 2)
-      im%m = ceiling((i%lower / (pi * i%kT) - 1) / 2)
+      im%u = ceiling((i%upper / (pi * i%kT) - 1) / 2)
+      im%l = ceiling((i%lower / (pi * i%kT) - 1) / 2)
 
-      allocate(im%omega(0:im%n - 1))
+      allocate(im%omega(0:im%u - 1))
 
-      do n = 0, im%n - 1
+      do n = 0, im%u - 1
          im%omega(n) = (2 * n + 1) * pi * i%kT
       end do
 
-      allocate(im%lambda(1 - im%n:2 * im%n - 1))
+      allocate(im%lambda(1 - im%u:2 * im%u - 1))
 
-      do n = 1 - im%n, 2 * im%n - 1
+      do n = 1 - im%u, 2 * im%u - 1
          im%lambda(n) = i%lambda / (1 + (2 * n * pi * i%kT / i%omegaE) ** 2)
       end do
 
-      allocate(im%mu(0:im%n - 1))
+      allocate(im%mu(0:im%u - 1))
 
-      omegaC = (2 * im%m + 1) * pi * i%kT
+      omegaC = (2 * im%l + 1) * pi * i%kT
 
       im%muStar = i%muStar / (1 + i%muStar * log(i%omegaE / omegaC))
 
-      im%mu(:im%m - 1) = -2 * im%muStar
-      im%mu(im%m:) = 0
+      im%mu(:im%l - 1) = -2 * im%muStar
+      im%mu(im%l:) = 0
 
       if (i%DOS) then
          call variableDOS(i, im)
@@ -54,13 +54,13 @@ contains
       real(dp), allocatable :: E(:)
       real(dp) :: Z, Delta
 
-      allocate(im%Z(0:im%n - 1))
-      allocate(im%Delta(0:im%n - 1))
+      allocate(im%Z(0:im%u - 1))
+      allocate(im%Delta(0:im%u - 1))
 
       im%Z(:) = 1
       im%Delta(:) = 1
 
-      allocate(E(0:im%n - 1))
+      allocate(E(0:im%u - 1))
 
       E(:) = sqrt(1 + im%omega ** 2)
 
@@ -69,11 +69,11 @@ contains
       do step = 1, i%limit
          done = .true.
 
-         do n = 0, im%n - 1
+         do n = 0, im%u - 1
             Z = 0
             Delta = 0
 
-            do m = 0, im%n - 1
+            do m = 0, im%u - 1
                Z = Z + im%omega(m) / E(m) &
                   * (im%lambda(n - m) - im%lambda(n + m + 1))
 
@@ -110,20 +110,20 @@ contains
       real(dp), allocatable :: A(:), B(:), trapezoids(:)
       real(dp) :: Z, phi, chi
 
-      allocate(im%Z(0:im%n - 1))
-      allocate(im%phi(0:im%n - 1))
-      allocate(im%chi(0:im%n - 1))
+      allocate(im%Z(0:im%u - 1))
+      allocate(im%phi(0:im%u - 1))
+      allocate(im%chi(0:im%u - 1))
 
       im%Z(:) = 1
       im%phi(:) = 1
       im%chi(:) = 0
 
-      allocate(A(0:im%n - 1))
-      allocate(B(0:im%n - 1))
+      allocate(A(0:im%u - 1))
+      allocate(B(0:im%u - 1))
 
       allocate(trapezoids(size(i%energy)))
 
-      do n = 0, im%n - 1
+      do n = 0, im%u - 1
          trapezoids(:) = i%weight / (im%omega(n) ** 2 + i%energy ** 2 + 1)
 
          A(n) = sum(trapezoids)
@@ -135,12 +135,12 @@ contains
       do step = 1, i%limit
          done = .true.
 
-         do n = 0, im%n - 1
+         do n = 0, im%u - 1
             Z = 0
             phi = 0
             chi = 0
 
-            do m = 0, im%n - 1
+            do m = 0, im%u - 1
                Z = Z + im%omega(m) * im%Z(m) * A(m) &
                   * (im%lambda(n - m) - im%lambda(n + m + 1))
 

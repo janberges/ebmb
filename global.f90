@@ -49,8 +49,8 @@ module global
 
       integer :: status ! convergence status
 
-      integer :: n ! number of Matsubara frequencies
-      integer :: m ! number of Coulomb terms
+      integer :: u ! index of overall cutoff frequency
+      integer :: l ! index of Coulomb cutoff frequency
 
       real(dp), allocatable :: omega(:) ! frequency (eV)
       real(dp), allocatable :: Delta(:) ! gap (eV)
