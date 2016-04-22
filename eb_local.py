@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from os import path
 import numpy as np
 import subprocess
 
@@ -31,15 +32,13 @@ def load(filename):
             else:
                 return data
 
-def run(executable='eb_local', filename='~temporary.in', **parameters):
-
+def new(filename, **parameters):
     if 'DOSfile' in parameters:
         if any(c in parameters['DOSfile'] for c in '/ '):
             parameters['DOSfile'] = "'%s'" % parameters['DOSfile'].replace(
                 "'", "''")
 
     with open(filename, 'w') as file:
-
         for parameter, default in [
             ('T', 10.0), # temperature (K)
 
@@ -67,9 +66,20 @@ def run(executable='eb_local', filename='~temporary.in', **parameters):
 
             print >> file, parameters.get(parameter, default)
 
+def run(filename, executable='eb_local'):
     subprocess.call([executable, filename])
 
-    return load(filename.rsplit('.', 1)[0] + '.dat')
+def get(infile='~temporary.in', executable='eb_local', replace=True,
+    **parameters):
+
+    outfile = infile.rsplit('.', 1)[0] + '.dat'
+
+    if replace or not path.exists(outfile):
+        new(infile, **parameters)
+        run(infile, executable)
+
+    if path.exists(outfile):
+        return load(outfile)
 
 def squareDOS(e, t=0.25):
     return ellipk(1 - (0.25 * e / t) ** 2) / (2 * np.pi ** 2 * t)
@@ -109,5 +119,5 @@ def squareDOSfile(name='dos.in', eF=0.5, n=401, t=0.25):
 if __name__ == '__main__':
     np.set_printoptions(threshold=3, edgeitems=1)
 
-    for item in sorted(run().items()):
+    for item in sorted(get().items()):
         print '%14s = %s' % item
