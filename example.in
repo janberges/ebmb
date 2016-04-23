@@ -1,7 +1,8 @@
     10 K     temperature (critical if -1)
 
+ 0.001 K     valid error of critical temperature
+ 1.000 K     lower bound of critical temperature
  1e-10 eV    negligible gap
- 1e-10 K     error of critical temperature
 
   0.02 eV    Einstein frequency (*)
   1.00       electron-phonon coupling

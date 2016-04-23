@@ -16,8 +16,9 @@ module global
 
       logical :: critical ! find critical temperature?
 
+      real(dp) :: error ! valid error of critical temperature (eV)
+      real(dp) :: bound ! lower bound of critical temperature (eV)
       real(dp) :: small ! negligible gap (eV)
-      real(dp) :: error ! error of critical temperature (eV)
 
       real(dp) :: omegaE ! Einstein frequency (eV)
       real(dp) :: lambda ! electron-phonon coupling

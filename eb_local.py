@@ -42,8 +42,9 @@ def new(filename, **parameters):
         for parameter, default in [
             ('T', 10.0), # temperature (K)
 
+            ('error', 0.001), # valid error of critical temperature (K)
+            ('bound', 1.000), # lower bound of critical temperature (K)
             ('small', 1e-10), # negligible gap (eV)
-            ('error', 1e-10), # error of critical temperature (K)
 
             ('omegaE', 0.02), # Einstein frequency (eV)
             ('lambda', 1.00), # electron-phonon coupling

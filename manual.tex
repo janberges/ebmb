@@ -199,8 +199,9 @@
       \begin{tabular}{r @{\,} *2l}
          \verb|10| & K & temperature $T$ (critical if \verb|-1|) \\
          [\gap]
+         \verb|0.001| & K & valid error of critical temperature \\
+         \verb|1.000| & K & lower bound of critical temperature \\
          \verb|1e-10| & eV & negligible gap $\Delta(\I \omega_0)$ \\
-         \verb|1e-10| & K & error of critical temperature \\
          [\gap]
          \verb|0.02| & eV & \name{Einstein} frequency $\omega \sub E$ \\
          \verb|1.00| && electron-phonon coupling $\lambda$ \\
@@ -289,6 +290,7 @@
    \begin{table}[b]
       \centering
       \begin{tabular}{r l}
+         \verb|bound| & lower bound of critical temperature \\
          \verb|chi| & imaginary-axis energy shift $\chi(\I \omega_n)$ \\
          \verb|cutoff| & index of \name{Coulomb} cutoff frequency \\
          \verb|Delta| & imaginary-axis gap $\Delta(\I \omega_n)$ \\

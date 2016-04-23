@@ -36,7 +36,7 @@ contains
          upper = i%kT
       else
          do while (im%Delta(0) .le. i%small)
-            if (i%kT .le. i%error) return
+            if (i%kT .lt. i%bound) return
 
             upper = i%kT
 

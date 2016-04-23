@@ -28,10 +28,12 @@ contains
 
       i%kT = i%kT * kB / qe ! (eV)
 
+      read (unit, *) i%error ! valid error of critical temperature (K)
+      read (unit, *) i%bound ! lower bound of critical temperature (K)
       read (unit, *) i%small ! negligible gap (eV)
-      read (unit, *) i%error ! error of critical temperature (K)
 
       i%error = i%error * kB / qe ! (eV)
+      i%bound = i%bound * kB / qe ! (eV)
 
       read (unit, *) i%omegaE ! Einstein frequency (eV)
       read (unit, *) i%lambda ! Electron-phonon coupling
@@ -163,9 +165,13 @@ contains
          write (unit, "(F9.3, 2X, A, /)") i%kT * qe / kB, 'temperature (K)'
 
          if (i%critical) then
-            write (unit, '(ES9.1E3, 2X, A)') i%small, 'negligible gap (eV)'
-            write (unit, '(ES9.1E3, 2X, A, /)') i%error * qe / kB, &
-               'error of critical temperature (K)'
+            write (unit, '(ES9.1E3, 2X, A)') i%error * qe / kB, &
+               'valid error of critical temperature (K)'
+
+            write (unit, '(ES9.1E3, 2X, A)') i%bound * qe / kB, &
+               'lower bound of critical temperature (K)'
+
+            write (unit, '(ES9.1E3, 2X, A, /)') i%small, 'negligible gap (eV)'
          end if
 
          write (unit, '(F9.3, 2X, A)') i%omegaE, 'Einstein frequency (eV)'
@@ -252,8 +258,9 @@ contains
          write (unit) 'T:', i%kT * qe / kB
 
          if (i%critical) then
-            write (unit) 'small:', i%small
             write (unit) 'error:', i%error * qe / kB
+            write (unit) 'bound:', i%bound * qe / kB
+            write (unit) 'small:', i%small
          end if
 
          write (unit) 'omegaE:', i%omegaE
