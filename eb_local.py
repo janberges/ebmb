@@ -97,7 +97,10 @@ def squareDOSGauss(e, t=0.25, n=200, sigma=0.02, cutoff=None):
 
     return sum(np.exp(-(r / sigma) ** 2) / (np.sqrt(np.pi) * sigma)) / n ** 2
 
-def squareDOSfile(name='dos.in', eF=0.5, n=401, t=0.25):
+def squareDOSfile(name='dos.in', eF=0.5, n=401, t=0.25, replace=True):
+    if not replace and path.exists(name):
+        return
+
     if not n % 2:
         n += 1
 
