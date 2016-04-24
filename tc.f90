@@ -51,14 +51,14 @@ contains
       do
          i%kT = (lower + upper) / 2
 
-         if ((upper - lower) / 2 .le. i%error) exit
-
          call solve(i, im)
 
          if (im%Delta(0) .gt. i%small) then
             lower = i%kT
-         else
+         else if ((upper - lower) / 2 .gt. i%error) then
             upper = i%kT
+         else
+            exit
          end if
       end do
    end subroutine bisection
