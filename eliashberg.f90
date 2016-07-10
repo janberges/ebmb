@@ -16,24 +16,24 @@ contains
 
       real(dp) :: omegaC
 
-      im%u = ceiling((i%upper / (pi * i%kT) - 1) / 2)
-      im%l = ceiling((i%lower / (pi * i%kT) - 1) / 2)
+      im%u = ceiling((i%upper / (pi * i%T) - 1) / 2)
+      im%l = ceiling((i%lower / (pi * i%T) - 1) / 2)
 
       allocate(im%omega(0:im%u - 1))
 
       do n = 0, im%u - 1
-         im%omega(n) = (2 * n + 1) * pi * i%kT
+         im%omega(n) = (2 * n + 1) * pi * i%T
       end do
 
       allocate(im%lambda(1 - im%u:2 * im%u - 1))
 
       do n = 1 - im%u, 2 * im%u - 1
-         im%lambda(n) = i%lambda / (1 + (2 * n * pi * i%kT / i%omegaE) ** 2)
+         im%lambda(n) = i%lambda / (1 + (2 * n * pi * i%T / i%omegaE) ** 2)
       end do
 
       allocate(im%mu(0:im%u - 1))
 
-      omegaC = (2 * im%l + 1) * pi * i%kT
+      omegaC = (2 * im%l + 1) * pi * i%T
 
       im%muStar = i%muStar / (1 + i%muStar * log(i%omegaE / omegaC))
 
@@ -81,8 +81,8 @@ contains
                   * (im%lambda(n - m) + im%lambda(n + m + 1) + im%mu(m))
             end do
 
-            Z = 1 + pi * i%kT * Z / im%omega(n)
-            Delta = pi * i%kT * Delta / Z
+            Z = 1 + pi * i%T * Z / im%omega(n)
+            Delta = pi * i%T * Delta / Z
 
             if ((im%Z(n) .na. Z) .or. (im%Delta(n) .na. Delta)) done = .false.
 
@@ -100,7 +100,7 @@ contains
 
       if (im%Delta(0) .lt. 0) im%Delta = -im%Delta
 
-      im%phiC = pi * i%kT * sum(im%Delta / E * im%mu)
+      im%phiC = pi * i%T * sum(im%Delta / E * im%mu)
    end subroutine constantDOS
 
    subroutine variableDOS(i, im)
@@ -151,9 +151,9 @@ contains
                   * (im%lambda(n - m) + im%lambda(n + m + 1))
             end do
 
-            Z = 1 + Z * i%kT / im%omega(n)
-            phi = phi * i%kT
-            chi = chi * i%kT
+            Z = 1 + Z * i%T / im%omega(n)
+            phi = phi * i%T
+            chi = chi * i%T
 
             if ((im%Z(n) .na. Z) &
                .or. (im%phi(n) .na. phi) &
@@ -182,6 +182,6 @@ contains
 
       if (im%Delta(0) .lt. 0) im%Delta = -im%Delta
 
-      im%phiC = i%kT * sum(im%phi * A * im%mu)
+      im%phiC = i%T * sum(im%phi * A * im%mu)
    end subroutine variableDOS
 end module eliashberg

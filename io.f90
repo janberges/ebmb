@@ -7,6 +7,8 @@ module io
    private
    public :: load, store
 
+   real(dp), parameter :: k = 8.61733e-05_dp ! Boltzmann constant (eV/K)
+
    integer :: n, m
    integer, parameter :: unit = 11
 
@@ -22,18 +24,18 @@ contains
 
       open (unit, file=file, action='read', status='old')
 
-      read (unit, *) i%kT ! temperature (K)
+      read (unit, *) i%T ! temperature (K)
 
-      i%critical = i%kT .lt. 0 ! find critical temperature?
+      i%critical = i%T .lt. 0 ! find critical temperature?
 
-      i%kT = i%kT * kB / qe ! (eV)
+      i%T = k * i%T ! (eV)
 
       read (unit, *) i%error ! valid error of critical temperature (K)
       read (unit, *) i%bound ! lower bound of critical temperature (K)
       read (unit, *) i%small ! negligible gap (eV)
 
-      i%error = i%error * kB / qe ! (eV)
-      i%bound = i%bound * kB / qe ! (eV)
+      i%error = k * i%error ! (eV)
+      i%bound = k * i%bound ! (eV)
 
       read (unit, *) i%omegaE ! Einstein frequency (eV)
       read (unit, *) i%lambda ! Electron-phonon coupling
@@ -106,11 +108,11 @@ contains
       write (unit, '(/, ES23.14E3)') im%muStar
 
       write (unit, "(/, 'McMillan and Dynes'' critical temperature:')")
-      write (unit, "(/, ES23.14E3, ' K')") i%Tc
+      write (unit, "(/, ES23.14E3, ' K')") i%Tc / k
 
       if (i%critical) then
          write (unit, "(/, 'Eliashberg''s critical temperature:')")
-         write (unit, "(/, ES23.14E3, ' K')") i%kT * qe / kB
+         write (unit, "(/, ES23.14E3, ' K')") i%T / k
       end if
 
       write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") im%status
@@ -162,13 +164,13 @@ contains
       if (i%standalone) then
          write (unit, "(/, 'Parameters:', /)")
 
-         write (unit, "(F9.3, 2X, A, /)") i%kT * qe / kB, 'temperature (K)'
+         write (unit, "(F9.3, 2X, A, /)") i%T / k, 'temperature (K)'
 
          if (i%critical) then
-            write (unit, '(ES9.1E3, 2X, A)') i%error * qe / kB, &
+            write (unit, '(ES9.1E3, 2X, A)') i%error / k, &
                'valid error of critical temperature (K)'
 
-            write (unit, '(ES9.1E3, 2X, A)') i%bound * qe / kB, &
+            write (unit, '(ES9.1E3, 2X, A)') i%bound / k, &
                'lower bound of critical temperature (K)'
 
             write (unit, '(ES9.1E3, 2X, A, /)') i%small, 'negligible gap (eV)'
@@ -211,9 +213,9 @@ contains
       write (unit) 'REAL:DIM:', 0
 
       write (unit) 'mu*EB:', im%muStar
-      write (unit) 'TcMD:', i%Tc
+      write (unit) 'TcMD:', i%Tc / k
 
-      if (i%critical) write (unit) 'TcEB:', i%kT * qe / kB
+      if (i%critical) write (unit) 'TcEB:', i%T / k
 
       write (unit) 'INT:status:', im%status
 
@@ -255,11 +257,11 @@ contains
       if (i%standalone) then
          write (unit) 'DIM:', 0
 
-         write (unit) 'T:', i%kT * qe / kB
+         write (unit) 'T:', i%T / k
 
          if (i%critical) then
-            write (unit) 'error:', i%error * qe / kB
-            write (unit) 'bound:', i%bound * qe / kB
+            write (unit) 'error:', i%error / k
+            write (unit) 'bound:', i%bound / k
             write (unit) 'small:', i%small
          end if
 

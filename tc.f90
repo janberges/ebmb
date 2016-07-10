@@ -8,7 +8,7 @@ contains
    subroutine estimate(i)
       type(universal), intent(inout) :: i
 
-      i%Tc = qe / kB * i%omegaE / 1.2_dp * exp(-1.04_dp * (1 + i%lambda) &
+      i%Tc = i%omegaE / 1.2_dp * exp(-1.04_dp * (1 + i%lambda) &
          / (i%lambda - 0.62_dp * i%lambda * i%muStar - i%muStar))
    end subroutine estimate
 
@@ -20,43 +20,43 @@ contains
 
       real(dp) :: lower, upper
 
-      i%kT = i%Tc * kB / qe
+      i%T = i%Tc
 
       call solve(i, im)
 
       if (im%Delta(0) .gt. i%small) then
          do while (im%Delta(0) .gt. i%small)
-            lower = i%kT
+            lower = i%T
 
-            i%kT = i%kT * (1 + ratio)
+            i%T = i%T * (1 + ratio)
 
             call solve(i, im)
          end do
 
-         upper = i%kT
+         upper = i%T
       else
          do while (im%Delta(0) .le. i%small)
-            if (i%kT .lt. i%bound) return
+            if (i%T .lt. i%bound) return
 
-            upper = i%kT
+            upper = i%T
 
-            i%kT = i%kT * (1 - ratio)
+            i%T = i%T * (1 - ratio)
 
             call solve(i, im)
          end do
 
-         lower = i%kT
+         lower = i%T
       end if
 
       do
-         i%kT = (lower + upper) / 2
+         i%T = (lower + upper) / 2
 
          call solve(i, im)
 
          if (im%Delta(0) .gt. i%small) then
-            lower = i%kT
+            lower = i%T
          else if ((upper - lower) / 2 .gt. i%error) then
-            upper = i%kT
+            upper = i%T
          else
             exit
          end if
