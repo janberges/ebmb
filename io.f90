@@ -61,6 +61,8 @@ contains
       read (unit, *) i%form ! output format
       read (unit, *) i%standalone ! include parameters in output file?
 
+      read (unit, *) i%rescale ! rescale Coulomb pseudo-potential?
+
       read (unit, *) negligible_difference ! negligible float difference
 
       close (unit)

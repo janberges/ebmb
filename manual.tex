@@ -39,7 +39,7 @@
 \def\Im{\mathrm{Im}}
 
 \newlength\gap
-\setlength\gap{1ex}
+\setlength\gap{1mm}
 
 \let\vol\textbf
 \let\name\textsc
@@ -223,6 +223,8 @@
          \verb|both| && output format
             (\verb|text|, \verb|data| or \verb|both|) \\
          \verb|true| && include parameters in output file? \\
+         [\gap]
+         \verb|true| && rescale Coulomb pseudo-potential? \\
          [\gap]
          \verb|1e-15| & a.u. & negligible float difference
       \end{tabular}

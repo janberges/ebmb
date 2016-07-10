@@ -35,6 +35,8 @@ module global
       character(4) :: form ! output format
       logical :: standalone ! include parameters in output file?
 
+      logical :: rescale ! rescale Coulomb pseudo-potential?
+
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
       real(dp), allocatable :: density(:) ! density of Bloch states (a.u.)
       real(dp), allocatable :: weight(:) ! integration weight (eV)

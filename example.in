@@ -21,4 +21,6 @@
   both       output format (text, data or both)
   true       include parameters in output file?
 
+  true       rescale Coulomb pseudo-potential?
+
  1e-15 a.u.  negligible float difference

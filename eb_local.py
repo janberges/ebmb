@@ -63,6 +63,8 @@ def new(filename, **parameters):
             ('form', 'data'), # output format
             ('standalone', True), # include parameters in output file?
 
+            ('rescale', True), # rescale Coulomb pseudo-potential?
+
             ('epsilon', 1e-15)]: # negligible float difference
 
             print >> file, parameters.get(parameter, default)

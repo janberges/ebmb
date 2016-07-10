@@ -35,7 +35,11 @@ contains
 
       omegaC = (2 * im%l + 1) * pi * i%T
 
-      im%muStar = i%muStar / (1 + i%muStar * log(i%omegaE / omegaC))
+      if (i%rescale) then
+         im%muStar = i%muStar / (1 + i%muStar * log(i%omegaE / omegaC))
+      else
+         im%muStar = i%muStar
+      end if
 
       im%mu(:im%l - 1) = -2 * im%muStar
       im%mu(im%l:) = 0
