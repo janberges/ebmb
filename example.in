@@ -1,26 +1,26 @@
-    10 K     temperature (critical if -1)
+       10  temperature (K) [critical if -1]
 
- 0.001 K     valid error of critical temperature
- 1.000 K     lower bound of critical temperature
- 1e-10 eV    negligible gap
+    1e-03  valid error of critical temperature (K)
+    1e+00  lower bound of critical temperature (K)
+    1e-10  maximum gap at critical temperature (eV)
 
-  0.02 eV    Einstein frequency (*)
-  1.00       electron-phonon coupling
-  0.15       Coulomb pseudo-potential
+     0.02  Einstein frequency (eV)
+     1.00  electron-phonon coupling
+     0.15  Coulomb pseudo-potential
 
-  none       file with density of Bloch states (or 'none')
+     none  file with density of Bloch states [or 'none']
 
-    10 (*)   overall cutoff frequency
-    -1 (*)   Coulomb cutoff frequency (absent if -1)
+       10  overall cutoff (Einstein frequency)
+       -1  Coulomb cutoff (Einstein frequency) [or -1]
 
-100000       maximum number of fixed-point steps
+   100000  maximum number of fixed-point steps
 
-  true       find measurable gap?
-   300       real axis resolution
+     true  find measurable gap?
+      300  real axis resolution
 
-  both       output format (text, data or both)
-  true       include parameters in output file?
+     both  output format [text, data or both]
+     true  include parameters in output file?
 
-  true       rescale Coulomb pseudo-potential?
+     true  rescale Coulomb pseudo-potential?
 
- 1e-15 a.u.  negligible float difference
+    1e-15  negligible float difference

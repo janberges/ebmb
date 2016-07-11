@@ -44,7 +44,7 @@ def new(filename, **parameters):
 
             ('error', 0.001), # valid error of critical temperature (K)
             ('bound', 1.000), # lower bound of critical temperature (K)
-            ('small', 1e-10), # negligible gap (eV)
+            ('small', 1e-10), # maximum gap at critical temperature (eV)
 
             ('omegaE', 0.02), # Einstein frequency (eV)
             ('lambda', 1.00), # electron-phonon coupling
@@ -52,8 +52,8 @@ def new(filename, **parameters):
 
             ('DOSfile', 'none'), # file with density of states
 
-            ('upper', 10.0), # overall cutoff frequency (eV)
-            ('lower', -1.0), # Coulomb cutoff frequency (eV)
+            ('upper', 10.0), # overall cutoff (Einstein frequency)
+            ('lower', -1.0), # Coulomb cutoff (Einstein frequency)
 
             ('limit', 100000), # maximum number of fixed-point steps
 

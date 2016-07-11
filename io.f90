@@ -32,7 +32,7 @@ contains
 
       read (unit, *) i%error ! valid error of critical temperature (K)
       read (unit, *) i%bound ! lower bound of critical temperature (K)
-      read (unit, *) i%small ! negligible gap (eV)
+      read (unit, *) i%small ! maximum gap at critical temperature (eV)
 
       i%error = k * i%error ! (eV)
       i%bound = k * i%bound ! (eV)
@@ -45,8 +45,8 @@ contains
 
       i%DOS = DOSfile .ne. 'none' ! consider full density of states?
 
-      read (unit, *) i%upper ! general cutoff frequency (omegaE)
-      read (unit, *) i%lower ! Coulomb cutoff frequency (omegaE)
+      read (unit, *) i%upper ! general cutoff (Einstein frequency)
+      read (unit, *) i%lower ! Coulomb cutoff (Einstein frequency)
 
       if (i%lower .lt. 0) i%lower = i%upper
 
@@ -169,18 +169,18 @@ contains
          write (unit, "(F9.3, 2X, A, /)") i%T / k, 'temperature (K)'
 
          if (i%critical) then
-            write (unit, '(ES9.1E3, 2X, A)') i%error / k, &
-               'valid error of critical temperature (K)'
-
-            write (unit, '(ES9.1E3, 2X, A)') i%bound / k, &
-               'lower bound of critical temperature (K)'
-
-            write (unit, '(ES9.1E3, 2X, A, /)') i%small, 'negligible gap (eV)'
+            write (unit, '(ES9.1E3, 2X, A)') &
+               i%error / k, 'valid error of critical temperature (K)', &
+               i%bound / k, 'lower bound of critical temperature (K)', &
+               i%small,     'maximum gap at critical temperature (eV)'
+            write (unit, *)
          end if
 
-         write (unit, '(F9.3, 2X, A)') i%omegaE, 'Einstein frequency (eV)'
-         write (unit, '(F9.3, 2X, A)') i%lambda, 'electron-phonon coupling'
-         write (unit, '(F9.3, 2X, A, /)') i%muStar, 'Coulomb pseudo-potential'
+         write (unit, '(F9.3, 2X, A)') &
+            i%omegaE, 'Einstein frequency (eV)', &
+            i%lambda, 'electron-phonon coupling', &
+            i%muStar, 'Coulomb pseudo-potential'
+         write (unit, *)
 
          if (im%l .lt. im%u) write (unit, '(I9, 2X, A)') im%l, &
             'index of Coulomb cutoff frequency'

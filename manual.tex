@@ -199,9 +199,9 @@
       \begin{tabular}{r @{\,} *2l}
          \verb|10| & K & temperature $T$ (critical if \verb|-1|) \\
          [\gap]
-         \verb|0.001| & K & valid error of critical temperature \\
-         \verb|1.000| & K & lower bound of critical temperature \\
-         \verb|1e-10| & eV & negligible gap $\Delta(\I \omega_0)$ \\
+         \verb|1e-03| & K & valid error of critical temperature \\
+         \verb|1e+00| & K & lower bound of critical temperature \\
+         \verb|1e-10| & eV & maximum gap at critical temperature \\
          [\gap]
          \verb|0.02| & eV & \name{Einstein} frequency $\omega \sub E$ \\
          \verb|1.00| && electron-phonon coupling $\lambda$ \\
@@ -210,10 +210,8 @@
          \verb|none| && file with density of \name{Bloch} states $n(\epsilon)$
             (or \verb|none|) \\
          [\gap]
-         \verb|10| & $\omega \sub E$
-            & overall cutoff frequency $\omega \sub c$\\
-         \verb|-1| & $\omega \sub E$
-            & \name{Coulomb} cutoff frequency (absent if \verb|-1|) \\
+         \verb|10| & $\omega \sub E$ & overall cutoff $\omega \sub c$ \\
+         \verb|-1| & $\omega \sub E$ & \name{Coulomb} cutoff (or \verb|-1|) \\
          [\gap]
          \verb|100000| && maximum number of fixed-point steps \\
          [\gap]

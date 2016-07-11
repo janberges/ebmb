@@ -16,7 +16,7 @@ module global
 
       real(dp) :: error ! valid error of critical temperature (eV)
       real(dp) :: bound ! lower bound of critical temperature (eV)
-      real(dp) :: small ! negligible gap (eV)
+      real(dp) :: small ! maximum gap at critical temperature (eV)
 
       real(dp) :: omegaE ! Einstein frequency (eV)
       real(dp) :: lambda ! electron-phonon coupling
@@ -24,8 +24,8 @@ module global
 
       logical :: DOS ! consider full density of states?
 
-      real(dp) :: upper ! overall cutoff frequency (eV)
-      real(dp) :: lower ! Coulomb cutoff frequency (eV)
+      real(dp) :: upper ! overall cutoff (eV)
+      real(dp) :: lower ! Coulomb cutoff (eV)
 
       integer :: limit ! maximum number of fixed-point steps
 
