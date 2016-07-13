@@ -45,9 +45,6 @@ module global
    type matsubara
       real(dp) :: muStar ! rescaled Coulomb pseudo-potential
 
-      real(dp), allocatable :: lambda(:) ! electron-phonon coupling
-      real(dp), allocatable :: mu(:) ! Coulomb pseudo-potential
-
       integer :: status ! convergence status
 
       integer :: u ! index of overall cutoff frequency
