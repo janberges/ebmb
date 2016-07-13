@@ -63,10 +63,7 @@ contains
          allocate(trapezoids(size(i%energy)))
 
          do n = 0, im%u - 1
-            trapezoids(:) = i%weight / (im%omega(n) ** 2 + i%energy ** 2 + 1)
-
-            A(n) = sum(trapezoids)
-            B(n) = sum(trapezoids * i%energy)
+            call integrate(n)
          end do
 
          do step = 1, i%limit
@@ -101,11 +98,7 @@ contains
                im%phi(n) = phi
                im%chi(n) = chi
 
-               trapezoids(:) = i%weight &
-                  / ((im%omega(n) * Z) ** 2 + (i%energy + chi) ** 2 + phi ** 2)
-
-               A(n) = sum(trapezoids)
-               B(n) = sum(trapezoids * i%energy)
+               call integrate(n)
             end do
 
             if (done) then
@@ -122,7 +115,7 @@ contains
       else
          im%Delta(:) = 1
 
-         A(:) = 1 / sqrt(1 + im%omega ** 2)
+         A(:) = 1 / sqrt(im%omega ** 2 + im%Delta ** 2)
 
          do step = 1, i%limit
             done = .true.
@@ -162,5 +155,18 @@ contains
 
          im%phiC = pi * i%T * sum(im%Delta * A * mu)
       end if
+
+   contains
+
+      subroutine integrate(n)
+         integer, intent(in) :: n
+
+         trapezoids(:) = i%weight / ((im%omega(n) * im%Z(n)) ** 2 &
+            + (i%energy + im%chi(n)) ** 2 + im%phi(n) ** 2)
+
+         A(n) = sum(trapezoids)
+         B(n) = sum(trapezoids * i%energy)
+      end subroutine integrate
+
    end subroutine solve
 end module eliashberg
