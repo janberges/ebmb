@@ -92,10 +92,10 @@ contains
                phi = phi * i%T
                chi = chi * i%T
 
-               if ((im%Z(n) .na. Z) &
-                  .or. (im%phi(n) .na. phi) &
-                  .or. (im%chi(n) .na. chi)) &
-                  done = .false.
+               done = done &
+                  .and. (im%Z(n) .ap. Z) &
+                  .and. (im%phi(n) .ap. phi) &
+                  .and. (im%chi(n) .ap. chi)
 
                im%Z(n) = Z
                im%phi(n) = phi
@@ -142,8 +142,9 @@ contains
                Z = 1 + pi * i%T * Z / im%omega(n)
                Delta = pi * i%T * Delta / Z
 
-               if ((im%Z(n) .na. Z) .or. (im%Delta(n) .na. Delta)) &
-                  done = .false.
+               done = done &
+                  .and. (im%Z(n) .ap. Z) &
+                  .and. (im%Delta(n) .ap. Delta)
 
                im%Z(n) = Z
                im%Delta(n) = Delta
