@@ -10,7 +10,10 @@ module global
       character(:), allocatable :: name
 
       real(dp) :: T ! temperature (eV)
-      real(dp) :: Tc ! McMillan's critical temperature (eV)
+
+      real(dp) :: TcMD ! McMillan's critical temperature (eV)
+
+      real(dp), allocatable :: TcEB(:) ! Eliashberg's critical temperature (eV)
 
       logical :: critical ! find critical temperature?
 
@@ -18,9 +21,12 @@ module global
       real(dp) :: bound ! lower bound of critical temperature (eV)
       real(dp) :: small ! maximum gap at critical temperature (eV)
 
+      integer :: bands ! number of electronic bands
+
       real(dp) :: omegaE ! Einstein frequency (eV)
-      real(dp) :: lambda ! electron-phonon coupling
-      real(dp) :: muStar ! Coulomb pseudo-potential
+
+      real(dp), allocatable :: lambda(:, :) ! electron-phonon coupling
+      real(dp), allocatable :: muStar(:, :) ! Coulomb pseudo-potential
 
       logical :: DOS ! consider full density of states?
 
@@ -33,17 +39,18 @@ module global
       integer :: resolution ! real axis resolution
 
       character(4) :: form ! output format
-      logical :: standalone ! include parameters in output file?
+      character(9) :: edit ! number format
 
+      logical :: standalone ! include parameters in output file?
       logical :: rescale ! rescale Coulomb pseudo-potential?
 
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
-      real(dp), allocatable :: density(:) ! density of Bloch states (a.u.)
-      real(dp), allocatable :: weight(:) ! integration weight (eV)
+      real(dp), allocatable :: density(:, :) ! density of Bloch states (a.u.)
+      real(dp), allocatable :: weight(:, :) ! integration weight (eV)
    end type universal
 
    type matsubara
-      real(dp) :: muStar ! rescaled Coulomb pseudo-potential
+      real(dp), allocatable :: muStar(:, :) ! rescaled Coulomb pseudo-potential
 
       integer :: status ! convergence status
 
@@ -51,22 +58,22 @@ module global
       integer :: l ! index of Coulomb cutoff frequency
 
       real(dp), allocatable :: omega(:) ! frequency (eV)
-      real(dp), allocatable :: Delta(:) ! gap (eV)
-      real(dp), allocatable :: phi(:) ! order parameter (eV)
-      real(dp), allocatable :: chi(:) ! energy shift (eV)
-      real(dp), allocatable :: Z(:) ! renormalization
+      real(dp), allocatable :: Delta(:, :) ! gap (eV)
+      real(dp), allocatable :: phi(:, :) ! order parameter (eV)
+      real(dp), allocatable :: chi(:, :) ! energy shift (eV)
+      real(dp), allocatable :: Z(:, :) ! renormalization
 
-      real(dp) :: phiC ! constant Coulomb contribution (eV)
+      real(dp), allocatable :: phiC(:) ! constant Coulomb contribution (eV)
    end type matsubara
 
    type continued
       real(dp), allocatable :: omega(:) ! frequency (eV)
-      complex(dp), allocatable :: Delta(:) ! gap (eV)
-      complex(dp), allocatable :: chi(:) ! energy shift (eV)
-      complex(dp), allocatable :: Z(:) ! renormalization
+      complex(dp), allocatable :: Delta(:, :) ! gap (eV)
+      complex(dp), allocatable :: chi(:, :) ! energy shift (eV)
+      complex(dp), allocatable :: Z(:, :) ! renormalization
 
-      real(dp) :: Delta0 ! measurable gap (eV)
-      integer :: status ! convergence status
+      real(dp), allocatable :: Delta0(:) ! measurable gap (eV)
+      integer, allocatable :: status(:) ! convergence status
    end type continued
 
    real(dp) :: negligible_difference = 1e-15_dp

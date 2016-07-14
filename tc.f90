@@ -8,8 +8,13 @@ contains
    subroutine estimate(i)
       type(universal), intent(inout) :: i
 
-      i%Tc = i%omegaE / 1.2_dp * exp(-1.04_dp * (1 + i%lambda) &
-         / (i%lambda - 0.62_dp * i%lambda * i%muStar - i%muStar))
+      real(dp) :: lambda, muStar
+
+      lambda = sqrt(sum(i%lambda ** 2))
+      muStar = sqrt(sum(i%muStar ** 2))
+
+      i%TcMD = i%omegaE / 1.2_dp * exp(-1.04_dp * (1 + lambda) &
+         / (lambda - 0.62_dp * lambda * muStar - muStar))
    end subroutine estimate
 
    subroutine bisection(i, im)
@@ -18,48 +23,58 @@ contains
 
       real(dp), parameter :: ratio = 0.1_dp
 
-      real(dp) :: lower, upper
+      integer :: p, q
+      real(dp) :: lower(i%bands), upper(i%bands)
 
-      i%T = i%Tc
+      allocate(i%TcEB(i%bands))
 
-      call solve(i, im)
+      lower(:) = -1
+      upper(:) = -1
 
-      if (im%Delta(0) .gt. i%small) then
-         do while (im%Delta(0) .gt. i%small)
-            lower = i%T
+      i%T = i%TcMD
+      call bounds
 
-            i%T = i%T * (1 + ratio)
+      do p = 1, i%bands
+         i%T = upper(p)
 
-            call solve(i, im)
-         end do
-
-         upper = i%T
-      else
-         do while (im%Delta(0) .le. i%small)
-            if (i%T .lt. i%bound) return
-
-            upper = i%T
-
+         do while (lower(p) .lt. 0)
             i%T = i%T * (1 - ratio)
-
-            call solve(i, im)
+            call bounds
          end do
 
-         lower = i%T
-      end if
+         i%T = lower(p)
 
-      do
-         i%T = (lower + upper) / 2
+         do while (upper(p) .lt. 0)
+            i%T = i%T * (1 + ratio)
+            call bounds
+         end do
 
+         do
+            i%T = (lower(p) + upper(p)) / 2
+            call bounds
+
+            if (abs(im%Delta(0, p)) .le. i%small .and. &
+               (upper(p) - lower(p)) / 2 .le. i%error) then
+
+               i%TcEB(p) = i%T
+               exit
+            end if
+         end do
+      end do
+
+   contains
+
+      subroutine bounds
          call solve(i, im)
 
-         if (im%Delta(0) .gt. i%small) then
-            lower = i%T
-         else if ((upper - lower) / 2 .gt. i%error) then
-            upper = i%T
-         else
-            exit
-         end if
-      end do
+         do q = 1, i%bands
+            if (abs(im%Delta(0, q)) .le. i%small) then
+               if (upper(q) .gt. i%T .or. upper(q) .lt. 0) upper(q) = i%T
+            else
+               if (lower(q) .lt. i%T .or. lower(q) .lt. 0) lower(q) = i%T
+            end if
+         end do
+      end subroutine bounds
+
    end subroutine bisection
 end module tc

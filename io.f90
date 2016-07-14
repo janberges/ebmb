@@ -9,7 +9,7 @@ module io
 
    real(dp), parameter :: k = 8.61733e-05_dp ! Boltzmann constant (eV/K)
 
-   integer :: n, m
+   integer :: p, n, m
    integer, parameter :: unit = 11
 
 contains
@@ -37,9 +37,20 @@ contains
       i%error = k * i%error ! (eV)
       i%bound = k * i%bound ! (eV)
 
+      read (unit, *) i%bands ! number of electronic bands
+
       read (unit, *) i%omegaE ! Einstein frequency (eV)
-      read (unit, *) i%lambda ! Electron-phonon coupling
-      read (unit, *) i%muStar ! Coulomb pseudo-potential
+
+      allocate(i%lambda(i%bands, i%bands))
+      allocate(i%muStar(i%bands, i%bands))
+
+      do p = 1, i%bands
+         read (unit, *) i%lambda(:, p) ! Electron-phonon coupling
+      end do
+
+      do p = 1, i%bands
+         read (unit, *) i%muStar(:, p) ! Coulomb pseudo-potential
+      end do
 
       read (unit, *) DOSfile ! file with density of states
 
@@ -58,9 +69,15 @@ contains
       read (unit, *) i%measurable ! find measurable gap?
       read (unit, *) i%resolution ! real axis resolution
 
-      read (unit, *) i%form ! output format
-      read (unit, *) i%standalone ! include parameters in output file?
+      if (i%critical) then
+         i%measurable = .false.
+         i%resolution = 0
+      end if
 
+      read (unit, *) i%form ! output format
+      read (unit, *) i%edit ! number format
+
+      read (unit, *) i%standalone ! include parameters in output file?
       read (unit, *) i%rescale ! rescale Coulomb pseudo-potential?
 
       read (unit, *) negligible_difference ! negligible float difference
@@ -73,20 +90,26 @@ contains
          read (unit, *) n ! density-of-states resolution
 
          allocate(i%energy(n)) ! free-electron energy (eV)
-         allocate(i%density(n)) ! density of states (a.u.)
-         allocate(i%weight(n)) ! integration weight (eV)
+         allocate(i%density(n, i%bands)) ! density of states (a.u.)
+         allocate(i%weight(n, i%bands)) ! integration weight (eV)
 
          do m = 1, n
-            read(unit, *) i%energy(m), i%density(m)
+            read(unit, *) i%energy(m), i%density(m, :)
          end do
 
          close (unit)
 
-         call differential(i%energy, i%weight)
+         call differential(i%energy, i%weight(:, 1))
+
+         do p = 2, i%bands
+            i%weight(:, p) = i%weight(:, 1)
+         end do
 
          n = minloc(abs(i%energy), 1) ! index of Fermi level
 
-         i%weight = i%weight * i%density / i%density(n)
+         do p = 1, i%bands
+            i%weight(:, p) = i%weight(:, p) * i%density(:, p) / i%density(n, p)
+         end do
       end if
    end subroutine load
 
@@ -104,104 +127,168 @@ contains
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
 
+      character(20) :: float, count, matrix, head, body
+
+      character(100) :: test
+      integer :: width
+
+      write (test, "(" // i%edit // ", '|')") pi
+      width = index(test, '|') - 1
+
+      write (float, "('(', A, ')')") i%edit
+      write (count, "('(I', I0, ')')") width
+      write (matrix, "('(', I0, A, ')')") i%bands, i%edit
+      write (head, "('(7A', I0, ')')") width
+      write (body, "('(7', A, ')')") i%edit
+
       open (unit, file=i%name // '.out', action='write', status='replace')
 
-      write (unit, "('Rescaled Coulomb pseudo-potential:')")
-      write (unit, '(/, ES23.14E3)') im%muStar
-
-      write (unit, "(/, 'McMillan and Dynes'' critical temperature:')")
-      write (unit, "(/, ES23.14E3, ' K')") i%Tc / k
+      write (unit, "('McMillan and Dynes'' critical temperature (K):', /)")
+      write (unit, float) i%TcMD / k
 
       if (i%critical) then
-         write (unit, "(/, 'Eliashberg''s critical temperature:')")
-         write (unit, "(/, ES23.14E3, ' K')") i%T / k
-      end if
-
-      write (unit, "(/, 'Imaginary-axis solution (', I0, '):')") im%status
-
-      if (i%DOS) then
-         write (unit, '(/, 4A23)') 'omega/eV', 'Z', 'chi/eV', 'Delta/eV'
-
-         do n = 0, im%u - 1
-            write (unit, '(4ES23.14E3)') &
-               im%omega(n), im%Z(n), im%chi(n), im%Delta(n)
-         end do
+         write (unit, "(/, 'Eliashberg''s critical temperature (K):', /)")
+         write (unit, float) i%TcEB / k
       else
-         write (unit, '(/, 3A23)') 'omega/eV', 'Z', 'Delta/eV'
-
-         do n = 0, im%u - 1
-            write (unit, '(3ES23.14E3)') im%omega(n), im%Z(n), im%Delta(n)
-         end do
-      end if
-
-      write (unit, '(/, A23)') 'phiC/eV'
-      write (unit, '(ES23.14E3)') im%phiC
-
-      if (i%measurable) then
-         write (unit, "(/, 'Measurable gap (', I0, '):')") re%status
-         write (unit, "(/, ES15.6E3, ' eV')") re%Delta0
-      end if
-
-      if (i%resolution .gt. 0) then
-         write (unit, "(/, 'Real-axis solution:')")
+         write (unit, "(/, 'imaginary-axis solution [', I0, ']:', /)") im%status
 
          if (i%DOS) then
-            write (unit, '(/, 7A15)') 'omega/eV', 'Re[Z]', 'Im[Z]', &
-               'Re[chi]', 'Im[chi]', 'Re[Delta]/eV', 'Im[Delta]/eV'
+            write (unit, head) 'omega/eV', 'Z', 'Delta/eV', 'chi/eV'
 
-            do n = 1, i%resolution
-               write (unit, '(7ES15.6E3)') &
-                  re%omega(n), re%Z(n), re%chi(n), re%Delta(n)
+            do p = 1, i%bands
+               call rule(4)
+
+               do n = 0, im%u - 1
+                  write (unit, body) &
+                     im%omega(n), im%Z(n, p), im%Delta(n, p), im%chi(n, p)
+               end do
             end do
          else
-            write (unit, '(/, 5A15)') &
-               'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
+            write (unit, head) 'omega/eV', 'Z', 'Delta/eV'
 
-            do n = 1, i%resolution
-               write (unit, '(5ES15.6E3)') re%omega(n), re%Z(n), re%Delta(n)
+            do p = 1, i%bands
+               call rule(3)
+
+               do n = 0, im%u - 1
+                  write (unit, body) &
+                     im%omega(n), im%Z(n, p), im%Delta(n, p)
+               end do
             end do
+         end if
+
+         write (unit, "(/, 'constant Coulomb contribution (eV):', /)")
+         write (unit, float) im%phiC
+
+         if (i%measurable) then
+            write (unit, "(/, 'measurable gap (eV):', /)")
+
+            do p = 1, i%bands
+               write (unit, float, advance='no') re%Delta0(p)
+               write (unit, "(' [', I0, ']')") re%status(p)
+            end do
+         end if
+
+         if (i%resolution .gt. 0) then
+            write (unit, "(/, 'real-axis solution:', /)")
+
+            if (i%DOS) then
+               write (unit, head) 'omega/eV', 'Re[Z]', 'Im[Z]', &
+                  'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]', 'Im[chi]'
+
+               do p = 1, i%bands
+                  call rule(7)
+
+                  do n = 1, i%resolution
+                     write (unit, body) &
+                        re%omega(n), re%Z(n, p), re%Delta(n, p), re%chi(n, p)
+                  end do
+               end do
+            else
+               write (unit, head) &
+                  'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
+
+               do p = 1, i%bands
+                  call rule(5)
+
+                  do n = 1, i%resolution
+                     write (unit, body) &
+                        re%omega(n), re%Z(n, p), re%Delta(n, p)
+                  end do
+               end do
+            end if
          end if
       end if
 
       if (i%standalone) then
-         write (unit, "(/, 'Parameters:', /)")
-
-         write (unit, "(F9.3, 2X, A, /)") i%T / k, 'temperature (K)'
-
          if (i%critical) then
-            write (unit, '(ES9.1E3, 2X, A)') &
-               i%error / k, 'valid error of critical temperature (K)', &
-               i%bound / k, 'lower bound of critical temperature (K)', &
-               i%small,     'maximum gap at critical temperature (eV)'
-            write (unit, *)
+            write (unit, "(/, 'valid error of critical temperature (K)', /)")
+            write (unit, float) i%error / k
+
+            write (unit, "(/, 'lower bound of critical temperature (K)', /)")
+            write (unit, float) i%bound / k
+
+            write (unit, "(/, 'maximum gap at critical temperature (eV)', /)")
+            write (unit, float) i%small
+         else
+            write (unit, "(/, 'temperature (K):', /)")
+            write (unit, float) i%T / k
          end if
 
-         write (unit, '(F9.3, 2X, A)') &
-            i%omegaE, 'Einstein frequency (eV)', &
-            i%lambda, 'electron-phonon coupling', &
-            i%muStar, 'Coulomb pseudo-potential'
-         write (unit, *)
+         write (unit, "(/, 'number of electronic bands:', /)")
+         write (unit, count) i%bands
 
-         if (im%l .lt. im%u) write (unit, '(I9, 2X, A)') im%l, &
-            'index of Coulomb cutoff frequency'
+         write (unit, "(/, 'Einstein frequency (eV):', /)")
+         write (unit, float) i%omegaE
 
-         write (unit, '(I9, 2X, A, /)') i%limit, &
-            'maximum number of fixed-point steps'
+         write (unit, "(/, 'electron-phonon coupling:', /)")
+         write (unit, matrix) i%lambda
 
-         write (unit, '(ES9.1E3, 2X, A)') negligible_difference, &
-            'negligible float difference (a.u.)'
+         write (unit, "(/, 'Coulomb pseudo-potential:', /)")
+         write (unit, matrix) i%muStar
+      end if
+
+      if (.not. i%critical) then
+         write (unit, "(/, 'rescaled Coulomb pseudo-potential:', /)")
+         write (unit, matrix) im%muStar
+      end if
+
+      if (i%standalone) then
+         write (unit, "(/, 'overall cutoff (eV):', /)")
+         write (unit, float) i%upper
+
+         if (i%lower .lt. i%upper) then
+            write (unit, "(/, 'Coulomb cutoff (eV):', /)")
+            write (unit, float) i%lower
+         end if
+
+         write (unit, "(/, 'maximum number of fixed-point steps:', /)")
+         write (unit, count) i%limit
+
+         write (unit, "(/, 'negligible float difference (a.u.):', /)")
+         write (unit, float) negligible_difference
 
          if (i%DOS) then
-            write (unit, "(/, 'Density of Bloch states:')")
-            write (unit, '(/, 2A23)') 'E/eV', 'DOS/a.u.'
+            write (unit, "(/, 'density of Bloch states:', /)")
+            write (unit, head) 'E/eV', 'DOS/a.u.'
+
+            call rule(i%bands + 1)
 
             do n = 1, size(i%energy)
-               write (unit, '(2ES23.14E3)') i%energy(n), i%density(n)
+               write (unit, body) i%energy(n), i%density(n, :)
             end do
          end if
       end if
 
       close (unit)
+
+   contains
+
+      subroutine rule(n)
+         integer, intent(in) :: n
+
+         write (unit, '(A)') repeat('~', n * width)
+      end subroutine rule
+
    end subroutine store_text
 
    subroutine store_data(i, im, re)
@@ -213,76 +300,98 @@ contains
          form='unformatted', access='stream')
 
       write (unit) 'REAL:DIM:', 0
+      write (unit) 'TcMD:', i%TcMD / k
 
-      write (unit) 'mu*EB:', im%muStar
-      write (unit) 'TcMD:', i%Tc / k
+      if (i%critical) then
+         if (i%bands .gt. 1) write (unit) 'DIM:', 1, i%bands
 
-      if (i%critical) write (unit) 'TcEB:', i%T / k
+         write (unit) 'TcEB:', i%TcEB / k
+      else
+         write (unit) 'INT:DIM:', 0
+         write (unit) 'status:', im%status
 
-      write (unit) 'INT:status:', im%status
+         write (unit) 'REAL:DIM:', 1, im%u
+         write (unit) 'iomega:', im%omega
 
-      write (unit) 'REAL:DIM:', 1, im%u
+         if (i%bands .gt. 1) write (unit) 'DIM:', 2, i%bands, im%u
 
-      write (unit) 'iomega:', im%omega
-      write (unit) 'Z:', im%Z
+         write (unit) 'Z:', im%Z
+         write (unit) 'Delta:', im%Delta
 
-      if (i%DOS) write (unit) 'chi:', im%chi
+         if (i%DOS) write (unit) 'chi:', im%chi
 
-      write (unit) 'Delta:', im%Delta
+         write (unit) 'DIM:'
 
-      write (unit) 'DIM:', 0
-
-      write (unit) 'phiC:', im%phiC
-
-      if (i%measurable) then
-         write (unit) 'INT:status0:', re%status
-         write (unit) 'REAL:Delta0:', re%Delta0
-      end if
-
-      if (i%resolution .gt. 0) then
-         write (unit) 'DIM:', 1, i%resolution
-
-         write (unit) 'omega:', re%omega
-
-         write (unit) 'Re[Z]:', real(re%Z)
-         write (unit) 'Im[Z]:', aimag(re%Z)
-
-         if (i%DOS) then
-            write (unit) 'Re[chi]:', real(re%chi)
-            write (unit) 'Im[chi]:', aimag(re%chi)
+         if (i%bands .gt. 1) then
+            write (unit) 1, i%bands
+         else
+            write (unit) 0
          end if
 
-         write (unit) 'Re[Delta]:', real(re%Delta)
-         write (unit) 'Im[Delta]:', aimag(re%Delta)
+         write (unit) 'phiC:', im%phiC
+
+         if (i%measurable) then
+            write (unit) 'INT:status0:', re%status
+            write (unit) 'REAL:Delta0:', re%Delta0
+         end if
+
+         if (i%resolution .gt. 0) then
+            write (unit) 'DIM:', 1, i%resolution
+
+            write (unit) 'omega:', re%omega
+
+            if (i%bands .gt. 1) write (unit) 'DIM:', 2, i%bands, i%resolution
+
+            write (unit) 'Re[Z]:', real(re%Z)
+            write (unit) 'Im[Z]:', aimag(re%Z)
+
+            write (unit) 'Re[Delta]:', real(re%Delta)
+            write (unit) 'Im[Delta]:', aimag(re%Delta)
+
+            if (i%DOS) then
+               write (unit) 'Re[chi]:', real(re%chi)
+               write (unit) 'Im[chi]:', aimag(re%chi)
+            end if
+         end if
       end if
 
       if (i%standalone) then
          write (unit) 'DIM:', 0
 
-         write (unit) 'T:', i%T / k
-
          if (i%critical) then
             write (unit) 'error:', i%error / k
             write (unit) 'bound:', i%bound / k
             write (unit) 'small:', i%small
+         else
+            write (unit) 'T:', i%T / k
          end if
 
-         write (unit) 'omegaE:', i%omegaE
+         write (unit) 'INT:bands:', i%bands
+         write (unit) 'REAL:omegaE:', i%omegaE
+
+         if (i%bands .gt. 1) write (unit) 'DIM:', 2, i%bands, i%bands
+
          write (unit) 'lambda:', i%lambda
          write (unit) 'mu*MD:', i%muStar
+      end if
 
-         write (unit) 'INT:'
+      if (.not. i%critical) write (unit) 'mu*EB:', im%muStar
 
-         if (im%l .lt. im%u) write (unit) 'cutoff:', im%l
+      if (i%standalone) then
+         write (unit) 'DIM:', 0
+         write (unit) 'upper:', i%upper
 
-         write (unit) 'limit:', i%limit
+         if (i%lower .lt. i%upper) write (unit) 'lower:', i%lower
 
+         write (unit) 'INT:limit:', i%limit
          write (unit) 'REAL:epsilon:', negligible_difference
 
          if (i%DOS) then
             write (unit) 'DIM:', 1, size(i%energy)
-
             write (unit) 'energy:', i%energy
+
+            if (i%bands .gt. 1) write (unit) 'DIM:', 2, i%bands, size(i%energy)
+
             write (unit) 'density:', i%density
          end if
       end if

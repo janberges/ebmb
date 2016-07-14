@@ -11,56 +11,64 @@ contains
       type(matsubara), intent(in) :: im
       type(continued), intent(out) :: re
 
-      integer :: n
+      integer :: p, n
       real(dp) :: Delta0
 
-      if (i%measurable .or. i%resolution .gt. 0) then
-         call coefficients(im%omega, im%Delta)
-      end if
-
       if (i%measurable) then
-         re%Delta0 = 1
-         re%status = -1
-
-         do n = 1, i%limit
-            Delta0 = real(continuation(re%Delta0), dp)
-
-            if (re%Delta0 .ap. Delta0) re%status = n
-
-            re%Delta0 = Delta0
-
-            if (n .eq. re%status) exit
-         end do
+         allocate(re%Delta0(i%bands))
+         allocate(re%status(i%bands))
       end if
 
       if (i%resolution .gt. 0) then
          allocate(re%omega(i%resolution))
+         allocate(re%Delta(i%resolution, i%bands))
+         allocate(re%Z(i%resolution, i%bands))
 
-         call interval(re%omega, 0.0_dp, i%upper, lower=.true., upper=.false.)
+         if (i%DOS) allocate(re%chi(i%resolution, i%bands))
+      end if
 
-         allocate(re%Delta(i%resolution))
+      if (i%measurable .or. i%resolution .gt. 0) then
+         do p = 1, i%bands
+            call coefficients(im%omega, im%Delta(:, p))
 
-         do n = 1, i%resolution
-            re%Delta(n) = continuation(re%omega(n))
+            if (i%measurable) then
+               re%Delta0(p) = 1
+               re%status(p) = -1
+
+               do n = 1, i%limit
+                  Delta0 = real(continuation(re%Delta0(p)), dp)
+
+                  if (re%Delta0(p) .ap. Delta0) re%status(p) = n
+
+                  re%Delta0(p) = Delta0
+
+                  if (n .eq. re%status(p)) exit
+               end do
+            end if
+
+            if (i%resolution .gt. 0) then
+               call interval(re%omega, 0.0_dp, i%upper, &
+                  lower=.true., upper=.false.)
+
+               do n = 1, i%resolution
+                  re%Delta(n, p) = continuation(re%omega(n))
+               end do
+
+               call coefficients(im%omega, im%Z(:, p))
+
+               do n = 1, i%resolution
+                  re%Z(n, p) = continuation(re%omega(n))
+               end do
+
+               if (i%DOS) then
+                  call coefficients(im%omega, im%chi(:, p))
+
+                  do n = 1, i%resolution
+                     re%chi(n, p) = continuation(re%omega(n))
+                  end do
+               end if
+            end if
          end do
-
-         call coefficients(im%omega, im%Z)
-
-         allocate(re%Z(i%resolution))
-
-         do n = 1, i%resolution
-            re%Z(n) = continuation(re%omega(n))
-         end do
-
-         if (i%DOS) then
-            call coefficients(im%omega, im%chi)
-
-            allocate(re%chi(i%resolution))
-
-            do n = 1, i%resolution
-               re%chi(n) = continuation(re%omega(n))
-            end do
-         end if
       end if
    end subroutine realize
 end module realaxis

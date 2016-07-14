@@ -28,23 +28,28 @@ def load(filename):
 
             elif name:
                 data[name] = np.fromfile(file, dtype,
-                    shape.prod()).reshape(shape, order='Fortran')
+                    shape.prod()).reshape(shape)
             else:
                 return data
 
-def new(filename, **parameters):
-    if 'DOSfile' in parameters:
-        if any(c in parameters['DOSfile'] for c in '/ '):
-            parameters['DOSfile'] = "'%s'" % parameters['DOSfile'].replace(
-                "'", "''")
+def escape(value):
+    string = str(value)
 
+    if any(character in string for character in '/ '):
+        string = "'%s'" % string.replace("'", "''")
+
+    return string
+
+def new(filename, **parameters):
     with open(filename, 'w') as file:
         for parameter, default in [
             ('T', 10.0), # temperature (K)
 
-            ('error', 0.001), # valid error of critical temperature (K)
-            ('bound', 1.000), # lower bound of critical temperature (K)
+            ('error', 1e-03), # valid error of critical temperature (K)
+            ('bound', 1e+00), # lower bound of critical temperature (K)
             ('small', 1e-10), # maximum gap at critical temperature (eV)
+
+            ('bands', 1), # number of electronic bands
 
             ('omegaE', 0.02), # Einstein frequency (eV)
             ('lambda', 1.00), # electron-phonon coupling
@@ -61,13 +66,17 @@ def new(filename, **parameters):
             ('resolution',  300), # real axis resolution
 
             ('form', 'data'), # output format
-            ('standalone', True), # include parameters in output file?
+            ('edit', 'ES15.6E3'), # number format
 
+            ('standalone', True), # include parameters in output file?
             ('rescale', True), # rescale Coulomb pseudo-potential?
 
             ('epsilon', 1e-15)]: # negligible float difference
 
-            print >> file, parameters.get(parameter, default)
+            value = parameters.get(parameter, default)
+
+            print >> file, '\n'.join(' '.join(map(escape, row))
+                for row in value) if np.shape(value) else escape(value)
 
 def run(filename, executable='eb_local'):
     subprocess.call([executable, filename])
@@ -100,7 +109,7 @@ def squareDOSGauss(e, t=0.25, n=200, sigma=0.02, cutoff=None):
 
     return sum(np.exp(-(r / sigma) ** 2) / (np.sqrt(np.pi) * sigma)) / n ** 2
 
-def squareDOSfile(name='dos.in', eF=0.5, n=401, t=0.25, replace=True):
+def squareDOSfile(name='dos.in', eF=0.5, n=401, t=0.25, bands=1, replace=True):
     if not replace and path.exists(name):
         return
 
@@ -120,10 +129,10 @@ def squareDOSfile(name='dos.in', eF=0.5, n=401, t=0.25, replace=True):
         file.write('%d\n\n' % n)
 
         for i in range(n):
-            file.write('% .10f %.10f\n' % (e[i], dos[i]))
+            print >> file, '% .10f' % e[i] + ' %.10f' % dos[i] * bands
 
 if __name__ == '__main__':
-    np.set_printoptions(threshold=3, edgeitems=1)
+    np.set_printoptions(threshold=9, edgeitems=1)
 
     for item in sorted(get().items()):
-        print '%14s = %s' % item
+        print ('%9s = %s' % item).replace('\n', '\n' + ' ' * 12)

@@ -4,9 +4,15 @@
     1e+00  lower bound of critical temperature (K)
     1e-10  maximum gap at critical temperature (eV)
 
+        2  number of electronic bands
+
      0.02  Einstein frequency (eV)
-     1.00  electron-phonon coupling
-     0.15  Coulomb pseudo-potential
+
+1.00 0.00  electron-phonon coupling
+0.00 2.00
+
+0.15 0.00  Coulomb pseudo-potential
+0.00 0.15
 
      none  file with density of Bloch states [or 'none']
 
@@ -19,8 +25,9 @@
       300  real axis resolution
 
      both  output format [text, data or both]
-     true  include parameters in output file?
+ ES15.6E3  number format [Fortran edit descriptor]
 
+     true  include parameters in output file?
      true  rescale Coulomb pseudo-potential?
 
     1e-15  negligible float difference
