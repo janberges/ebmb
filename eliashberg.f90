@@ -61,7 +61,8 @@ contains
          allocate(im%phi(0:im%u - 1, i%bands))
          allocate(im%chi(0:im%u - 1, i%bands))
 
-         im%phi(:, :) = 1
+         im%phi(:, :) = 0
+         im%phi(0, :) = 1
          im%chi(:, :) = 0
 
          allocate(B(0:im%u - 1, i%bands))
@@ -119,15 +120,14 @@ contains
             end if
          end do
 
-         if (all(im%phi(0, :) .lt. 0)) im%phi(:, :) = -im%phi
-
          im%Delta(:, :) = im%phi / im%Z
 
          do p = 1, i%bands
             im%phiC(p) = i%T * sum(im%phi * A * mu(:, :, p))
          end do
       else
-         im%Delta(:, :) = 1
+         im%Delta(:, :) = 0
+         im%Delta(0, :) = 1
 
          do p = 1, i%bands
             A(:, p) = 1 / sqrt(im%omega ** 2 + im%Delta(:, p) ** 2)
@@ -170,8 +170,6 @@ contains
                exit
             end if
          end do
-
-         if (all(im%Delta(0, :) .lt. 0)) im%Delta(:, :) = -im%Delta
 
          do p = 1, i%bands
             im%phiC(p) = pi * i%T * sum(im%Delta * A * mu(:, :, p))
