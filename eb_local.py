@@ -40,7 +40,7 @@ def escape(value):
 
     return string
 
-def new(filename, **parameters):
+def new(filename, lamda=1.0, **parameters):
     with open(filename, 'w') as file:
         for parameter, default in [
             ('T', 10.0), # temperature (K)
@@ -52,7 +52,7 @@ def new(filename, **parameters):
             ('bands', 1), # number of electronic bands
 
             ('omegaE', 0.02), # Einstein frequency (eV)
-            ('lambda', 1.00), # electron-phonon coupling
+            ('lambda', lamda), # electron-phonon coupling
             ('muStar', 0.15), # Coulomb pseudo-potential
 
             ('DOSfile', 'none'), # file with density of states
