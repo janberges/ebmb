@@ -33,14 +33,29 @@ contains
       lower(:) = -1
       upper(:) = -1
 
-      i%T = i%TcMD
+      i%T = max(i%TcMD, i%bound)
       call bounds
 
-      do p = 1, i%bands
+      BANDS: do p = 1, i%bands
          i%T = upper(p)
 
          do while (lower(p) .lt. 0)
+            if (i%T .le. i%error) then
+               print '(A13)', '(zero?)'
+
+               i%TcEB(p) = 0
+               cycle BANDS
+            end if
+
+            if (i%T .eq. i%bound) then
+               print '(A13)', '(bound)'
+
+               i%TcEB(p) = -1
+               cycle BANDS
+            end if
+
             i%T = i%T * (1 - ratio)
+            i%T = max(i%T, i%bound)
             call bounds
          end do
 
@@ -61,10 +76,10 @@ contains
                print '(A13)', '(ok)'
 
                i%TcEB(p) = i%T
-               exit
+               cycle BANDS
             end if
          end do
-      end do
+      end do BANDS
 
    contains
 
