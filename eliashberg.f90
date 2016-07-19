@@ -31,15 +31,17 @@ contains
          lambda(n, :, :) = i%lambda / (1 + (2 * n * pi * i%T / i%omegaE) ** 2)
       end do
 
-      allocate(mu(0:im%u - 1, i%bands, i%bands))
-
       omegaC = (2 * im%l + 1) * pi * i%T
+
+      allocate(im%muStar(i%bands, i%bands))
 
       if (i%rescale) then
          im%muStar = i%muStar / (1 + i%muStar * log(i%omegaE / omegaC))
       else
          im%muStar = i%muStar
       end if
+
+      allocate(mu(0:im%u - 1, i%bands, i%bands))
 
       do n = 0, im%l - 1
          mu(n, :, :) = -2 * im%muStar
