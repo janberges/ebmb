@@ -5,6 +5,7 @@ module global
    integer, parameter :: qp = selected_real_kind(30)
 
    real(dp), parameter :: pi = 4 * atan(1.0_dp)
+   real(dp), parameter :: kB = 8.61733e-05_dp ! Boltzmann constant (eV/K)
 
    type universal
       character(:), allocatable :: name

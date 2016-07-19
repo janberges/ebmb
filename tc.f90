@@ -26,6 +26,8 @@ contains
       integer :: p, q
       real(dp) :: lower(i%bands), upper(i%bands)
 
+      print '(A13)', 'T/K'
+
       allocate(i%TcEB(i%bands))
 
       lower(:) = -1
@@ -56,6 +58,8 @@ contains
             if (abs(im%Delta(0, p)) .le. i%small .and. &
                (upper(p) - lower(p)) / 2 .le. i%error) then
 
+               print '(A13)', '(ok)'
+
                i%TcEB(p) = i%T
                exit
             end if
@@ -65,6 +69,8 @@ contains
    contains
 
       subroutine bounds
+         print '(F13.9)', i%T / kB
+
          call solve(i, im)
 
          do q = 1, i%bands

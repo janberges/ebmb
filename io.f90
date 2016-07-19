@@ -7,8 +7,6 @@ module io
    private
    public :: load, store
 
-   real(dp), parameter :: k = 8.61733e-05_dp ! Boltzmann constant (eV/K)
-
    integer :: p, n, m
    integer, parameter :: unit = 11
 
@@ -28,14 +26,14 @@ contains
 
       i%critical = i%T .lt. 0 ! find critical temperature?
 
-      i%T = k * i%T ! (eV)
+      i%T = kB * i%T ! (eV)
 
       read (unit, *) i%error ! valid error of critical temperature (K)
       read (unit, *) i%bound ! lower bound of critical temperature (K)
       read (unit, *) i%small ! maximum gap at critical temperature (eV)
 
-      i%error = k * i%error ! (eV)
-      i%bound = k * i%bound ! (eV)
+      i%error = kB * i%error ! (eV)
+      i%bound = kB * i%bound ! (eV)
 
       read (unit, *) i%bands ! number of electronic bands
 
@@ -144,11 +142,11 @@ contains
       open (unit, file=i%name // '.out', action='write', status='replace')
 
       write (unit, "('McMillan and Dynes'' critical temperature (K):', /)")
-      write (unit, float) i%TcMD / k
+      write (unit, float) i%TcMD / kB
 
       if (i%critical) then
          write (unit, "(/, 'Eliashberg''s critical temperature (K):', /)")
-         write (unit, float) i%TcEB / k
+         write (unit, float) i%TcEB / kB
       else
          write (unit, "(/, 'imaginary-axis solution [', I0, ']:', /)") im%status
 
@@ -222,16 +220,16 @@ contains
       if (i%standalone) then
          if (i%critical) then
             write (unit, "(/, 'valid error of critical temperature (K)', /)")
-            write (unit, float) i%error / k
+            write (unit, float) i%error / kB
 
             write (unit, "(/, 'lower bound of critical temperature (K)', /)")
-            write (unit, float) i%bound / k
+            write (unit, float) i%bound / kB
 
             write (unit, "(/, 'maximum gap at critical temperature (eV)', /)")
             write (unit, float) i%small
          else
             write (unit, "(/, 'temperature (K):', /)")
-            write (unit, float) i%T / k
+            write (unit, float) i%T / kB
          end if
 
          write (unit, "(/, 'number of electronic bands:', /)")
@@ -300,12 +298,12 @@ contains
          form='unformatted', access='stream')
 
       write (unit) 'REAL:DIM:', 0
-      write (unit) 'TcMD:', i%TcMD / k
+      write (unit) 'TcMD:', i%TcMD / kB
 
       if (i%critical) then
          if (i%bands .gt. 1) write (unit) 'DIM:', 1, i%bands
 
-         write (unit) 'TcEB:', i%TcEB / k
+         write (unit) 'TcEB:', i%TcEB / kB
       else
          write (unit) 'INT:DIM:', 0
          write (unit) 'status:', im%status
@@ -359,11 +357,11 @@ contains
          write (unit) 'DIM:', 0
 
          if (i%critical) then
-            write (unit) 'error:', i%error / k
-            write (unit) 'bound:', i%bound / k
+            write (unit) 'error:', i%error / kB
+            write (unit) 'bound:', i%bound / kB
             write (unit) 'small:', i%small
          else
-            write (unit) 'T:', i%T / k
+            write (unit) 'T:', i%T / kB
          end if
 
          write (unit) 'INT:bands:', i%bands
