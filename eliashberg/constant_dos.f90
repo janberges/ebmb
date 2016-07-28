@@ -6,12 +6,14 @@ contains
 
    subroutine solve_constant_dos(i, im)
       type(universal), intent(in) :: i
-      type(matsubara), intent(out) :: im
+      type(matsubara), intent(inout) :: im
 
       real(dp) :: nE, Z, Delta
 
       real(dp), allocatable :: lambda(:, :, :), mu(:, :, :)
       real(dp), allocatable :: muStar(:, :), A(:, :)
+
+      integer, save :: u0 = -1
 
       integer :: step, p, q, n, m, u, l
       logical :: done
@@ -21,7 +23,27 @@ contains
       u = ceiling(i%upper * nE - 0.5_dp)
       l = ceiling(i%lower * nE - 0.5_dp)
 
-      allocate(im%omega(0:u - 1))
+      if (u .ne. u0) then
+         if (u0 .ne. -1) then
+            deallocate(im%omega)
+            deallocate(im%Z)
+            deallocate(im%Delta)
+            deallocate(im%phiC)
+         end if
+
+         allocate(im%omega(0:u - 1))
+         allocate(im%Z    (0:u - 1, i%bands))
+         allocate(im%Delta(0:u - 1, i%bands))
+
+         allocate(im%phiC(i%bands))
+
+         im%Z(:, :) = 1
+
+         im%Delta(:, :) = 0
+         im%Delta(0, :) = 1
+
+         u0 = u
+      end if
 
       do n = 0, u - 1
          im%omega(n) = (2 * n + 1) * pi * i%T
@@ -48,15 +70,6 @@ contains
       end do
 
       mu(l:, :, :) = 0
-
-      allocate(im%Z(0:u - 1, i%bands))
-
-      im%Z(:, :) = 1
-
-      allocate(im%Delta(0:u - 1, i%bands))
-
-      im%Delta(:, :) = 0
-      im%Delta(0, :) = 1
 
       allocate(A(0:u - 1, i%bands))
 
@@ -103,8 +116,6 @@ contains
             exit
          end if
       end do
-
-      allocate(im%phiC(i%bands))
 
       do p = 1, i%bands
          im%phiC(p) = pi * i%T * sum(im%Delta * A * mu(:, :, p))

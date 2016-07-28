@@ -6,12 +6,14 @@ contains
 
    subroutine solve_variable_dos(i, im)
       type(universal), intent(in) :: i
-      type(matsubara), intent(out) :: im
+      type(matsubara), intent(inout) :: im
 
       real(dp) :: nE, Z, phi, chi
 
       real(dp), allocatable :: lambda(:, :, :), mu(:, :, :)
       real(dp), allocatable :: muStar(:, :), A(:, :), B(:, :), trapezoids(:)
+
+      integer, save :: u0 = -1
 
       integer :: step, p, q, n, m, u, l
       logical :: done
@@ -21,7 +23,35 @@ contains
       u = ceiling(i%upper * nE - 0.5_dp)
       l = ceiling(i%lower * nE - 0.5_dp)
 
-      allocate(im%omega(0:u - 1))
+      if (u .ne. u0) then
+         if (u0 .ne. -1) then
+            deallocate(im%omega)
+            deallocate(im%Z)
+            deallocate(im%phi)
+            deallocate(im%chi)
+            deallocate(im%Delta)
+            deallocate(im%phiC)
+         end if
+
+         allocate(im%omega(0:u - 1))
+         allocate(im%Z    (0:u - 1, i%bands))
+         allocate(im%phi  (0:u - 1, i%bands))
+         allocate(im%chi  (0:u - 1, i%bands))
+         allocate(im%Delta(0:u - 1, i%bands))
+
+         allocate(im%phiC(i%bands))
+
+         im%Z(:, :) = 1
+
+         im%phi(:, :) = 0
+         im%phi(0, :) = 1
+         im%chi(:, :) = 0
+
+         im%Delta(:, :) = 0
+         im%Delta(0, :) = 1
+
+         u0 = u
+      end if
 
       do n = 0, u - 1
          im%omega(n) = (2 * n + 1) * pi * i%T
@@ -48,17 +78,6 @@ contains
       end do
 
       mu(l:, :, :) = 0
-
-      allocate(im%Z(0:u - 1, i%bands))
-
-      im%Z(:, :) = 1
-
-      allocate(im%phi(0:u - 1, i%bands))
-      allocate(im%chi(0:u - 1, i%bands))
-
-      im%phi(:, :) = 0
-      im%phi(0, :) = 1
-      im%chi(:, :) = 0
 
       allocate(A(0:u - 1, i%bands))
       allocate(B(0:u - 1, i%bands))
@@ -118,11 +137,7 @@ contains
          end if
       end do
 
-      allocate(im%Delta(0:u - 1, i%bands))
-
       im%Delta(:, :) = im%phi / im%Z
-
-      allocate(im%phiC(i%bands))
 
       do p = 1, i%bands
          im%phiC(p) = i%T * sum(im%phi * A * mu(:, :, p))
