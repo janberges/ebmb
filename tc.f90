@@ -1,5 +1,6 @@
 module tc
-   use eliashberg
+   use eliashberg_constant_dos
+   use eliashberg_variable_dos
    use global
    implicit none
 
@@ -94,7 +95,11 @@ contains
       end subroutine critical
 
       subroutine bounds
-         call solve(i, im)
+         if (i%DOS) then
+            call solve_variable_dos(i, im)
+         else
+            call solve_constant_dos(i, im)
+         end if
 
          do q = 1, i%bands
             if (abs(im%Delta(0, q)) .le. i%small) then

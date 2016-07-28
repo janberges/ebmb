@@ -1,6 +1,7 @@
 program eb_local
    use arguments
-   use eliashberg
+   use eliashberg_constant_dos
+   use eliashberg_variable_dos
    use global
    use io
    use realaxis
@@ -21,7 +22,11 @@ program eb_local
       if (i%critical) then
          call bisection(i, im)
       else
-         call solve(i, im)
+         if (i%DOS) then
+            call solve_variable_dos(i, im)
+         else
+            call solve_constant_dos(i, im)
+         end if
       end if
 
       call realize(i, im, re)

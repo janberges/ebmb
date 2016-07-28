@@ -59,9 +59,6 @@ contains
 
       if (i%lower .lt. 0) i%lower = i%upper
 
-      i%upper = i%upper * i%omegaE ! (eV)
-      i%lower = i%lower * i%omegaE ! (eV)
-
       read (unit, *) i%limit ! maximum number of fixed-point steps
 
       read (unit, *) i%measurable ! find measurable gap?
@@ -251,11 +248,11 @@ contains
       end if
 
       if (i%standalone) then
-         write (unit, "(/, 'overall cutoff (eV):', /)")
+         write (unit, "(/, 'overall cutoff (Einstein frequency):', /)")
          write (unit, float) i%upper
 
          if (i%lower .lt. i%upper) then
-            write (unit, "(/, 'Coulomb cutoff (eV):', /)")
+            write (unit, "(/, 'Coulomb cutoff (Einstein frequency):', /)")
             write (unit, float) i%lower
          end if
 
