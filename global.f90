@@ -51,8 +51,6 @@ module global
    end type universal
 
    type matsubara
-      real(dp), allocatable :: muStar(:, :) ! rescaled Coulomb pseudo-potential
-
       integer :: status ! convergence status
 
       real(dp), allocatable :: omega(:) ! frequency (eV)

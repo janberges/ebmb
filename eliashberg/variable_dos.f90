@@ -11,7 +11,7 @@ contains
       real(dp) :: nE, Z, phi, chi
 
       real(dp), allocatable :: lambda(:, :, :), mu(:, :, :)
-      real(dp), allocatable :: A(:, :), B(:, :), trapezoids(:)
+      real(dp), allocatable :: muStar(:, :), A(:, :), B(:, :), trapezoids(:)
 
       integer :: step, p, q, n, m, u, l
       logical :: done
@@ -33,18 +33,18 @@ contains
          lambda(n, :, :) = i%lambda / (1 + (n / nE) ** 2)
       end do
 
-      allocate(im%muStar(i%bands, i%bands))
+      allocate(muStar(i%bands, i%bands))
 
       if (i%rescale) then
-         im%muStar = i%muStar / (1 + i%muStar * log(nE / (l + 0.5_dp)))
+         muStar = i%muStar / (1 + i%muStar * log(nE / (l + 0.5_dp)))
       else
-         im%muStar = i%muStar
+         muStar = i%muStar
       end if
 
       allocate(mu(0:u - 1, i%bands, i%bands))
 
       do n = 0, l - 1
-         mu(n, :, :) = -2 * im%muStar
+         mu(n, :, :) = -2 * muStar
       end do
 
       mu(l:, :, :) = 0

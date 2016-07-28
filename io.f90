@@ -240,14 +240,7 @@ contains
 
          write (unit, "(/, 'Coulomb pseudo-potential:', /)")
          write (unit, matrix) i%muStar
-      end if
 
-      if (.not. i%critical) then
-         write (unit, "(/, 'rescaled Coulomb pseudo-potential:', /)")
-         write (unit, matrix) im%muStar
-      end if
-
-      if (i%standalone) then
          write (unit, "(/, 'overall cutoff (Einstein frequency):', /)")
          write (unit, float) i%upper
 
@@ -367,12 +360,8 @@ contains
          if (i%bands .gt. 1) write (unit) 'DIM:', 2, i%bands, i%bands
 
          write (unit) 'lambda:', i%lambda
-         write (unit) 'mu*MD:', i%muStar
-      end if
+         write (unit) 'muStar:', i%muStar
 
-      if (.not. i%critical) write (unit) 'mu*EB:', im%muStar
-
-      if (i%standalone) then
          write (unit) 'DIM:', 0
          write (unit) 'upper:', i%upper
 
