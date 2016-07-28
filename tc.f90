@@ -34,6 +34,7 @@ contains
       upper(:) = -1
 
       i%T = max(i%TcMD, i%bound)
+      call tell
       call bounds
 
       BANDS: do p = 1, i%bands
@@ -41,9 +42,7 @@ contains
 
          do while (lower(p) .lt. 0)
             if (i%T .le. i%error) then
-               print '(A13)', '(zero?)'
-
-               i%TcEB(p) = 0
+               call critical
                cycle BANDS
             end if
 
@@ -56,6 +55,7 @@ contains
 
             i%T = i%T * (1 - ratio)
             i%T = max(i%T, i%bound)
+            call tell
             call bounds
          end do
 
@@ -63,29 +63,37 @@ contains
 
          do while (upper(p) .lt. 0)
             i%T = i%T * (1 + ratio)
+            call tell
             call bounds
          end do
 
          do
             i%T = (lower(p) + upper(p)) / 2
-            call bounds
 
-            if (abs(im%Delta(0, p)) .le. i%small .and. &
-               (upper(p) - lower(p)) / 2 .le. i%error) then
+            call tell
 
-               print '(A13)', '(ok)'
-
-               i%TcEB(p) = i%T
+            if (upper(p) - lower(p) .le. 2 * i%error) then
+               call critical
                cycle BANDS
             end if
+
+            call bounds
          end do
       end do BANDS
 
    contains
 
-      subroutine bounds
+      subroutine tell
          print '(F13.9)', i%T / kB
+      end subroutine tell
 
+      subroutine critical
+         i%TcEB(p) = i%T
+
+         print '(A13)', '(critical)'
+      end subroutine critical
+
+      subroutine bounds
          call solve(i, im)
 
          do q = 1, i%bands
