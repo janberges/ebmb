@@ -13,25 +13,25 @@ contains
 
       real(dp) :: omegaC, Z, Delta, phi, chi
 
-      integer :: step, p, q, n, m
+      integer :: step, p, q, n, m, u, l
       logical :: done
 
-      im%u = ceiling((i%upper / (pi * i%T) - 1) / 2)
-      im%l = ceiling((i%lower / (pi * i%T) - 1) / 2)
+      u = ceiling((i%upper / (pi * i%T) - 1) / 2) ! index of overall cutoff
+      l = ceiling((i%lower / (pi * i%T) - 1) / 2) ! index of Coulomb cutoff
 
-      allocate(im%omega(0:im%u - 1))
+      allocate(im%omega(0:u - 1))
 
-      do n = 0, im%u - 1
+      do n = 0, u - 1
          im%omega(n) = (2 * n + 1) * pi * i%T
       end do
 
-      allocate(lambda(1 - im%u:2 * im%u - 1, i%bands, i%bands))
+      allocate(lambda(1 - u:2 * u - 1, i%bands, i%bands))
 
-      do n = 1 - im%u, 2 * im%u - 1
+      do n = 1 - u, 2 * u - 1
          lambda(n, :, :) = i%lambda / (1 + (2 * n * pi * i%T / i%omegaE) ** 2)
       end do
 
-      omegaC = (2 * im%l + 1) * pi * i%T
+      omegaC = (2 * l + 1) * pi * i%T
 
       allocate(im%muStar(i%bands, i%bands))
 
@@ -41,38 +41,38 @@ contains
          im%muStar = i%muStar
       end if
 
-      allocate(mu(0:im%u - 1, i%bands, i%bands))
+      allocate(mu(0:u - 1, i%bands, i%bands))
 
-      do n = 0, im%l - 1
+      do n = 0, l - 1
          mu(n, :, :) = -2 * im%muStar
       end do
 
-      mu(im%l:, :, :) = 0
+      mu(l:, :, :) = 0
 
-      allocate(im%Z(0:im%u - 1, i%bands))
-      allocate(im%Delta(0:im%u - 1, i%bands))
+      allocate(im%Z(0:u - 1, i%bands))
+      allocate(im%Delta(0:u - 1, i%bands))
       allocate(im%phiC(i%bands))
 
       im%Z(:, :) = 1
 
-      allocate(A(0:im%u - 1, i%bands))
+      allocate(A(0:u - 1, i%bands))
 
       im%status = -1
 
       if (i%DOS) then
-         allocate(im%phi(0:im%u - 1, i%bands))
-         allocate(im%chi(0:im%u - 1, i%bands))
+         allocate(im%phi(0:u - 1, i%bands))
+         allocate(im%chi(0:u - 1, i%bands))
 
          im%phi(:, :) = 0
          im%phi(0, :) = 1
          im%chi(:, :) = 0
 
-         allocate(B(0:im%u - 1, i%bands))
+         allocate(B(0:u - 1, i%bands))
 
          allocate(trapezoids(size(i%energy)))
 
          do p = 1, i%bands
-            do n = 0, im%u - 1
+            do n = 0, u - 1
                call integrate(n, p)
             end do
          end do
@@ -81,13 +81,13 @@ contains
             done = .true.
 
             do p = 1, i%bands
-               do n = 0, im%u - 1
+               do n = 0, u - 1
                   Z = 0
                   phi = 0
                   chi = 0
 
                   do q = 1, i%bands
-                     do m = 0, im%u - 1
+                     do m = 0, u - 1
                         Z = Z + im%omega(m) * im%Z(m, q) * A(m, q) &
                            * (lambda(n - m, q, p) - lambda(n + m + 1, q, p))
 
@@ -139,12 +139,12 @@ contains
             done = .true.
 
             do p = 1, i%bands
-               do n = 0, im%u - 1
+               do n = 0, u - 1
                   Z = 0
                   Delta = 0
 
                   do q = 1, i%bands
-                     do m = 0, im%u - 1
+                     do m = 0, u - 1
                         Z = Z + im%omega(m) * A(m, q) &
                            * (lambda(n - m, q, p) - lambda(n + m + 1, q, p))
 

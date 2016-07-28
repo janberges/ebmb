@@ -156,7 +156,7 @@ contains
             do p = 1, i%bands
                call rule(4)
 
-               do n = 0, im%u - 1
+               do n = 0, size(im%omega) - 1
                   write (unit, body) &
                      im%omega(n), im%Z(n, p), im%Delta(n, p), im%chi(n, p)
                end do
@@ -167,7 +167,7 @@ contains
             do p = 1, i%bands
                call rule(3)
 
-               do n = 0, im%u - 1
+               do n = 0, size(im%omega) - 1
                   write (unit, body) &
                      im%omega(n), im%Z(n, p), im%Delta(n, p)
                end do
@@ -308,10 +308,10 @@ contains
          write (unit) 'INT:DIM:', 0
          write (unit) 'status:', im%status
 
-         write (unit) 'REAL:DIM:', 1, im%u
+         write (unit) 'REAL:DIM:', 1, size(im%omega)
          write (unit) 'iomega:', im%omega
 
-         if (i%bands .gt. 1) write (unit) 'DIM:', 2, i%bands, im%u
+         if (i%bands .gt. 1) write (unit) 'DIM:', 2, i%bands, size(im%omega)
 
          write (unit) 'Z:', im%Z
          write (unit) 'Delta:', im%Delta

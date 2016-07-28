@@ -55,9 +55,6 @@ module global
 
       integer :: status ! convergence status
 
-      integer :: u ! index of overall cutoff frequency
-      integer :: l ! index of Coulomb cutoff frequency
-
       real(dp), allocatable :: omega(:) ! frequency (eV)
       real(dp), allocatable :: Delta(:, :) ! gap (eV)
       real(dp), allocatable :: phi(:, :) ! order parameter (eV)
