@@ -8,12 +8,15 @@ For further information typeset and read 'manual.tex'.
 
 I n s t a l l a t i o n
 
-  $ make
+By default, the makefile builds the program with the GNU Fortran compiler and in
+validation mode, i.e. with all warnings for the Fortran 2003 standard turned on.
+On the contrary, to obtain an optimized executable run
 
-will build the program using the GNU Fortran compiler with maximum optimization.
-These defaults may be overwritten by means of command-line arguments, e.g.
+  $ make mode=optimize
 
-  $ make compiler=ifort optimize=false
+Other compilers and options may also be chosen, e.g.
+
+  $ make compiler=ifort options=-O3
 
 
 A c k n o w l e d g m e n t

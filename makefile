@@ -1,13 +1,12 @@
 compiler = gfortran
+mode = validate
 
 ifeq ($(compiler), gfortran)
-  optional = -std=f2003 -Wall -pedantic
-endif
-
-optimize = true
-
-ifeq ($(optimize), true)
-  optional += -O3
+  ifeq ($(mode), validate)
+    options = -std=f2003 -Wall -pedantic
+  else ifeq ($(mode), optimize)
+    options = -O3
+  endif
 endif
 
 needless = *.aux *.dat .*.lb *.log *.out *.pyc *.synctex *.synctex.gz ~temporary.* .DS_Store
@@ -32,7 +31,7 @@ $(programs):
 
 %.o: %.f90
 	@echo compile $*
-	@$(compiler) $(optional) -c $< -o $@
+	@$(compiler) $(options) -c $< -o $@
 
 eb_local: eliashberg/constant_dos.o eliashberg/variable_dos.o global.o integration.o intervals.o io/arguments.o io/load.o io/store_data.o io/store_text.o main.o pade.o realaxis.o tc.o
 
