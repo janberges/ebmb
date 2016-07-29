@@ -40,58 +40,25 @@ def escape(value):
 
     return string
 
-def new(filename, lamda=1.0, **parameters):
-    with open(filename, 'w') as file:
-        for parameter, default in [
-            ('T', 10.0), # temperature (K)
+def run(executable='eb_local', **parameters):
+    command = [executable]
 
-            ('error', 1e-03), # valid error of critical temperature (K)
-            ('bound', 1e+00), # lower bound of critical temperature (K)
-            ('small', 1e-10), # maximum gap at critical temperature (eV)
+    for key, value in parameters.items():
+        command.append(
+            '='.join([key,
+            ','.join(np.ravel(value)) if np.shape(value) else escape(value)]))
 
-            ('bands', 1), # number of electronic bands
+    subprocess.call(command)
 
-            ('omegaE', 0.02), # Einstein frequency (eV)
-            ('lambda', lamda), # electron-phonon coupling
-            ('muStar', 0.15), # Coulomb pseudo-potential
-
-            ('DOSfile', 'none'), # file with density of states
-
-            ('upper', 10.0), # overall cutoff (Einstein frequency)
-            ('lower', -1.0), # Coulomb cutoff (Einstein frequency)
-
-            ('limit', 100000), # maximum number of fixed-point steps
-
-            ('measurable', True), # find measurable gap?
-            ('resolution',  300), # real axis resolution
-
-            ('form', 'data'), # output format
-            ('edit', 'ES15.6E3'), # number format
-
-            ('standalone', True), # include parameters in output file?
-            ('rescale', True), # rescale Coulomb pseudo-potential?
-
-            ('epsilon', 1e-15)]: # negligible float difference
-
-            value = parameters.get(parameter, default)
-
-            print >> file, '\n'.join(' '.join(map(escape, row))
-                for row in value) if np.shape(value) else escape(value)
-
-def run(filename, executable='eb_local'):
-    subprocess.call([executable, filename])
-
-def get(infile='~temporary.in', executable='eb_local', replace=True,
+def get(name='~temporary', executable='eb_local', replace=True,
     **parameters):
 
-    outfile = infile.rsplit('.', 1)[0] + '.dat'
+    datafile = name + '.dat'
 
-    if replace or not path.exists(outfile):
-        new(infile, **parameters)
-        run(infile, executable)
+    if replace or not path.exists(datafile):
+        run(executable, name=name, **parameters)
 
-    if path.exists(outfile):
-        return load(outfile)
+    return load(datafile)
 
 def squareDOS(e, t=0.25):
     return ellipk(1 - (0.25 * e / t) ** 2) / (2 * np.pi ** 2 * t)

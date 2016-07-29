@@ -21,7 +21,7 @@ programs = dos eb_local
 all: $(programs)
 
 clean:
-	@rm -f $(needless) arguments.mod arguments.o dos.o eliashberg/constant_dos.o eliashberg/variable_dos.o eliashberg_constant_dos.mod eliashberg_variable_dos.mod filenames.mod filenames.o global.mod global.o integration.mod integration.o intervals.mod intervals.o io.mod io.o main.o pade.mod pade.o realaxis.mod realaxis.o tc.mod tc.o
+	@rm -f $(needless) arguments.mod dos.o eliashberg/constant_dos.o eliashberg/variable_dos.o eliashberg_constant_dos.mod eliashberg_variable_dos.mod global.mod global.o integration.mod integration.o intervals.mod intervals.o io/arguments.o io/load.o io/store_data.o io/store_text.o io_load.mod io_store_data.mod io_store_text.mod main.o pade.mod pade.o realaxis.mod realaxis.o tc.mod tc.o
 
 cleaner: clean
 	@rm -f $(programs)
@@ -34,16 +34,18 @@ $(programs):
 	@echo compile $*
 	@$(compiler) $(optional) -c $< -o $@
 
-dos: arguments.o dos.o global.o intervals.o
-eb_local: arguments.o eliashberg/constant_dos.o eliashberg/variable_dos.o filenames.o global.o integration.o intervals.o io.o main.o pade.o realaxis.o tc.o
+dos: dos.o global.o intervals.o io/arguments.o
+eb_local: eliashberg/constant_dos.o eliashberg/variable_dos.o global.o integration.o intervals.o io/arguments.o io/load.o io/store_data.o io/store_text.o main.o pade.o realaxis.o tc.o
 
-dos.o: arguments.o global.o intervals.o
+dos.o: global.o intervals.o io/arguments.o
 eliashberg/constant_dos.o: global.o
 eliashberg/variable_dos.o: global.o
 integration.o: global.o
 intervals.o: global.o
-io.o: filenames.o global.o integration.o
-main.o: arguments.o eliashberg/constant_dos.o eliashberg/variable_dos.o global.o io.o realaxis.o tc.o
+io/load.o: global.o integration.o io/arguments.o
+io/store_data.o: global.o
+io/store_text.o: global.o
+main.o: eliashberg/constant_dos.o eliashberg/variable_dos.o global.o io/arguments.o io/load.o io/store_data.o io/store_text.o realaxis.o tc.o
 pade.o: global.o
 realaxis.o: global.o intervals.o pade.o
 tc.o: eliashberg/constant_dos.o eliashberg/variable_dos.o global.o

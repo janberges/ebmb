@@ -10,40 +10,40 @@ module global
    type universal
       character(:), allocatable :: name
 
-      real(dp) :: T ! temperature (eV)
+      real(dp) :: T = 10.0_dp ! temperature (K)
 
       real(dp) :: TcMD ! McMillan's critical temperature (eV)
 
       real(dp), allocatable :: TcEB(:) ! Eliashberg's critical temperature (eV)
 
-      logical :: critical ! find critical temperature?
+      logical :: critical = .false. ! find critical temperature?
 
-      real(dp) :: error ! valid error of critical temperature (eV)
-      real(dp) :: bound ! lower bound of critical temperature (eV)
-      real(dp) :: small ! maximum gap at critical temperature (eV)
+      real(dp) :: error = 1e-03_dp ! valid error of critical temperature (K)
+      real(dp) :: bound = 1e+00_dp ! lower bound of critical temperature (K)
+      real(dp) :: small = 1e-10_dp ! maximum gap at critical temperature (eV)
 
-      integer :: bands ! number of electronic bands
+      integer :: bands = 1 ! number of electronic bands
 
-      real(dp) :: omegaE ! Einstein frequency (eV)
+      real(dp) :: omegaE = 0.02_dp ! Einstein frequency (eV)
 
       real(dp), allocatable :: lambda(:, :) ! electron-phonon coupling
       real(dp), allocatable :: muStar(:, :) ! Coulomb pseudo-potential
 
-      logical :: DOS ! consider full density of states?
+      logical :: DOS = .false. ! consider full density of states?
 
-      real(dp) :: upper ! overall cutoff (eV)
-      real(dp) :: lower ! Coulomb cutoff (eV)
+      real(dp) :: upper = 10.0_dp ! overall cutoff (omegaE)
+      real(dp) :: lower = -1.0_dp ! Coulomb cutoff (omegaE)
 
-      integer :: limit ! maximum number of fixed-point steps
+      integer :: limit = 100000 ! maximum number of fixed-point steps
 
-      logical :: measurable ! find measurable gap?
-      integer :: resolution ! real axis resolution
+      logical :: measurable = .false. ! find measurable gap?
+      integer :: resolution = 0       ! real axis resolution
 
-      character(4) :: form ! output format
-      character(9) :: edit ! number format
+      character(4) :: form = 'both'     ! output format
+      character(9) :: edit = 'ES15.6E3' ! number format
 
-      logical :: standalone ! include parameters in output file?
-      logical :: rescale ! rescale Coulomb pseudo-potential?
+      logical :: standalone = .false. ! include parameters in output file?
+      logical ::    rescale = .true.  ! rescale Coulomb pseudo-potential?
 
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
       real(dp), allocatable :: density(:, :) ! density of Bloch states (a.u.)
