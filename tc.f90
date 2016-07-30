@@ -14,7 +14,7 @@ contains
       lambda = sqrt(sum(i%lambda ** 2))
       muStar = sqrt(sum(i%muStar ** 2))
 
-      i%TcMD = i%omegaE / 1.2_dp * exp(-1.04_dp * (1 + lambda) &
+      i%TcMD = i%omegaE / (1.2_dp * kB) * exp(-1.04_dp * (1 + lambda) &
          / (lambda - 0.62_dp * lambda * muStar - muStar))
    end subroutine estimate
 
@@ -85,7 +85,7 @@ contains
    contains
 
       subroutine tell
-         print '(F13.9)', i%T / kB
+         print '(F13.9)', i%T
       end subroutine tell
 
       subroutine critical

@@ -18,7 +18,7 @@ contains
       integer :: step, p, q, n, m, u, l
       logical :: done
 
-      nE = i%omegaE / (2 * pi * i%T)
+      nE = i%omegaE / (2 * pi * kB * i%T)
 
       u = ceiling(i%upper * nE - 0.5_dp)
       l = ceiling(i%lower * nE - 0.5_dp)
@@ -54,7 +54,7 @@ contains
       end if
 
       do n = 0, u - 1
-         im%omega(n) = (2 * n + 1) * pi * i%T
+         im%omega(n) = (2 * n + 1) * pi * kB * i%T
       end do
 
       allocate(lambda(1 - u:2 * u - 1, i%bands, i%bands))
@@ -114,9 +114,9 @@ contains
                   end do
                end do
 
-               Z = 1 + Z * i%T / im%omega(n)
-               phi = phi * i%T
-               chi = chi * i%T
+               Z = 1 + Z * kB * i%T / im%omega(n)
+               phi = phi * kB * i%T
+               chi = chi * kB * i%T
 
                done = done &
                   .and. (im%Z(n, p) .ap. Z) &
@@ -140,7 +140,7 @@ contains
       im%Delta(:, :) = im%phi / im%Z
 
       do p = 1, i%bands
-         im%phiC(p) = i%T * sum(im%phi * A * mu(:, :, p))
+         im%phiC(p) = kB * i%T * sum(im%phi * A * mu(:, :, p))
       end do
 
    contains

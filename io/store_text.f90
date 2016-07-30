@@ -30,11 +30,11 @@ contains
       open (unit, file=i%name // '.out', action='write', status='replace')
 
       write (unit, "('McMillan and Dynes'' critical temperature (K):', /)")
-      write (unit, float) i%TcMD / kB
+      write (unit, float) i%TcMD
 
       if (i%critical) then
          write (unit, "(/, 'Eliashberg''s critical temperature (K):', /)")
-         write (unit, float) i%TcEB / kB
+         write (unit, float) i%TcEB
       else
          write (unit, "(/, 'imaginary-axis solution [', I0, ']:', /)") im%status
 
@@ -108,16 +108,16 @@ contains
       if (i%standalone) then
          if (i%critical) then
             write (unit, "(/, 'valid error of critical temperature (K)', /)")
-            write (unit, float) i%error / kB
+            write (unit, float) i%error
 
             write (unit, "(/, 'lower bound of critical temperature (K)', /)")
-            write (unit, float) i%bound / kB
+            write (unit, float) i%bound
 
             write (unit, "(/, 'maximum gap at critical temperature (eV)', /)")
             write (unit, float) i%small
          else
             write (unit, "(/, 'temperature (K):', /)")
-            write (unit, float) i%T / kB
+            write (unit, float) i%T
          end if
 
          write (unit, "(/, 'number of electronic bands:', /)")

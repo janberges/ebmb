@@ -18,12 +18,12 @@ contains
          form='unformatted', access='stream')
 
       write (unit) 'REAL:DIM:', 0
-      write (unit) 'TcMD:', i%TcMD / kB
+      write (unit) 'TcMD:', i%TcMD
 
       if (i%critical) then
          if (i%bands .gt. 1) write (unit) 'DIM:', 1, i%bands
 
-         write (unit) 'TcEB:', i%TcEB / kB
+         write (unit) 'TcEB:', i%TcEB
       else
          write (unit) 'INT:DIM:', 0
          write (unit) 'status:', im%status
@@ -77,11 +77,11 @@ contains
          write (unit) 'DIM:', 0
 
          if (i%critical) then
-            write (unit) 'error:', i%error / kB
-            write (unit) 'bound:', i%bound / kB
+            write (unit) 'error:', i%error
+            write (unit) 'bound:', i%bound
             write (unit) 'small:', i%small
          else
-            write (unit) 'T:', i%T / kB
+            write (unit) 'T:', i%T
          end if
 
          write (unit) 'INT:bands:', i%bands

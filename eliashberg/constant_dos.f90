@@ -18,7 +18,7 @@ contains
       integer :: step, p, q, n, m, u, l
       logical :: done
 
-      nE = i%omegaE / (2 * pi * i%T)
+      nE = i%omegaE / (2 * pi * kB * i%T)
 
       u = ceiling(i%upper * nE - 0.5_dp)
       l = ceiling(i%lower * nE - 0.5_dp)
@@ -46,7 +46,7 @@ contains
       end if
 
       do n = 0, u - 1
-         im%omega(n) = (2 * n + 1) * pi * i%T
+         im%omega(n) = (2 * n + 1) * pi * kB * i%T
       end do
 
       allocate(lambda(1 - u:2 * u - 1, i%bands, i%bands))
@@ -97,8 +97,8 @@ contains
                   end do
                end do
 
-               Z = 1 + pi * i%T * Z / im%omega(n)
-               Delta = pi * i%T * Delta / Z
+               Z = 1 + pi * kB * i%T * Z / im%omega(n)
+               Delta = pi * kB * i%T * Delta / Z
 
                done = done &
                   .and. (im%Z(n, p) .ap. Z) &
@@ -118,7 +118,7 @@ contains
       end do
 
       do p = 1, i%bands
-         im%phiC(p) = pi * i%T * sum(im%Delta * A * mu(:, :, p))
+         im%phiC(p) = pi * kB * i%T * sum(im%Delta * A * mu(:, :, p))
       end do
    end subroutine solve_constant_dos
 end module eliashberg_constant_dos

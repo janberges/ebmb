@@ -84,11 +84,6 @@ contains
          i%resolution = 0
       end if
 
-      i%T = kB * i%T
-
-      i%error = kB * i%error
-      i%bound = kB * i%bound
-
       i%bands = nint(sqrt(elements))
 
       allocate(i%lambda(i%bands, i%bands))
