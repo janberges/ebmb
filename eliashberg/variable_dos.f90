@@ -11,7 +11,9 @@ contains
       real(dp) :: nE, Z, phi, chi
 
       real(dp), allocatable :: lambda(:, :, :), mu(:, :, :)
-      real(dp), allocatable :: muStar(:, :), A(:, :), B(:, :), trapezoids(:)
+      real(dp), allocatable :: muStar(:, :), A(:, :), B(:, :)
+
+      real(dp), allocatable, save :: weight(:, :), trapezoids(:)
 
       integer, save :: u0 = -1
 
@@ -24,7 +26,22 @@ contains
       l = ceiling(i%lower * nE - 0.5_dp)
 
       if (u .ne. u0) then
-         if (u0 .ne. -1) then
+         if (u0 .eq. -1) then
+            allocate(weight(size(i%energy), i%bands))
+            allocate(trapezoids(size(i%energy)))
+
+            call differential(i%energy, weight(:, 1))
+
+            do p = 2, i%bands
+               weight(:, p) = weight(:, 1)
+            end do
+
+            n = minloc(abs(i%energy), 1)
+
+            do p = 1, i%bands
+               weight(:, p) = weight(:, p) * i%density(:, p) / i%density(n, p)
+            end do
+         else
             deallocate(im%omega)
             deallocate(im%Z)
             deallocate(im%phi)
@@ -81,8 +98,6 @@ contains
 
       allocate(A(0:u - 1, i%bands))
       allocate(B(0:u - 1, i%bands))
-
-      allocate(trapezoids(size(i%energy)))
 
       do p = 1, i%bands
          do n = 0, u - 1
@@ -148,7 +163,7 @@ contains
       subroutine integrate(n, p)
          integer, intent(in) :: n, p
 
-         trapezoids(:) = i%weight(:, p) / ((im%omega(n) * im%Z(n, p)) ** 2 &
+         trapezoids(:) = weight(:, p) / ((im%omega(n) * im%Z(n, p)) ** 2 &
             + (i%energy + im%chi(n, p)) ** 2 + im%phi(n, p) ** 2)
 
          A(n, p) = sum(trapezoids)
@@ -156,4 +171,18 @@ contains
       end subroutine integrate
 
    end subroutine solve_variable_dos
+
+   subroutine differential(x, dx)
+      real(dp), intent(in) :: x(:)
+      real(dp), intent(out) :: dx(:)
+
+      integer :: n
+      n = size(x)
+
+      dx(1) = x(2) - x(1)
+      dx(2:n - 1) = x(3:n) - x(1:n - 2)
+      dx(n) = x(n) - x(n - 1)
+
+      dx(:) = dx / 2
+   end subroutine differential
 end module eliashberg_variable_dos

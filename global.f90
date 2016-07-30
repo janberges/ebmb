@@ -47,7 +47,6 @@ module global
 
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
       real(dp), allocatable :: density(:, :) ! density of Bloch states (a.u.)
-      real(dp), allocatable :: weight(:, :) ! integration weight (eV)
    end type universal
 
    type matsubara

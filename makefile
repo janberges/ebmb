@@ -42,7 +42,7 @@ programs = eb_local
 all: $(programs)
 
 clean:
-	@rm -f $(needless) eliashberg/constant_dos.o eliashberg/variable_dos.o global.o integration.o io/arguments.o io/load.o io/store_data.o io/store_text.o main.o real_axis/intervals.o real_axis/pade.o real_axis/realaxis.o tc.o
+	@rm -f $(needless) eliashberg/constant_dos.o eliashberg/variable_dos.o global.o io/arguments.o io/load.o io/store_data.o io/store_text.o main.o real_axis/intervals.o real_axis/pade.o real_axis/realaxis.o tc.o
 
 cleaner: clean
 	@rm -f $(programs)
@@ -55,12 +55,11 @@ $(programs):
 	@echo compile $*
 	@$(compiler) $(options) -c $< -o $@
 
-eb_local: eliashberg/constant_dos.o eliashberg/variable_dos.o global.o integration.o io/arguments.o io/load.o io/store_data.o io/store_text.o main.o real_axis/intervals.o real_axis/pade.o real_axis/realaxis.o tc.o
+eb_local: eliashberg/constant_dos.o eliashberg/variable_dos.o global.o io/arguments.o io/load.o io/store_data.o io/store_text.o main.o real_axis/intervals.o real_axis/pade.o real_axis/realaxis.o tc.o
 
 eliashberg/constant_dos.o: global.o
 eliashberg/variable_dos.o: global.o
-integration.o: global.o
-io/load.o: global.o integration.o io/arguments.o
+io/load.o: global.o io/arguments.o
 io/store_data.o: global.o
 io/store_text.o: global.o
 main.o: eliashberg/constant_dos.o eliashberg/variable_dos.o global.o io/arguments.o io/load.o io/store_data.o io/store_text.o real_axis/realaxis.o tc.o

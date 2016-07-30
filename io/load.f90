@@ -1,7 +1,6 @@
 module io_load
    use arguments
    use global
-   use integration
    implicit none
 
    private
@@ -129,7 +128,7 @@ contains
       character(*), intent(in) :: DOSfile
       type(universal), intent(inout) :: i
 
-      integer :: n, m, p
+      integer :: n, m
       integer, parameter :: unit = 11
 
       open (unit, file=DOSfile, action='read', status='old')
@@ -138,24 +137,11 @@ contains
 
       allocate(i%energy(n)) ! free-electron energy (eV)
       allocate(i%density(n, i%bands)) ! density of states (a.u.)
-      allocate(i%weight(n, i%bands)) ! integration weight (eV)
 
       do m = 1, n
          read(unit, *) i%energy(m), i%density(m, :)
       end do
 
       close (unit)
-
-      call differential(i%energy, i%weight(:, 1))
-
-      do p = 2, i%bands
-         i%weight(:, p) = i%weight(:, 1)
-      end do
-
-      n = minloc(abs(i%energy), 1) ! index of Fermi level
-
-      do p = 1, i%bands
-         i%weight(:, p) = i%weight(:, p) * i%density(:, p) / i%density(n, p)
-      end do
    end subroutine load_dos
 end module io_load
