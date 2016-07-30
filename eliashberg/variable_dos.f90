@@ -39,7 +39,7 @@ contains
             n = minloc(abs(i%energy), 1)
 
             do p = 1, i%bands
-               weight(:, p) = weight(:, p) * i%density(:, p) / i%density(n, p)
+               weight(:, p) = weight(:, p) * i%dos(:, p) / i%dos(n, p)
             end do
          else
             deallocate(im%omega)

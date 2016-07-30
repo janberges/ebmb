@@ -23,7 +23,7 @@ contains
          allocate(re%Delta(i%resolution, i%bands))
          allocate(re%Z(i%resolution, i%bands))
 
-         if (i%DOS) allocate(re%chi(i%resolution, i%bands))
+         if (i%chi) allocate(re%chi(i%resolution, i%bands))
       end if
 
       if (i%measurable .or. i%resolution .gt. 0) then
@@ -59,7 +59,7 @@ contains
                   re%Z(n, p) = continuation(re%omega(n))
                end do
 
-               if (i%DOS) then
+               if (i%chi) then
                   call coefficients(im%omega, im%chi(:, p))
 
                   do n = 1, i%resolution

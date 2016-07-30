@@ -95,7 +95,7 @@ contains
       end subroutine critical
 
       subroutine bounds
-         if (i%DOS) then
+         if (i%chi) then
             call solve_variable_dos(i, im)
          else
             call solve_constant_dos(i, im)

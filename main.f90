@@ -20,7 +20,7 @@ program eb_local
    if (i%critical) then
       call bisection(i, im)
    else
-      if (i%DOS) then
+      if (i%chi) then
          call solve_variable_dos(i, im)
       else
          call solve_constant_dos(i, im)

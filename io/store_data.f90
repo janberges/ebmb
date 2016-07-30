@@ -36,7 +36,7 @@ contains
          write (unit) 'Z:', im%Z
          write (unit) 'Delta:', im%Delta
 
-         if (i%DOS) write (unit) 'chi:', im%chi
+         if (i%chi) write (unit) 'chi:', im%chi
 
          write (unit) 'DIM:'
 
@@ -66,7 +66,7 @@ contains
             write (unit) 'Re[Delta]:', real(re%Delta)
             write (unit) 'Im[Delta]:', aimag(re%Delta)
 
-            if (i%DOS) then
+            if (i%chi) then
                write (unit) 'Re[chi]:', real(re%chi)
                write (unit) 'Im[chi]:', aimag(re%chi)
             end if
@@ -100,13 +100,13 @@ contains
          write (unit) 'INT:limit:', i%limit
          write (unit) 'REAL:epsilon:', negligible_difference
 
-         if (i%DOS) then
+         if (i%chi) then
             write (unit) 'DIM:', 1, size(i%energy)
             write (unit) 'energy:', i%energy
 
             if (i%bands .gt. 1) write (unit) 'DIM:', 2, i%bands, size(i%energy)
 
-            write (unit) 'density:', i%density
+            write (unit) 'density:', i%dos
          end if
       end if
 

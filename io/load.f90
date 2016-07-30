@@ -34,7 +34,7 @@ contains
       integer :: p ! band index
       integer :: n ! argument number
 
-      character(:), allocatable :: DOSfile
+      character(:), allocatable :: dos_file
 
       real(dp) :: elements ! number of elements in lambda and muStar
 
@@ -69,7 +69,7 @@ contains
                muStar = rhs
                elements = values(rhs)
 
-            case ('DOSfile'); DOSfile = rhs
+            case ('dos'); dos_file = rhs
 
             case ('upper'); read (rhs, *) i%upper
             case ('lower'); read (rhs, *) i%lower
@@ -116,9 +116,9 @@ contains
          i%muStar(:, :) = 0
       end if
 
-      if (allocated(DOSfile)) then
-         i%DOS = .true.
-         call load_dos(DOSfile, i)
+      if (allocated(dos_file)) then
+         i%chi = .true.
+         call load_dos(dos_file, i)
       end if
 
       if (i%lower .lt. 0) i%lower = i%upper
@@ -136,22 +136,22 @@ contains
       end do
    end function values
 
-   subroutine load_dos(DOSfile, i)
-      character(*), intent(in) :: DOSfile
+   subroutine load_dos(file, i)
+      character(*), intent(in) :: file
       type(universal), intent(inout) :: i
 
       integer :: n, m
       integer, parameter :: unit = 11
 
-      open (unit, file=DOSfile, action='read', status='old')
+      open (unit, file=file, action='read', status='old')
 
       read (unit, *) n ! density-of-states resolution
 
       allocate(i%energy(n)) ! free-electron energy (eV)
-      allocate(i%density(n, i%bands)) ! density of states (a.u.)
+      allocate(i%dos(n, i%bands)) ! density of states (a.u.)
 
       do m = 1, n
-         read(unit, *) i%energy(m), i%density(m, :)
+         read(unit, *) i%energy(m), i%dos(m, :)
       end do
 
       close (unit)

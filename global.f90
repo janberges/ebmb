@@ -29,7 +29,7 @@ module global
       real(dp), allocatable :: lambda(:, :) ! electron-phonon coupling
       real(dp), allocatable :: muStar(:, :) ! Coulomb pseudo-potential
 
-      logical :: DOS = .false. ! consider full density of states?
+      logical :: chi = .false. ! consider full DOS and calculate chi?
 
       real(dp) :: upper = 10.0_dp ! overall cutoff (omegaE)
       real(dp) :: lower = -1.0_dp ! Coulomb cutoff (omegaE)
@@ -46,7 +46,7 @@ module global
       logical ::    rescale = .true.  ! rescale Coulomb pseudo-potential?
 
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
-      real(dp), allocatable :: density(:, :) ! density of Bloch states (a.u.)
+      real(dp), allocatable :: dos(:, :) ! density of Bloch states (a.u.)
    end type universal
 
    type matsubara

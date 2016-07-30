@@ -38,7 +38,7 @@ contains
       else
          write (unit, "(/, 'imaginary-axis solution [', I0, ']:', /)") im%status
 
-         if (i%DOS) then
+         if (i%chi) then
             write (unit, head) 'omega/eV', 'Z', 'Delta/eV', 'chi/eV'
 
             do p = 1, i%bands
@@ -77,7 +77,7 @@ contains
          if (i%resolution .gt. 0) then
             write (unit, "(/, 'real-axis solution:', /)")
 
-            if (i%DOS) then
+            if (i%chi) then
                write (unit, head) 'omega/eV', 'Re[Z]', 'Im[Z]', &
                   'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]', 'Im[chi]'
 
@@ -146,14 +146,14 @@ contains
          write (unit, "(/, 'negligible float difference (a.u.):', /)")
          write (unit, float) negligible_difference
 
-         if (i%DOS) then
+         if (i%chi) then
             write (unit, "(/, 'density of Bloch states:', /)")
             write (unit, head) 'E/eV', 'DOS/a.u.'
 
             call rule(i%bands + 1)
 
             do n = 1, size(i%energy)
-               write (unit, body) i%energy(n), i%density(n, :)
+               write (unit, body) i%energy(n), i%dos(n, :)
             end do
          end if
       end if
