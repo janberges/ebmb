@@ -1,6 +1,6 @@
 module real_axis
    use global
-   use pade
+   use real_axis_pade
    implicit none
 
 contains

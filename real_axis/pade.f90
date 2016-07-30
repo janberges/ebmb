@@ -1,4 +1,4 @@
-module pade
+module real_axis_pade
    use global
    implicit none
 
@@ -51,4 +51,4 @@ contains
 
       continuation = cmplx(d(1, n) / d(2, n), kind=dp)
    end function continuation
-end module pade
+end module real_axis_pade
