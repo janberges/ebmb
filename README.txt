@@ -10,13 +10,9 @@ I n s t a l l a t i o n
 
 By default, the makefile builds the program with the GNU Fortran compiler and in
 validation mode, i.e. with all warnings for the Fortran 2003 standard turned on.
-On the contrary, to obtain an optimized executable run
+There are two command-line arguments to change this behavior:
 
-  $ make mode=optimize
-
-Other compilers and options may also be chosen, e.g.
-
-  $ make compiler=ifort options=-O3
+  $ make compiler=gfortran|g95|ifort|f95 mode=validate|optimize
 
 
 A c k n o w l e d g m e n t
