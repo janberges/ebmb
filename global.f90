@@ -50,24 +50,23 @@ module global
    end type universal
 
    type matsubara
-      integer :: status ! convergence status
-
-      real(dp), allocatable :: omega(:) ! frequency (eV)
+      real(dp), allocatable :: omega(:)    ! frequency (eV)
+      real(dp), allocatable :: Z    (:, :) ! renormalization
+      real(dp), allocatable :: chi  (:, :) ! energy shift (eV)
       real(dp), allocatable :: Delta(:, :) ! gap (eV)
-      real(dp), allocatable :: phi(:, :) ! order parameter (eV)
-      real(dp), allocatable :: chi(:, :) ! energy shift (eV)
-      real(dp), allocatable :: Z(:, :) ! renormalization
+      real(dp), allocatable :: phi  (:, :) ! order parameter (eV)
+      real(dp), allocatable :: phiC (:)    ! constant Coulomb contribution (eV)
 
-      real(dp), allocatable :: phiC(:) ! constant Coulomb contribution (eV)
+      integer :: status ! convergence status
    end type matsubara
 
    type continued
-      real(dp), allocatable :: omega(:) ! frequency (eV)
-      complex(dp), allocatable :: Delta(:, :) ! gap (eV)
-      complex(dp), allocatable :: chi(:, :) ! energy shift (eV)
-      complex(dp), allocatable :: Z(:, :) ! renormalization
+      real   (dp), allocatable :: omega (:)    ! frequency (eV)
+      complex(dp), allocatable :: Z     (:, :) ! renormalization
+      complex(dp), allocatable :: chi   (:, :) ! energy shift (eV)
+      complex(dp), allocatable :: Delta (:, :) ! gap (eV)
+      real   (dp), allocatable :: Delta0(:)    ! measurable gap (eV)
 
-      real(dp), allocatable :: Delta0(:) ! measurable gap (eV)
       integer, allocatable :: status(:) ! convergence status
    end type continued
 
