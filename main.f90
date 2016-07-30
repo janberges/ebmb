@@ -5,7 +5,7 @@ program eb_local
    use io_load
    use io_store_data
    use io_store_text
-   use realaxis
+   use real_axis
    use tc
    implicit none
 
