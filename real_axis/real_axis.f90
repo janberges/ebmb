@@ -5,65 +5,65 @@ module real_axis
 
 contains
 
-   subroutine realize(i, im, re)
-      type(universal), intent(in) :: i
+   subroutine realize(x, im, re)
+      type(universal), intent(in) :: x
       type(matsubara), intent(in) :: im
       type(continued), intent(out) :: re
 
-      integer :: p, n
+      integer :: i, n
       real(dp) :: Delta0
 
-      if (i%measurable) then
-         allocate(re%Delta0(i%bands))
-         allocate(re%status(i%bands))
+      if (x%measurable) then
+         allocate(re%Delta0(x%bands))
+         allocate(re%status(x%bands))
       end if
 
-      if (i%resolution .gt. 0) then
-         allocate(re%omega(i%resolution))
-         allocate(re%Delta(i%resolution, i%bands))
-         allocate(re%Z(i%resolution, i%bands))
+      if (x%resolution .gt. 0) then
+         allocate(re%omega(x%resolution))
+         allocate(re%Delta(x%resolution, x%bands))
+         allocate(re%Z(x%resolution, x%bands))
 
-         if (i%chi) allocate(re%chi(i%resolution, i%bands))
+         if (x%chi) allocate(re%chi(x%resolution, x%bands))
       end if
 
-      if (i%measurable .or. i%resolution .gt. 0) then
-         do p = 1, i%bands
-            call coefficients(im%omega, im%Delta(:, p))
+      if (x%measurable .or. x%resolution .gt. 0) then
+         do i = 1, x%bands
+            call coefficients(im%omega, im%Delta(:, i))
 
-            if (i%measurable) then
-               re%Delta0(p) = 1
-               re%status(p) = -1
+            if (x%measurable) then
+               re%Delta0(i) = 1
+               re%status(i) = -1
 
-               do n = 1, i%limit
-                  Delta0 = real(continuation(re%Delta0(p)), dp)
+               do n = 1, x%limit
+                  Delta0 = real(continuation(re%Delta0(i)), dp)
 
-                  if (re%Delta0(p) .ap. Delta0) re%status(p) = n
+                  if (re%Delta0(i) .ap. Delta0) re%status(i) = n
 
-                  re%Delta0(p) = Delta0
+                  re%Delta0(i) = Delta0
 
-                  if (n .eq. re%status(p)) exit
+                  if (n .eq. re%status(i)) exit
                end do
             end if
 
-            if (i%resolution .gt. 0) then
-               call interval(re%omega, 0.0_dp, i%upper, &
+            if (x%resolution .gt. 0) then
+               call interval(re%omega, 0.0_dp, x%upper, &
                   lower=.true., upper=.false.)
 
-               do n = 1, i%resolution
-                  re%Delta(n, p) = continuation(re%omega(n))
+               do n = 1, x%resolution
+                  re%Delta(n, i) = continuation(re%omega(n))
                end do
 
-               call coefficients(im%omega, im%Z(:, p))
+               call coefficients(im%omega, im%Z(:, i))
 
-               do n = 1, i%resolution
-                  re%Z(n, p) = continuation(re%omega(n))
+               do n = 1, x%resolution
+                  re%Z(n, i) = continuation(re%omega(n))
                end do
 
-               if (i%chi) then
-                  call coefficients(im%omega, im%chi(:, p))
+               if (x%chi) then
+                  call coefficients(im%omega, im%chi(:, i))
 
-                  do n = 1, i%resolution
-                     re%chi(n, p) = continuation(re%omega(n))
+                  do n = 1, x%resolution
+                     re%chi(n, i) = continuation(re%omega(n))
                   end do
                end if
             end if

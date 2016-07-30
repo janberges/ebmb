@@ -9,26 +9,26 @@ program eb_local
    use tc
    implicit none
 
-   type(universal) :: i
+   type(universal) :: x
    type(matsubara) :: im
    type(continued) :: re
 
-   call load(i)
+   call load(x)
 
-   call estimate(i)
+   call estimate(x)
 
-   if (i%critical) then
-      call bisection(i, im)
+   if (x%critical) then
+      call bisection(x, im)
    else
-      if (i%chi) then
-         call solve_variable_dos(i, im)
+      if (x%chi) then
+         call solve_variable_dos(x, im)
       else
-         call solve_constant_dos(i, im)
+         call solve_constant_dos(x, im)
       end if
    end if
 
-   call realize(i, im, re)
+   call realize(x, im, re)
 
-   if (i%form .eq. 'text' .or. i%form .eq. 'both') call store_text(i, im, re)
-   if (i%form .eq. 'data' .or. i%form .eq. 'both') call store_data(i, im, re)
+   if (x%form .eq. 'text' .or. x%form .eq. 'both') call store_text(x, im, re)
+   if (x%form .eq. 'data' .or. x%form .eq. 'both') call store_data(x, im, re)
 end program eb_local

@@ -4,8 +4,8 @@ module eliashberg_variable_dos
 
 contains
 
-   subroutine solve_variable_dos(i, im)
-      type(universal), intent(in) :: i
+   subroutine solve_variable_dos(x, im)
+      type(universal), intent(in) :: x
       type(matsubara), intent(inout) :: im
 
       real(dp) :: nE, Z, phi, chi
@@ -17,29 +17,29 @@ contains
 
       integer, save :: u0 = -1
 
-      integer :: step, p, q, n, m, u, l
+      integer :: step, i, j, n, m, u, l
       logical :: done
 
-      nE = i%omegaE / (2 * pi * kB * i%T)
+      nE = x%omegaE / (2 * pi * kB * x%T)
 
-      u = ceiling(i%upper * nE - 0.5_dp)
-      l = ceiling(i%lower * nE - 0.5_dp)
+      u = ceiling(x%upper * nE - 0.5_dp)
+      l = ceiling(x%lower * nE - 0.5_dp)
 
       if (u .ne. u0) then
          if (u0 .eq. -1) then
-            allocate(weight(size(i%energy), i%bands))
-            allocate(trapezoids(size(i%energy)))
+            allocate(weight(size(x%energy), x%bands))
+            allocate(trapezoids(size(x%energy)))
 
-            call differential(i%energy, weight(:, 1))
+            call differential(x%energy, weight(:, 1))
 
-            do p = 2, i%bands
-               weight(:, p) = weight(:, 1)
+            do i = 2, x%bands
+               weight(:, i) = weight(:, 1)
             end do
 
-            n = minloc(abs(i%energy), 1)
+            n = minloc(abs(x%energy), 1)
 
-            do p = 1, i%bands
-               weight(:, p) = weight(:, p) * i%dos(:, p) / i%dos(n, p)
+            do i = 1, x%bands
+               weight(:, i) = weight(:, i) * x%dos(:, i) / x%dos(n, i)
             end do
          else
             deallocate(im%omega)
@@ -51,12 +51,12 @@ contains
          end if
 
          allocate(im%omega(0:u - 1))
-         allocate(im%Z    (0:u - 1, i%bands))
-         allocate(im%phi  (0:u - 1, i%bands))
-         allocate(im%chi  (0:u - 1, i%bands))
-         allocate(im%Delta(0:u - 1, i%bands))
+         allocate(im%Z    (0:u - 1, x%bands))
+         allocate(im%phi  (0:u - 1, x%bands))
+         allocate(im%chi  (0:u - 1, x%bands))
+         allocate(im%Delta(0:u - 1, x%bands))
 
-         allocate(im%phiC(i%bands))
+         allocate(im%phiC(x%bands))
 
          im%Z(:, :) = 1
 
@@ -71,24 +71,24 @@ contains
       end if
 
       do n = 0, u - 1
-         im%omega(n) = (2 * n + 1) * pi * kB * i%T
+         im%omega(n) = (2 * n + 1) * pi * kB * x%T
       end do
 
-      allocate(lambda(1 - u:2 * u - 1, i%bands, i%bands))
+      allocate(lambda(1 - u:2 * u - 1, x%bands, x%bands))
 
       do n = 1 - u, 2 * u - 1
-         lambda(n, :, :) = i%lambda / (1 + (n / nE) ** 2)
+         lambda(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
       end do
 
-      allocate(muStar(i%bands, i%bands))
+      allocate(muStar(x%bands, x%bands))
 
-      if (i%rescale) then
-         muStar = i%muStar / (1 + i%muStar * log(nE / (l + 0.5_dp)))
+      if (x%rescale) then
+         muStar = x%muStar / (1 + x%muStar * log(nE / (l + 0.5_dp)))
       else
-         muStar = i%muStar
+         muStar = x%muStar
       end if
 
-      allocate(mu(0:u - 1, i%bands, i%bands))
+      allocate(mu(0:u - 1, x%bands, x%bands))
 
       do n = 0, l - 1
          mu(n, :, :) = -2 * muStar
@@ -96,53 +96,53 @@ contains
 
       mu(l:, :, :) = 0
 
-      allocate(A(0:u - 1, i%bands))
-      allocate(B(0:u - 1, i%bands))
+      allocate(A(0:u - 1, x%bands))
+      allocate(B(0:u - 1, x%bands))
 
-      do p = 1, i%bands
+      do i = 1, x%bands
          do n = 0, u - 1
-            call integrate(n, p)
+            call integrate(n, i)
          end do
       end do
 
       im%status = -1
 
-      do step = 1, i%limit
+      do step = 1, x%limit
          done = .true.
 
-         do p = 1, i%bands
+         do i = 1, x%bands
             do n = 0, u - 1
                Z = 0
                phi = 0
                chi = 0
 
-               do q = 1, i%bands
+               do j = 1, x%bands
                   do m = 0, u - 1
-                     Z = Z + im%omega(m) * im%Z(m, q) * A(m, q) &
-                        * (lambda(n - m, q, p) - lambda(n + m + 1, q, p))
+                     Z = Z + im%omega(m) * im%Z(m, j) * A(m, j) &
+                        * (lambda(n - m, j, i) - lambda(n + m + 1, j, i))
 
-                     phi = phi + im%phi(m, q) * A(m, q) * (mu(m, q, p) &
-                        +  lambda(n - m, q, p) + lambda(n + m + 1, q, p))
+                     phi = phi + im%phi(m, j) * A(m, j) * (mu(m, j, i) &
+                        +  lambda(n - m, j, i) + lambda(n + m + 1, j, i))
 
-                     chi = chi - (im%chi(m, q) * A(m, q) + B(m, q)) &
-                        * (lambda(n - m, q, p) + lambda(n + m + 1, q, p))
+                     chi = chi - (im%chi(m, j) * A(m, j) + B(m, j)) &
+                        * (lambda(n - m, j, i) + lambda(n + m + 1, j, i))
                   end do
                end do
 
-               Z = 1 + Z * kB * i%T / im%omega(n)
-               phi = phi * kB * i%T
-               chi = chi * kB * i%T
+               Z = 1 + Z * kB * x%T / im%omega(n)
+               phi = phi * kB * x%T
+               chi = chi * kB * x%T
 
                done = done &
-                  .and. (im%Z(n, p) .ap. Z) &
-                  .and. (im%phi(n, p) .ap. phi) &
-                  .and. (im%chi(n, p) .ap. chi)
+                  .and. (im%Z(n, i) .ap. Z) &
+                  .and. (im%phi(n, i) .ap. phi) &
+                  .and. (im%chi(n, i) .ap. chi)
 
-               im%Z(n, p) = Z
-               im%phi(n, p) = phi
-               im%chi(n, p) = chi
+               im%Z(n, i) = Z
+               im%phi(n, i) = phi
+               im%chi(n, i) = chi
 
-               call integrate(n, p)
+               call integrate(n, i)
             end do
          end do
 
@@ -154,20 +154,20 @@ contains
 
       im%Delta(:, :) = im%phi / im%Z
 
-      do p = 1, i%bands
-         im%phiC(p) = kB * i%T * sum(im%phi * A * mu(:, :, p))
+      do i = 1, x%bands
+         im%phiC(i) = kB * x%T * sum(im%phi * A * mu(:, :, i))
       end do
 
    contains
 
-      subroutine integrate(n, p)
-         integer, intent(in) :: n, p
+      subroutine integrate(n, i)
+         integer, intent(in) :: n, i
 
-         trapezoids(:) = weight(:, p) / ((im%omega(n) * im%Z(n, p)) ** 2 &
-            + (i%energy + im%chi(n, p)) ** 2 + im%phi(n, p) ** 2)
+         trapezoids(:) = weight(:, i) / ((im%omega(n) * im%Z(n, i)) ** 2 &
+            + (x%energy + im%chi(n, i)) ** 2 + im%phi(n, i) ** 2)
 
-         A(n, p) = sum(trapezoids)
-         B(n, p) = sum(trapezoids * i%energy)
+         A(n, i) = sum(trapezoids)
+         B(n, i) = sum(trapezoids * x%energy)
       end subroutine integrate
 
    end subroutine solve_variable_dos

@@ -20,8 +20,8 @@ contains
       call get_command_argument(n, value=argument)
    end function argument
 
-   subroutine load(i)
-      type(universal), intent(out) :: i
+   subroutine load(x)
+      type(universal), intent(out) :: x
 
       character(:), allocatable :: setting ! command-line argument
       character(:), allocatable :: lhs, rhs ! left- and right-hand side
@@ -31,16 +31,16 @@ contains
 
       integer :: equals ! position of '='
 
-      integer :: p ! band index
+      integer :: i ! band index
       integer :: n ! argument number
 
       character(:), allocatable :: dos_file
 
       real(dp) :: elements ! number of elements in lambda and muStar
 
-      elements = i%bands ** 2
+      elements = x%bands ** 2
 
-      i%name = 'eb_local_untitled'
+      x%name = 'eb_local_untitled'
 
       do n = 1, command_argument_count()
          setting = argument(n)
@@ -51,15 +51,15 @@ contains
          rhs = setting(equals + 1:)
 
          select case (lhs)
-            case ('name'); i%name = rhs
+            case ('name'); x%name = rhs
 
-            case ('T'); read (rhs, *) i%T
+            case ('T'); read (rhs, *) x%T
 
-            case ('error'); read (rhs, *) i%error
-            case ('bound'); read (rhs, *) i%bound
-            case ('small'); read (rhs, *) i%small
+            case ('error'); read (rhs, *) x%error
+            case ('bound'); read (rhs, *) x%bound
+            case ('small'); read (rhs, *) x%small
 
-            case ('omegaE'); read (rhs, *) i%omegaE
+            case ('omegaE'); read (rhs, *) x%omegaE
 
             case ('lambda', 'lamda')
                lambda = rhs
@@ -71,57 +71,57 @@ contains
 
             case ('dos'); dos_file = rhs
 
-            case ('upper'); read (rhs, *) i%upper
-            case ('lower'); read (rhs, *) i%lower
+            case ('upper'); read (rhs, *) x%upper
+            case ('lower'); read (rhs, *) x%lower
 
-            case ('limit'); read (rhs, *) i%limit
+            case ('limit'); read (rhs, *) x%limit
 
-            case ('measurable'); read (rhs, *) i%measurable
-            case ('resolution'); read (rhs, *) i%resolution
+            case ('measurable'); read (rhs, *) x%measurable
+            case ('resolution'); read (rhs, *) x%resolution
 
-            case ('form'); read (rhs, *) i%form
-            case ('edit'); read (rhs, *) i%edit
+            case ('form'); read (rhs, *) x%form
+            case ('edit'); read (rhs, *) x%edit
 
-            case ('standalone'); read (rhs, *) i%standalone
-            case ('rescale');    read (rhs, *) i%rescale
+            case ('standalone'); read (rhs, *) x%standalone
+            case ('rescale');    read (rhs, *) x%rescale
 
             case ('epsilon'); read (rhs, *) negligible_difference
          end select
       end do
 
-      if (i%T .lt. 0) then
-         i%critical = .true.
-         i%measurable = .false.
-         i%resolution = 0
+      if (x%T .lt. 0) then
+         x%critical = .true.
+         x%measurable = .false.
+         x%resolution = 0
       end if
 
-      i%bands = nint(sqrt(elements))
+      x%bands = nint(sqrt(elements))
 
-      allocate(i%lambda(i%bands, i%bands))
-      allocate(i%muStar(i%bands, i%bands))
+      allocate(x%lambda(x%bands, x%bands))
+      allocate(x%muStar(x%bands, x%bands))
 
       if (allocated(lambda)) then
-         read (lambda, *) i%lambda
+         read (lambda, *) x%lambda
       else
-         i%lambda(:, :) = 0
+         x%lambda(:, :) = 0
 
-         do p = 1, i%bands
-            i%lambda(p, p) = 1
+         do i = 1, x%bands
+            x%lambda(i, i) = 1
          end do
       end if
 
       if (allocated(muStar)) then
-         read (muStar, *) i%muStar
+         read (muStar, *) x%muStar
       else
-         i%muStar(:, :) = 0
+         x%muStar(:, :) = 0
       end if
 
       if (allocated(dos_file)) then
-         i%chi = .true.
-         call load_dos(dos_file, i)
+         x%chi = .true.
+         call load_dos(dos_file, x)
       end if
 
-      if (i%lower .lt. 0) i%lower = i%upper
+      if (x%lower .lt. 0) x%lower = x%upper
    end subroutine load
 
    integer function values(list)       ! number of ...
@@ -136,9 +136,9 @@ contains
       end do
    end function values
 
-   subroutine load_dos(file, i)
+   subroutine load_dos(file, x)
       character(*), intent(in) :: file
-      type(universal), intent(inout) :: i
+      type(universal), intent(inout) :: x
 
       integer :: n, m
       integer, parameter :: unit = 11
@@ -147,11 +147,11 @@ contains
 
       read (unit, *) n ! density-of-states resolution
 
-      allocate(i%energy(n)) ! free-electron energy (eV)
-      allocate(i%dos(n, i%bands)) ! density of states (a.u.)
+      allocate(x%energy(n)) ! free-electron energy (eV)
+      allocate(x%dos(n, x%bands)) ! density of states (a.u.)
 
       do m = 1, n
-         read(unit, *) i%energy(m), i%dos(m, :)
+         read(unit, *) x%energy(m), x%dos(m, :)
       end do
 
       close (unit)
