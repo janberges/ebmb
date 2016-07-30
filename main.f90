@@ -1,5 +1,4 @@
 program eb_local
-   use arguments
    use eliashberg_constant_dos
    use eliashberg_variable_dos
    use global

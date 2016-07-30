@@ -1,5 +1,4 @@
 module io_load
-   use arguments
    use global
    implicit none
 
@@ -7,6 +6,19 @@ module io_load
    public :: load
 
 contains
+
+   function argument(n)
+      character(:), allocatable :: argument
+      integer, intent(in) :: n
+
+      integer :: size
+
+      call get_command_argument(n, length=size)
+
+      allocate(character(size) :: argument)
+
+      call get_command_argument(n, value=argument)
+   end function argument
 
    subroutine load(i)
       type(universal), intent(out) :: i
