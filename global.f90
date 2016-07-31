@@ -4,11 +4,13 @@ module global
    integer, parameter :: dp = selected_real_kind(15)
    integer, parameter :: qp = selected_real_kind(30)
 
-   real(dp), parameter :: pi = 4 * atan(1.0_dp)
-   real(dp), parameter :: kB = 8.61733e-05_dp ! Boltzmann constant (eV/K)
+   real(dp), parameter :: pi = 4 * atan(1.0_dp) ! 3.14159...
+   real(dp), parameter :: kB = 8.61733e-05_dp   ! Boltzmann constant (meV/K)
 
    type universal
       character(:), allocatable :: name
+
+      real(dp), pointer :: variable => null() ! parameter to be optimized
 
       real(dp) :: T = 10.0_dp ! temperature (K)
 
@@ -44,9 +46,13 @@ module global
 
       logical :: standalone = .false. ! include parameters in output file?
       logical ::    rescale = .true.  ! rescale Coulomb pseudo-potential?
+      logical ::    cutoffZ = .false. ! cut off renormalization function?
 
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
       real(dp), allocatable :: dos(:, :) ! density of Bloch states (a.u.)
+
+      real(dp) ::  rate = 1e-01_dp ! growth rate for bound search
+      real(dp) :: shift = 1e+01_dp ! eigenvalue shift for power method
    end type universal
 
    type matsubara

@@ -1,4 +1,4 @@
-module tc
+module bisection_tc
    use eliashberg_constant_dos
    use eliashberg_variable_dos
    use global
@@ -18,11 +18,9 @@ contains
          / (lambda - 0.62_dp * lambda * muStar - muStar))
    end subroutine estimate
 
-   subroutine bisection(x, im)
+   subroutine tc(x, im)
       type(universal), intent(inout) :: x
       type(matsubara), intent(out) :: im
-
-      real(dp), parameter :: ratio = 0.1_dp
 
       integer :: i, j
       real(dp) :: lower(x%bands), upper(x%bands)
@@ -54,7 +52,7 @@ contains
                cycle BANDS
             end if
 
-            x%T = x%T * (1 - ratio)
+            x%T = x%T * (1 - x%rate)
             x%T = max(x%T, x%bound)
             call tell
             call bounds
@@ -63,7 +61,7 @@ contains
          x%T = lower(i)
 
          do while (upper(i) .lt. 0)
-            x%T = x%T * (1 + ratio)
+            x%T = x%T * (1 + x%rate)
             call tell
             call bounds
          end do
@@ -110,5 +108,5 @@ contains
          end do
       end subroutine bounds
 
-   end subroutine bisection
-end module tc
+   end subroutine tc
+end module bisection_tc
