@@ -20,7 +20,7 @@ module global
 
       logical :: critical = .false. ! find critical temperature?
 
-      real(dp) :: error = 1e-03_dp ! valid error of critical temperature (K)
+      real(dp) :: error = 1e-05_dp ! valid error of critical temperature (K)
       real(dp) :: bound = 1e+00_dp ! lower bound of critical temperature (K)
       real(dp) :: small = 1e-10_dp ! maximum gap at critical temperature (eV)
 
@@ -33,10 +33,10 @@ module global
 
       logical :: chi = .false. ! consider full DOS and calculate chi?
 
-      real(dp) :: upper = 10.0_dp ! overall cutoff (omegaE)
+      real(dp) :: upper = 15.0_dp ! overall cutoff (omegaE)
       real(dp) :: lower = -1.0_dp ! Coulomb cutoff (omegaE)
 
-      integer :: limit = 100000 ! maximum number of fixed-point steps
+      integer :: limit = 250000 ! maximum number of fixed-point steps
 
       logical :: measurable = .false. ! find measurable gap?
       integer :: resolution = 0       ! real axis resolution
@@ -52,7 +52,7 @@ module global
       real(dp), allocatable :: dos(:, :) ! density of Bloch states (a.u.)
 
       real(dp) ::  rate = 1e-01_dp ! growth rate for bound search
-      real(dp) :: shift = 1e+01_dp ! eigenvalue shift for power method
+      real(dp) :: shift = 1e+02_dp ! eigenvalue shift for power method
    end type universal
 
    type matsubara
