@@ -144,7 +144,7 @@ contains
          write (unit, count) x%limit
 
          write (unit, "(/, 'negligible float difference (a.u.):', /)")
-         write (unit, float) negligible_difference
+         write (unit, float) epsilon
 
          if (x%chi) then
             write (unit, "(/, 'density of Bloch states:', /)")

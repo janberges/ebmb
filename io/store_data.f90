@@ -98,7 +98,7 @@ contains
          if (x%lower .lt. x%upper) write (unit) 'lower:', x%lower
 
          write (unit) 'INT:limit:', x%limit
-         write (unit) 'REAL:epsilon:', negligible_difference
+         write (unit) 'REAL:epsilon:', epsilon
 
          if (x%chi) then
             write (unit) 'DIM:', 1, size(x%energy)

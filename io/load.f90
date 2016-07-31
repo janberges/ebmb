@@ -89,7 +89,7 @@ contains
             case ('rate');  read (rhs, *) x%rate
             case ('shift'); read (rhs, *) x%shift
 
-            case ('epsilon'); read (rhs, *) negligible_difference
+            case ('epsilon'); read (rhs, *) epsilon
          end select
       end do
 

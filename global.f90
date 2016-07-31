@@ -76,7 +76,7 @@ module global
       integer, allocatable :: status(:) ! convergence status
    end type continued
 
-   real(dp) :: negligible_difference = 1e-15_dp
+   real(dp) :: epsilon = 1e-15_dp
 
    interface operator(.ap.)
       module procedure ap
@@ -88,6 +88,6 @@ contains
       logical :: ap
       real(dp), intent(in) :: lhs, rhs
 
-      ap = abs(lhs - rhs) .le. negligible_difference
+      ap = abs(lhs - rhs) .le. epsilon
    end function ap
 end module global
