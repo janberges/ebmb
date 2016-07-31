@@ -1,21 +1,22 @@
 module eliashberg_variable_dos
    use global
    implicit none
+   private
+
+   public :: solve_variable_dos, initialize_variable_dos
+
+   real(dp), allocatable :: weight(:, :), trapezoids(:)
 
 contains
 
    subroutine solve_variable_dos(x, im)
       type(universal), intent(in) :: x
-      type(matsubara), intent(inout) :: im
+      type(matsubara), intent(out) :: im
 
       real(dp) :: nE, Z, phi, chi
 
       real(dp), allocatable :: lambda(:, :, :), mu(:, :, :)
       real(dp), allocatable :: muStar(:, :), A(:, :), B(:, :)
-
-      real(dp), allocatable, save :: weight(:, :), trapezoids(:)
-
-      integer, save :: u0 = -1
 
       integer :: step, i, j, n, m, u, l
       logical :: done
@@ -25,50 +26,7 @@ contains
       u = ceiling(x%upper * nE - 0.5_dp)
       l = ceiling(x%lower * nE - 0.5_dp)
 
-      if (u .ne. u0) then
-         if (u0 .eq. -1) then
-            allocate(weight(size(x%energy), x%bands))
-            allocate(trapezoids(size(x%energy)))
-
-            call differential(x%energy, weight(:, 1))
-
-            do i = 2, x%bands
-               weight(:, i) = weight(:, 1)
-            end do
-
-            n = minloc(abs(x%energy), 1)
-
-            do i = 1, x%bands
-               weight(:, i) = weight(:, i) * x%dos(:, i) / x%dos(n, i)
-            end do
-         else
-            deallocate(im%omega)
-            deallocate(im%Z)
-            deallocate(im%phi)
-            deallocate(im%chi)
-            deallocate(im%Delta)
-            deallocate(im%phiC)
-         end if
-
-         allocate(im%omega(0:u - 1))
-         allocate(im%Z    (0:u - 1, x%bands))
-         allocate(im%phi  (0:u - 1, x%bands))
-         allocate(im%chi  (0:u - 1, x%bands))
-         allocate(im%Delta(0:u - 1, x%bands))
-
-         allocate(im%phiC(x%bands))
-
-         im%Z(:, :) = 1
-
-         im%phi(:, :) = 0
-         im%phi(0, :) = 1
-         im%chi(:, :) = 0
-
-         im%Delta(:, :) = 0
-         im%Delta(0, :) = 1
-
-         u0 = u
-      end if
+      allocate(im%omega(0:u - 1))
 
       do n = 0, u - 1
          im%omega(n) = (2 * n + 1) * pi * kB * x%T
@@ -95,6 +53,19 @@ contains
       end do
 
       mu(l:, :, :) = 0
+
+      allocate(im%Z(0:u - 1, x%bands))
+
+      im%Z(:, :) = 1
+
+      allocate(im%phi(0:u - 1, x%bands))
+
+      im%phi(:, :) = 0
+      im%phi(0, :) = 1
+
+      allocate(im%chi(0:u - 1, x%bands))
+
+      im%chi(:, :) = 0
 
       allocate(A(0:u - 1, x%bands))
       allocate(B(0:u - 1, x%bands))
@@ -152,7 +123,11 @@ contains
          end if
       end do
 
+      allocate(im%Delta(0:u - 1, x%bands))
+
       im%Delta(:, :) = im%phi / im%Z
+
+      allocate(im%phiC(x%bands))
 
       do i = 1, x%bands
          im%phiC(i) = kB * x%T * sum(im%phi * A * mu(:, :, i))
@@ -171,6 +146,27 @@ contains
       end subroutine integrate
 
    end subroutine solve_variable_dos
+
+   subroutine initialize_variable_dos(x)
+      type(universal), intent(in) :: x
+
+      integer :: i, n
+
+      allocate(weight(size(x%energy), x%bands))
+      allocate(trapezoids(size(x%energy)))
+
+      call differential(x%energy, weight(:, 1))
+
+      do i = 2, x%bands
+         weight(:, i) = weight(:, 1)
+      end do
+
+      n = minloc(abs(x%energy), 1)
+
+      do i = 1, x%bands
+         weight(:, i) = weight(:, i) * x%dos(:, i) / x%dos(n, i)
+      end do
+   end subroutine initialize_variable_dos
 
    subroutine differential(x, dx)
       real(dp), intent(in) :: x(:)

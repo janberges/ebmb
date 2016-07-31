@@ -24,6 +24,8 @@ program eb_local
    else
       call estimate(x)
 
+      if (x%chi) call initialize_variable_dos(x)
+
       if (x%critical) then
          call tc(x, im)
       else
