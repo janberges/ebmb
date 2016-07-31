@@ -17,7 +17,7 @@ contains
          matrix(:, :),    & ! Eliashberg matrix
          vector(:)          ! energy gap
 
-      integer       :: u       ! number of Matsubara frequencies
+      integer       :: u, l    ! number of Matsubara frequencies (with mu*)
       integer, save :: u0 = -1 ! ... in previous subroutine call
 
       integer :: i, j ! band indices
@@ -31,6 +31,7 @@ contains
       nE = x%omegaE / (2 * pi * kB * x%T)
 
       u = ceiling(x%upper * nE - 0.5_dp)
+      l = ceiling(x%lower * nE - 0.5_dp)
 
       if (u .ne. u0) then
          if (u0 .ne. -1) then
@@ -77,7 +78,7 @@ contains
       end if
 
       if (x%rescale) then
-         muStar(:, :) = x%muStar / (1 + x%muStar * log(nE / (u + 0.5_dp)))
+         muStar(:, :) = x%muStar / (1 + x%muStar * log(nE / (l + 0.5_dp)))
       else
          muStar(:, :) = x%muStar
       end if
@@ -88,7 +89,8 @@ contains
          do j = 0, x%bands - 1
             q = j * u
 
-            matrix(q:q + u - 1, p:p + u - 1) = -2 * muStar(j, i)
+            matrix(q    :q + l - 1, p:p + u - 1) = -2 * muStar(j, i)
+            matrix(q + l:q + u - 1, p:p + u - 1) = 0
 
             do n = 0, u - 1
                matrix(q + n, p + n) = matrix(q + n, p + n) - renorm(n, j, i)
