@@ -2,6 +2,9 @@ module eliashberg_constant_dos
    use global
    implicit none
 
+   private
+   public :: solve_constant_dos
+
 contains
 
    subroutine solve_constant_dos(x, im)

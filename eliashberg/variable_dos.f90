@@ -1,8 +1,8 @@
 module eliashberg_variable_dos
    use global
    implicit none
-   private
 
+   private
    public :: solve_variable_dos, initialize_variable_dos
 
    real(dp), allocatable :: weight(:, :), trapezoids(:)

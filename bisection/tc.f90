@@ -4,6 +4,9 @@ module bisection_tc
    use global
    implicit none
 
+   private
+   public :: estimate, tc
+
 contains
 
    subroutine estimate(x)

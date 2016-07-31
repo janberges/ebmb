@@ -3,6 +3,9 @@ module real_axis
    use real_axis_pade
    implicit none
 
+   private
+   public :: realize
+
 contains
 
    subroutine realize(x, im, re)

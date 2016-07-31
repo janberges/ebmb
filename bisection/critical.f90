@@ -3,6 +3,9 @@ module bisection_critical
    use global
    implicit none
 
+   private
+   public :: critical
+
 contains
 
    subroutine critical(x)

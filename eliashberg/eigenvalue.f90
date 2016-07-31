@@ -2,6 +2,9 @@ module eliashberg_eigenvalue
    use global
    implicit none
 
+   private
+   public :: greatest_eigenvalue
+
 contains
 
    subroutine greatest_eigenvalue(status, x)
