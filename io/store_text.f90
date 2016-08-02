@@ -160,6 +160,8 @@ contains
 
       close (unit)
 
+      write (*, "('Results written to ''', A, '''')") x%name // '.out'
+
    contains
 
       subroutine rule(n)

@@ -111,5 +111,7 @@ contains
       end if
 
       close (unit)
+
+      write (*, "('Results written to ''', A, '''')") x%name // '.dat'
    end subroutine store_data
 end module io_store_data
