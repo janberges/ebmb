@@ -19,6 +19,8 @@ contains
 
       x%TcMD = x%omegaE / (1.2_dp * kB) * exp(-1.04_dp * (1 + lambda) &
          / (lambda - 0.62_dp * lambda * muStar - muStar))
+
+      if (x%T .eq. 0) x%T = x%TcMD
    end subroutine estimate
 
    subroutine tc(x, im)
@@ -35,7 +37,7 @@ contains
       lower(:) = -1
       upper(:) = -1
 
-      x%T = max(x%TcMD, x%bound)
+      x%T = max(x%T, x%bound)
       call tell
       call bounds
 

@@ -32,7 +32,7 @@ contains
       write (unit, "('McMillan and Dynes'' critical temperature (K):', /)")
       write (unit, float) x%TcMD
 
-      if (x%critical) then
+      if (x%mode .eq. 'tc') then
          write (unit, "(/, 'Eliashberg''s critical temperature (K):', /)")
          write (unit, float) x%TcEB
       else
@@ -106,7 +106,7 @@ contains
       end if
 
       if (x%standalone) then
-         if (x%critical) then
+         if (x%mode .eq. 'tc') then
             write (unit, "(/, 'valid error of critical temperature (K)', /)")
             write (unit, float) x%error
 

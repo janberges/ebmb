@@ -9,7 +9,7 @@ module bisection_critical
 contains
 
    subroutine critical(x)
-      type(universal), intent(inout) :: x
+      type(universal), target, intent(inout) :: x
 
       real(dp) :: inner ! bound within superconducting phase
       real(dp) :: outer ! bound beyond superconducting phase
@@ -18,6 +18,34 @@ contains
       real(dp) :: status0 ! ... in previous step
 
       logical :: try ! still trying out direction?
+
+      integer :: i, j ! band indices
+
+      x%variable => x%T
+
+      if (x%T .lt. 0) then
+         x%variable => x%T
+         x%variable = -x%variable
+      end if
+
+      if (x%omegaE .lt. 0) then
+         x%variable => x%omegaE
+         x%variable = -x%variable
+      end if
+
+      do i = 1, x%bands
+         do j = 1, x%bands
+            if (x%lambda(j, i) .lt. 0) then
+               x%variable => x%lambda(j, i)
+               x%variable = -x%variable
+            end if
+
+            if (x%muStar(j, i) .lt. 0) then
+               x%variable => x%muStar(j, i)
+               x%variable = -x%variable
+            end if
+         end do
+      end do
 
       try = .true.
 

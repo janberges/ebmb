@@ -20,7 +20,7 @@ contains
       write (unit) 'REAL:DIM:', 0
       write (unit) 'TcMD:', x%TcMD
 
-      if (x%critical) then
+      if (x%mode .eq. 'tc') then
          if (x%bands .gt. 1) write (unit) 'DIM:', 1, x%bands
 
          write (unit) 'TcEB:', x%TcEB
@@ -76,7 +76,7 @@ contains
       if (x%standalone) then
          write (unit) 'DIM:', 0
 
-         if (x%critical) then
+         if (x%mode .eq. 'tc') then
             write (unit) 'error:', x%error
             write (unit) 'bound:', x%bound
             write (unit) 'small:', x%small

@@ -21,6 +21,8 @@ contains
       integer :: step, i, j, n, m, u, l
       logical :: done
 
+      if (.not. allocated(weight)) call initialize_variable_dos(x)
+
       nE = x%omegaE / (2 * pi * kB * x%T)
 
       u = ceiling(x%upper * nE - 0.5_dp)
@@ -151,6 +153,9 @@ contains
       type(universal), intent(in) :: x
 
       integer :: i, n
+
+      if (allocated(weight))     deallocate(weight)
+      if (allocated(trapezoids)) deallocate(trapezoids)
 
       allocate(weight(size(x%energy), x%bands))
       allocate(trapezoids(size(x%energy)))

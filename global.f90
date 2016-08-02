@@ -10,15 +10,15 @@ module global
    type universal
       character(:), allocatable :: name
 
+      character(11) :: mode = 'self-energy'
+
       real(dp), pointer :: variable => null() ! parameter to be optimized
 
-      real(dp) :: T = 10.0_dp ! temperature (K)
+      real(dp) :: T = 0 ! temperature (K)
 
       real(dp) :: TcMD ! McMillan's critical temperature (eV)
 
       real(dp), allocatable :: TcEB(:) ! Eliashberg's critical temperature (eV)
-
-      logical :: critical = .false. ! find critical temperature?
 
       real(dp) :: error = 1e-05_dp ! valid error of critical temperature (K)
       real(dp) :: bound = 1e+00_dp ! lower bound of critical temperature (K)

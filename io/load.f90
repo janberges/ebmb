@@ -90,14 +90,10 @@ contains
             case ('shift'); read (rhs, *) x%shift
 
             case ('epsilon'); read (rhs, *) epsilon
+
+            case default; x%mode = rhs
          end select
       end do
-
-      if (x%T .eq. 0) then
-         x%critical = .true.
-         x%measurable = .false.
-         x%resolution = 0
-      end if
 
       x%bands = nint(sqrt(elements))
 
@@ -126,8 +122,6 @@ contains
       end if
 
       if (x%lower .lt. 0) x%lower = x%upper
-
-      call associate(x)
    end subroutine load
 
    integer function values(list)       ! number of ...
@@ -162,34 +156,4 @@ contains
 
       close (unit)
    end subroutine load_dos
-
-   subroutine associate(x)
-      type(universal), target, intent(inout) :: x
-
-      integer :: i, j ! band indices
-
-      if (x%T .lt. 0) then
-         x%variable => x%T
-         x%variable = -x%variable
-      end if
-
-      if (x%omegaE .lt. 0) then
-         x%variable => x%omegaE
-         x%variable = -x%variable
-      end if
-
-      do i = 1, x%bands
-         do j = 1, x%bands
-            if (x%lambda(j, i) .lt. 0) then
-               x%variable => x%lambda(j, i)
-               x%variable = -x%variable
-            end if
-
-            if (x%muStar(j, i) .lt. 0) then
-               x%variable => x%muStar(j, i)
-               x%variable = -x%variable
-            end if
-         end do
-      end do
-   end subroutine associate
 end module io_load

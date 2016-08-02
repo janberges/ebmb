@@ -16,29 +16,27 @@ program eb_local
 
    call load(x)
 
-   if (associated(x%variable)) then
-      call load(x)
-      call critical(x)
+   call estimate(x)
 
-      print '(F0.15)', x%variable
-   else
-      call estimate(x)
-
-      if (x%chi) call initialize_variable_dos(x)
-
-      if (x%critical) then
-         call tc(x, im)
-      else
+   select case (x%mode)
+      case ('self-energy')
          if (x%chi) then
             call solve_variable_dos(x, im)
          else
             call solve_constant_dos(x, im)
          end if
-      end if
 
-      call realize(x, im, re)
+         call realize(x, im, re)
 
-      if (x%form .eq. 'text' .or. x%form .eq. 'both') call store_text(x, im, re)
-      if (x%form .eq. 'data' .or. x%form .eq. 'both') call store_data(x, im, re)
-   end if
+      case ('critical')
+         call critical(x)
+
+         print '(F0.15)', x%variable
+
+      case ('tc')
+         call tc(x, im)
+   end select
+
+   if (x%form .eq. 'text' .or. x%form .eq. 'both') call store_text(x, im, re)
+   if (x%form .eq. 'data' .or. x%form .eq. 'both') call store_data(x, im, re)
 end program eb_local
