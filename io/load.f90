@@ -40,8 +40,6 @@ contains
 
       elements = x%bands ** 2
 
-      x%name = 'eb_local_untitled'
-
       do n = 1, command_argument_count()
          setting = argument(n)
 
@@ -51,12 +49,11 @@ contains
          rhs = setting(equals + 1:)
 
          select case (lhs)
-            case ('name'); x%name = rhs
+            case ('file'); read (rhs, *) x%file
 
             case ('T'); read (rhs, *) x%T
 
             case ('error'); read (rhs, *) x%error
-            case ('bound'); read (rhs, *) x%bound
             case ('small'); read (rhs, *) x%small
 
             case ('omegaE'); read (rhs, *) x%omegaE
@@ -80,18 +77,19 @@ contains
             case ('resolution'); read (rhs, *) x%resolution
 
             case ('form'); read (rhs, *) x%form
-            case ('edit'); read (rhs, *) x%edit
 
-            case ('standalone'); read (rhs, *) x%standalone
-            case ('rescale');    read (rhs, *) x%rescale
-            case ('cutoffZ');    read (rhs, *) x%cutoffZ
+            case ('rescale'); read (rhs, *) x%rescale
+            case ('cutoffZ'); read (rhs, *) x%cutoffZ
+
+            case ('tell'); read (rhs, *) x%tell
 
             case ('rate');  read (rhs, *) x%rate
             case ('shift'); read (rhs, *) x%shift
 
             case ('epsilon'); read (rhs, *) epsilon
 
-            case default; x%mode = rhs
+            case default
+               print "('Ignored unknown parameter ''', A, '''')", lhs
          end select
       end do
 

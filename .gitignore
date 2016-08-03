@@ -5,7 +5,6 @@
 *.o
 
 *.in
-!example.in
 *.out
 *.dat
 
@@ -17,4 +16,6 @@
 *.synctex
 *.synctex.gz
 
-eb_local
+critical
+ebmb
+tc

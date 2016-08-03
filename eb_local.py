@@ -40,25 +40,34 @@ def escape(value):
 
     return string
 
-def run(executable='eb_local', **parameters):
-    command = [executable]
+def run(program='ebmb', **parameters):
+    command = [program]
 
     for key, value in parameters.items():
-        command.append(
-            '='.join([key,
-            ','.join(np.ravel(value)) if np.shape(value) else escape(value)]))
+        command.append('='.join([key, ','.join(map(escape, np.ravel(value)))]))
 
     subprocess.call(command)
 
-def get(name='~temporary', executable='eb_local', replace=True,
-    **parameters):
+def get(file='~temporary.dat', replace=True, program='ebmb', **parameters):
+    if replace or not path.exists(file):
+        run(program, file=file, **parameters)
 
-    datafile = name + '.dat'
+    if program == 'ebmb':
+        return load(file)
+    else:
+        with open(file, 'rb') as file:
+            data = np.fromfile(file, np.float64)
 
-    if replace or not path.exists(datafile):
-        run(executable, name=name, **parameters)
+        return data if data.size > 1 else data[0]
 
-    return load(datafile)
+def ebmb(**parameters):
+    return get(program='ebmb', **parameters)
+
+def tc(**parameters):
+    return get(program='tc', **parameters)
+
+def critical(**parameters):
+    return get(program='critical', **parameters)
 
 def squareDOS(e, t=0.25):
     return ellipk(1 - (0.25 * e / t) ** 2) / (2 * np.pi ** 2 * t)
@@ -101,5 +110,5 @@ def squareDOSfile(name='dos.in', eF=0.5, n=401, t=0.25, bands=1, replace=True):
 if __name__ == '__main__':
     np.set_printoptions(threshold=9, edgeitems=1)
 
-    for item in sorted(get().items()):
+    for item in sorted(ebmb(tell=False).items()):
         print ('%9s = %s' % item).replace('\n', '\n' + ' ' * 12)
