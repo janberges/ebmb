@@ -42,7 +42,7 @@ programs = critical ebmb tc
 all: $(programs)
 
 clean:
-	@rm -f $(needless) critical.o ebmb.o eliashberg/eigenvalue.o eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o io/store.o io/tell.o real_axis/pade.o real_axis/real_axis.o tc.o
+	@rm -f $(needless) eliashberg/eigenvalue.o eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o io/store.o io/tell.o programs/critical.o programs/ebmb.o programs/tc.o real_axis/pade.o real_axis/real_axis.o
 
 cleaner: clean
 	@rm -f $(programs)
@@ -55,12 +55,10 @@ $(programs):
 	@echo compile $*
 	@$(compiler) $(options) -c $< -o $@
 
-critical: critical.o eliashberg/eigenvalue.o global.o io/load.o
-ebmb: ebmb.o eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o io/store.o io/tell.o real_axis/pade.o real_axis/real_axis.o
-tc: eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o tc.o
+critical: eliashberg/eigenvalue.o global.o io/load.o programs/critical.o
+ebmb: eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o io/store.o io/tell.o programs/ebmb.o real_axis/pade.o real_axis/real_axis.o
+tc: eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o programs/tc.o
 
-critical.o: eliashberg/eigenvalue.o global.o io/load.o
-ebmb.o: eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/load.o io/store.o io/tell.o real_axis/real_axis.o
 eliashberg/eigenvalue.o: global.o
 eliashberg/self_energy.o: global.o
 eliashberg/self_energy_cdos.o: global.o
@@ -68,6 +66,8 @@ io/formatting.o: global.o
 io/load.o: global.o
 io/store.o: global.o
 io/tell.o: global.o io/formatting.o
+programs/critical.o: eliashberg/eigenvalue.o global.o io/load.o
+programs/ebmb.o: eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/load.o io/store.o io/tell.o real_axis/real_axis.o
+programs/tc.o: eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o
 real_axis/pade.o: global.o
 real_axis/real_axis.o: global.o real_axis/pade.o
-tc.o: eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o
