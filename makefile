@@ -1,5 +1,5 @@
 compiler = gfortran
-mode = validate
+mode = optimize
 
 ifeq ($(compiler), gfortran)
   ifeq ($(mode), validate)
@@ -8,13 +8,6 @@ ifeq ($(compiler), gfortran)
     options = -O3
   endif
   override options += -J mod
-else ifeq ($(compiler), g95)
-  ifeq ($(mode), validate)
-    options = -std=f2003 -Wall -pedantic
-  else ifeq ($(mode), optimize)
-    options = -O3
-  endif
-  override options += -fmod=mod
 else ifeq ($(compiler), ifort)
   ifeq ($(mode), validate)
     options = -O0 -warn all
@@ -22,13 +15,6 @@ else ifeq ($(compiler), ifort)
     options = -O3
   endif
   override options += -module mod
-else ifeq ($(compiler), f95)
-  ifeq ($(mode), validate)
-    options = -w4
-  else ifeq ($(mode), optimize)
-    options = -O3
-  endif
-  override options += -moddir=mod
 endif
 
 needless = *.aux *.dat .*.lb *.log mod/*.mod *.out *.pyc *.synctex *.synctex.gz ~temporary.* .DS_Store
