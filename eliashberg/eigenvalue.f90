@@ -3,11 +3,11 @@ module eliashberg_eigenvalue
    implicit none
 
    private
-   public :: greatest_eigenvalue
+   public :: eigenvalue
 
 contains
 
-   subroutine greatest_eigenvalue(status, x)
+   subroutine eigenvalue(status, x)
       type(universal), intent(in) :: x
 
       real(dp), intent(out) :: status  ! greatest eigenvalue
@@ -33,8 +33,8 @@ contains
 
       nE = x%omegaE / (2 * pi * kB * x%T)
 
-      u = ceiling(x%upper * nE - 0.5_dp)
-      l = ceiling(x%lower * nE - 0.5_dp)
+      u = ceiling(x%cutoff * nE - 0.5_dp)
+      l = ceiling(x%cutout * nE - 0.5_dp)
 
       if (u .ne. u0) then
          if (u0 .ne. -1) then
@@ -63,7 +63,7 @@ contains
          lambda(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
       end do
 
-      if (x%cutoffZ) then
+      if (x%imitate) then
          do n = 0, u - 1
             renorm(n, :, :) = 0
 
@@ -127,5 +127,5 @@ contains
       end do
 
       status = status - x%shift
-   end subroutine greatest_eigenvalue
+   end subroutine eigenvalue
 end module eliashberg_eigenvalue

@@ -49,7 +49,7 @@ contains
             end if
 
             if (x%resolution .gt. 0) then
-               call interval(re%omega, 0.0_dp, x%upper, &
+               call interval(re%omega, 0.0_dp, x%cutoff, &
                   lower=.true., upper=.false.)
 
                do n = 1, x%resolution

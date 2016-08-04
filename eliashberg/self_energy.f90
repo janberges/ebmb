@@ -1,15 +1,15 @@
-module eliashberg_variable_dos
+module eliashberg_self_energy
    use global
    implicit none
 
    private
-   public :: solve_variable_dos, initialize_variable_dos
+   public :: self_energy, initialize
 
    real(dp), allocatable :: weight(:, :), trapezoids(:)
 
 contains
 
-   subroutine solve_variable_dos(x, im)
+   subroutine self_energy(x, im)
       type(universal), intent(in) :: x
       type(matsubara), intent(out) :: im
 
@@ -21,12 +21,12 @@ contains
       integer :: step, i, j, n, m, u, l
       logical :: done
 
-      if (.not. allocated(weight)) call initialize_variable_dos(x)
+      if (.not. allocated(weight)) call initialize(x)
 
       nE = x%omegaE / (2 * pi * kB * x%T)
 
-      u = ceiling(x%upper * nE - 0.5_dp)
-      l = ceiling(x%lower * nE - 0.5_dp)
+      u = ceiling(x%cutoff * nE - 0.5_dp)
+      l = ceiling(x%cutout * nE - 0.5_dp)
 
       allocate(im%omega(0:u - 1))
 
@@ -147,9 +147,9 @@ contains
          B(n, i) = sum(trapezoids * x%energy)
       end subroutine integrate
 
-   end subroutine solve_variable_dos
+   end subroutine self_energy
 
-   subroutine initialize_variable_dos(x)
+   subroutine initialize(x)
       type(universal), intent(in) :: x
 
       integer :: i, n
@@ -171,7 +171,7 @@ contains
       do i = 1, x%bands
          weight(:, i) = weight(:, i) * x%dos(:, i) / x%dos(n, i)
       end do
-   end subroutine initialize_variable_dos
+   end subroutine initialize
 
    subroutine differential(x, dx)
       real(dp), intent(in) :: x(:)
@@ -186,4 +186,4 @@ contains
 
       dx(:) = dx / 2
    end subroutine differential
-end module eliashberg_variable_dos
+end module eliashberg_self_energy

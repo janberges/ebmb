@@ -1,6 +1,6 @@
 program tc
-   use eliashberg_constant_dos
-   use eliashberg_variable_dos
+   use eliashberg_self_energy
+   use eliashberg_self_energy_cdos
    use global
    use io_formatting
    use io_load
@@ -89,13 +89,13 @@ contains
       if (x%tell) print body, x%T
 
       if (x%chi) then
-         call solve_variable_dos(x, im)
+         call self_energy(x, im)
       else
-         call solve_constant_dos(x, im)
+         call self_energy_cDOS(x, im)
       end if
 
       do j = 1, x%bands
-         if (abs(im%Delta(0, j)) .le. x%small) then
+         if (abs(im%Delta(0, j)) .le. x%zero) then
             if (upper(j) .gt. x%T .or. upper(j) .lt. 0) upper(j) = x%T
          else
             if (lower(j) .lt. x%T .or. lower(j) .lt. 0) lower(j) = x%T

@@ -42,7 +42,7 @@ programs = critical ebmb tc
 all: $(programs)
 
 clean:
-	@rm -f $(needless) critical.o ebmb.o eliashberg/constant_dos.o eliashberg/eigenvalue.o eliashberg/variable_dos.o global.o io/formatting.o io/load.o io/store.o io/tell.o real_axis/pade.o real_axis/real_axis.o tc.o
+	@rm -f $(needless) critical.o ebmb.o eliashberg/eigenvalue.o eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o io/store.o io/tell.o real_axis/pade.o real_axis/real_axis.o tc.o
 
 cleaner: clean
 	@rm -f $(programs)
@@ -56,18 +56,18 @@ $(programs):
 	@$(compiler) $(options) -c $< -o $@
 
 critical: critical.o eliashberg/eigenvalue.o global.o io/load.o
-ebmb: ebmb.o eliashberg/constant_dos.o eliashberg/variable_dos.o global.o io/formatting.o io/load.o io/store.o io/tell.o real_axis/pade.o real_axis/real_axis.o
-tc: eliashberg/constant_dos.o eliashberg/variable_dos.o global.o io/formatting.o io/load.o tc.o
+ebmb: ebmb.o eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o io/store.o io/tell.o real_axis/pade.o real_axis/real_axis.o
+tc: eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o tc.o
 
 critical.o: eliashberg/eigenvalue.o global.o io/load.o
-ebmb.o: eliashberg/constant_dos.o eliashberg/variable_dos.o global.o io/load.o io/store.o io/tell.o real_axis/real_axis.o
-eliashberg/constant_dos.o: global.o
+ebmb.o: eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/load.o io/store.o io/tell.o real_axis/real_axis.o
 eliashberg/eigenvalue.o: global.o
-eliashberg/variable_dos.o: global.o
+eliashberg/self_energy.o: global.o
+eliashberg/self_energy_cdos.o: global.o
 io/formatting.o: global.o
 io/load.o: global.o
 io/store.o: global.o
 io/tell.o: global.o io/formatting.o
 real_axis/pade.o: global.o
 real_axis/real_axis.o: global.o real_axis/pade.o
-tc.o: eliashberg/constant_dos.o eliashberg/variable_dos.o global.o io/formatting.o io/load.o
+tc.o: eliashberg/self_energy.o eliashberg/self_energy_cdos.o global.o io/formatting.o io/load.o

@@ -50,13 +50,14 @@ contains
 
          select case (lhs)
             case ('file'); read (rhs, *) x%file
+            case ('form'); read (rhs, *) x%form
+            case ('tell'); read (rhs, *) x%tell
 
             case ('T'); read (rhs, *) x%T
 
-            case ('error'); read (rhs, *) x%error
-            case ('small'); read (rhs, *) x%small
-
             case ('omegaE'); read (rhs, *) x%omegaE
+            case ('cutoff'); read (rhs, *) x%cutoff
+            case ('cutout'); read (rhs, *) x%cutout
 
             case ('lambda', 'lamda')
                lambda = rhs
@@ -68,25 +69,19 @@ contains
 
             case ('dos'); dos_file = rhs
 
-            case ('upper'); read (rhs, *) x%upper
-            case ('lower'); read (rhs, *) x%lower
-
             case ('limit'); read (rhs, *) x%limit
 
-            case ('measurable'); read (rhs, *) x%measurable
-            case ('resolution'); read (rhs, *) x%resolution
+            case ('epsilon'); read (rhs, *) epsilon
+            case ('error');   read (rhs, *) x%error
+            case ('zero');    read (rhs, *) x%zero
+            case ('rate');    read (rhs, *) x%rate
+            case ('shift');   read (rhs, *) x%shift
 
-            case ('form'); read (rhs, *) x%form
+            case ('resolution'); read (rhs, *) x%resolution
+            case ('measurable'); read (rhs, *) x%measurable
 
             case ('rescale'); read (rhs, *) x%rescale
-            case ('cutoffZ'); read (rhs, *) x%cutoffZ
-
-            case ('tell'); read (rhs, *) x%tell
-
-            case ('rate');  read (rhs, *) x%rate
-            case ('shift'); read (rhs, *) x%shift
-
-            case ('epsilon'); read (rhs, *) epsilon
+            case ('imitate'); read (rhs, *) x%imitate
 
             case default
                print "('Ignored unknown parameter ''', A, '''')", lhs
@@ -119,7 +114,7 @@ contains
          call load_dos(dos_file, x)
       end if
 
-      if (x%lower .lt. 0) x%lower = x%upper
+      if (x%cutout .lt. 0) x%cutout = x%cutoff
    end subroutine load
 
    integer function values(list)       ! number of ...

@@ -1,8 +1,8 @@
 module global
    implicit none
 
-   integer, parameter :: dp = selected_real_kind(15)
-   integer, parameter :: qp = selected_real_kind(30)
+   integer, parameter :: dp = selected_real_kind(15) ! double precision
+   integer, parameter :: qp = selected_real_kind(30) ! quad precision
 
    real(dp), parameter :: pi = 4 * atan(1.0_dp) ! 3.14159...
    real(dp), parameter :: kB = 8.61733e-05_dp   ! Boltzmann constant (meV/K)
@@ -10,44 +10,41 @@ module global
    integer, parameter :: unit = 11 ! file unit number
 
    type universal
-      character(100) :: file = 'none' ! name of output file
+      character(99) :: file = 'none'   ! name of output file
+      character(50) :: form = 'F16.12' ! number format
+
+      logical :: tell = .true. ! use standard output?
 
       real(dp), pointer :: variable => null() ! parameter to be optimized
 
       real(dp) :: T = 10.0_dp ! temperature (K)
 
-      real(dp) :: error = 1e-05_dp ! valid error of critical temperature (K)
-      real(dp) :: small = 1e-10_dp ! maximum gap at critical temperature (eV)
+      real(dp) :: omegaE = 0.02_dp ! Einstein frequency (eV)
+      real(dp) :: cutoff = 15.0_dp  ! overall cutoff frequency (omegaE)
+      real(dp) :: cutout = -1.0_dp  ! Coulomb cutoff frequency (omegaE)
 
       integer :: bands = 1 ! number of electronic bands
-
-      real(dp) :: omegaE = 0.02_dp ! Einstein frequency (eV)
 
       real(dp), allocatable :: lambda(:, :) ! electron-phonon coupling
       real(dp), allocatable :: muStar(:, :) ! Coulomb pseudo-potential
 
-      logical :: chi = .false. ! consider full DOS and calculate chi?
-
-      real(dp) :: upper = 15.0_dp ! overall cutoff (omegaE)
-      real(dp) :: lower = -1.0_dp ! Coulomb cutoff (omegaE)
-
-      integer :: limit = 250000 ! maximum number of fixed-point steps
-
-      logical :: measurable = .false. ! find measurable gap?
-      integer :: resolution = 0       ! real axis resolution
-
-      character(50) :: form = 'F16.12' ! number format
-
-      logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
-      logical :: cutoffZ = .false. ! cut off renormalization function?
-
-      logical :: tell = .true. ! tell progress through standard output?
-
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
       real(dp), allocatable :: dos(:, :) ! density of Bloch states (a.u.)
 
+      logical :: chi = .false. ! find energy shift?
+
+      integer :: limit = 250000 ! maximum number of iterations
+
+      real(dp) :: error = 1e-05_dp ! bisection error (a.u.)
+      real(dp) ::  zero = 1e-10_dp ! negligible gap at critical temperature (eV)
       real(dp) ::  rate = 1e-01_dp ! growth rate for bound search
       real(dp) :: shift = 1e+02_dp ! eigenvalue shift for power method
+
+      integer :: resolution = 0       ! real-axis resolution
+      logical :: measurable = .false. ! find measurable gap?
+
+      logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
+      logical :: imitate = .false. ! cut off renormalization function?
    end type universal
 
    type matsubara
@@ -71,7 +68,7 @@ module global
       integer, allocatable :: status(:) ! convergence status
    end type continued
 
-   real(dp) :: epsilon = 1e-15_dp
+   real(dp) :: epsilon = 1e-15_dp ! negligible float difference (a.u.)
 
    interface operator(.ap.)
       module procedure ap

@@ -46,7 +46,7 @@ program critical
 
    try = .true.
 
-   call greatest_eigenvalue(status, x)
+   call eigenvalue(status, x)
    status0 = status
 
    if (status .ge. 1) then
@@ -55,7 +55,7 @@ program critical
 
          x%variable = x%variable * (1 + x%rate)
 
-         call greatest_eigenvalue(status, x)
+         call eigenvalue(status, x)
 
          if (status .gt. status0) then
             if (try) then
@@ -77,7 +77,7 @@ program critical
 
          x%variable = x%variable * (1 - x%rate)
 
-         call greatest_eigenvalue(status, x)
+         call eigenvalue(status, x)
 
          if (status .lt. status0) then
             if (try) then
@@ -100,7 +100,7 @@ program critical
 
       if (abs(outer - inner) .le. 2 * x%error) exit
 
-      call greatest_eigenvalue(status, x)
+      call eigenvalue(status, x)
 
       if (status .ge. 1) then
          inner = x%variable

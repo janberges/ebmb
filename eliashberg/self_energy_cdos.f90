@@ -1,13 +1,13 @@
-module eliashberg_constant_dos
+module eliashberg_self_energy_cdos
    use global
    implicit none
 
    private
-   public :: solve_constant_dos
+   public :: self_energy_cdos
 
 contains
 
-   subroutine solve_constant_dos(x, im)
+   subroutine self_energy_cdos(x, im)
       type(universal), intent(in) :: x
       type(matsubara), intent(out) :: im
 
@@ -21,8 +21,8 @@ contains
 
       nE = x%omegaE / (2 * pi * kB * x%T)
 
-      u = ceiling(x%upper * nE - 0.5_dp)
-      l = ceiling(x%lower * nE - 0.5_dp)
+      u = ceiling(x%cutoff * nE - 0.5_dp)
+      l = ceiling(x%cutout * nE - 0.5_dp)
 
       allocate(im%omega(0:u - 1))
 
@@ -112,5 +112,5 @@ contains
       do i = 1, x%bands
          im%phiC(i) = pi * kB * x%T * sum(im%Delta * A * mu(:, :, i))
       end do
-   end subroutine solve_constant_dos
-end module eliashberg_constant_dos
+   end subroutine self_energy_cdos
+end module eliashberg_self_energy_cdos

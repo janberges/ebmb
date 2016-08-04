@@ -1,10 +1,10 @@
 program ebmb
-   use eliashberg_constant_dos
-   use eliashberg_variable_dos
+   use eliashberg_self_energy
+   use eliashberg_self_energy_cdos
    use global
    use io_load
-   use io_tell
    use io_store
+   use io_tell
    use real_axis
    implicit none
 
@@ -15,9 +15,9 @@ program ebmb
    call load(x)
 
    if (x%chi) then
-      call solve_variable_dos(x, im)
+      call self_energy(x, im)
    else
-      call solve_constant_dos(x, im)
+      call self_energy_cdos(x, im)
    end if
 
    call realize(x, im, re)
