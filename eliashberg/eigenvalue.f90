@@ -8,7 +8,7 @@ module eliashberg_eigenvalue
 contains
 
    subroutine eigenvalue(status, x)
-      type(universal), intent(in) :: x
+      type(parameters), intent(in) :: x
 
       real(dp), intent(out) :: status  ! greatest eigenvalue
       real(dp), save        :: status0 ! ... in previous step

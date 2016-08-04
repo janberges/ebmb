@@ -8,7 +8,7 @@ module eliashberg_self_energy_cdos
 contains
 
    subroutine self_energy_cdos(x, im)
-      type(universal), intent(in) :: x
+      type(parameters), intent(in) :: x
       type(matsubara), intent(out) :: im
 
       real(dp) :: nE, Z, Delta

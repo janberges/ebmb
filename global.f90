@@ -9,7 +9,7 @@ module global
 
    integer, parameter :: unit = 11 ! file unit number
 
-   type universal
+   type parameters
       character(99) :: file = 'none'   ! name of output file
       character(50) :: form = 'F16.12' ! number format
 
@@ -45,7 +45,7 @@ module global
 
       logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
       logical :: imitate = .false. ! cut off renormalization function?
-   end type universal
+   end type parameters
 
    type matsubara
       real(dp), allocatable :: omega(:)    ! frequency (eV)

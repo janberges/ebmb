@@ -10,7 +10,7 @@ module eliashberg_self_energy
 contains
 
    subroutine self_energy(x, im)
-      type(universal), intent(in) :: x
+      type(parameters), intent(in) :: x
       type(matsubara), intent(out) :: im
 
       real(dp) :: nE, Z, phi, chi
@@ -150,7 +150,7 @@ contains
    end subroutine self_energy
 
    subroutine initialize(x)
-      type(universal), intent(in) :: x
+      type(parameters), intent(in) :: x
 
       integer :: i, n
 

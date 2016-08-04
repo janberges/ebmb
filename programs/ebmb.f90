@@ -8,7 +8,7 @@ program ebmb
    use real_axis
    implicit none
 
-   type(universal) :: x
+   type(parameters) :: x
    type(matsubara) :: im
    type(continued) :: re
 

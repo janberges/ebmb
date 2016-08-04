@@ -21,7 +21,7 @@ contains
    end function argument
 
    subroutine load(x)
-      type(universal), intent(out) :: x
+      type(parameters), intent(out) :: x
 
       character(:), allocatable :: setting ! command-line argument
       character(:), allocatable :: lhs, rhs ! left- and right-hand side
@@ -131,7 +131,7 @@ contains
 
    subroutine load_dos(file, x)
       character(*), intent(in) :: file
-      type(universal), intent(inout) :: x
+      type(parameters), intent(inout) :: x
 
       integer :: n, m
       integer, parameter :: unit = 11

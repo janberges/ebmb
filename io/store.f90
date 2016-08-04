@@ -8,7 +8,7 @@ module io_store
 contains
 
    subroutine store(x, im, re)
-      type(universal), intent(in) :: x
+      type(parameters), intent(in) :: x
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
 

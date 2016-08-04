@@ -6,7 +6,7 @@ program tc
    use io_load
    implicit none
 
-   type(universal) :: x
+   type(parameters) :: x
    type(matsubara) :: im
 
    integer :: i, j

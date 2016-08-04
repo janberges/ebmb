@@ -4,7 +4,7 @@ program critical
    use io_load
    implicit none
 
-   type(universal), target :: x
+   type(parameters), target :: x
 
    real(dp) :: inner ! bound within superconducting phase
    real(dp) :: outer ! bound beyond superconducting phase
