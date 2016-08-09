@@ -1,6 +1,6 @@
 module io_tell
+   use formatting
    use global
-   use io_formatting
    implicit none
 
    private

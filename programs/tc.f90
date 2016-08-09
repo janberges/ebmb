@@ -1,8 +1,8 @@
 program tc
    use eliashberg_self_energy
    use eliashberg_self_energy_cdos
+   use formatting
    use global
-   use io_formatting
    use io_load
    implicit none
 

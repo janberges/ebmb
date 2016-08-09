@@ -1,24 +1,12 @@
 module io_load
    use global
+   use tools, only: argument, matches
    implicit none
 
    private
    public :: load
 
 contains
-
-   function argument(n)
-      character(:), allocatable :: argument
-      integer, intent(in) :: n
-
-      integer :: size
-
-      call get_command_argument(n, length=size)
-
-      allocate(character(size) :: argument)
-
-      call get_command_argument(n, value=argument)
-   end function argument
 
    subroutine load(x)
       type(parameters), intent(out) :: x
@@ -61,11 +49,11 @@ contains
 
             case ('lambda', 'lamda')
                lambda = rhs
-               elements = values(rhs)
+               elements = matches(rhs, ',') + 1
 
             case ('muStar', 'mu*')
                muStar = rhs
-               elements = values(rhs)
+               elements = matches(rhs, ',') + 1
 
             case ('dos'); dos_file = rhs
 
@@ -116,18 +104,6 @@ contains
 
       if (x%cutoffC .lt. 0) x%cutoffC = x%cutoff
    end subroutine load
-
-   integer function values(list)       ! number of ...
-      character(*), intent(in) :: list ! comma-separated values
-
-      integer :: c ! character position
-
-      values = 1
-
-      do c = 1, len(list)
-         if (list(c:c) .eq. ',') values = values + 1
-      end do
-   end function values
 
    subroutine load_dos(file, x)
       character(*), intent(in) :: file

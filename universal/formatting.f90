@@ -1,4 +1,4 @@
-module io_formatting
+module formatting
    use global
    implicit none
 
@@ -49,4 +49,4 @@ contains
 
       rule = "('" // repeat('_', n * width) // "')"
    end function rule
-end module io_formatting
+end module formatting
