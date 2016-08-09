@@ -1,6 +1,6 @@
 e b m b  --  solve multiband Eliashberg equations
 
-For further information typeset and read 'ebmb.tex'.
+For further information typeset and read 'manual/ebmb.tex'.
 
 
 I n s t a l l a t i o n

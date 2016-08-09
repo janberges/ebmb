@@ -1,0 +1,385 @@
+\documentclass[a4paper]{article}
+
+\usepackage[margin=35mm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage[math]{iwona}
+\usepackage{inconsolata}
+\usepackage[T1]{fontenc}
+
+\usepackage[labelfont=bf]{caption}
+\usepackage[colorlinks, allcolors=darkblue]{hyperref}
+
+\usepackage{mathtools, xcolor}
+
+\definecolor{darkblue}{rgb}{0, 0, 0.5}
+
+\def\bottomfraction{0.9}
+
+\def\D{\mathrm d}
+\def\I{\mathrm i}
+
+\def\sub#1{\sb{\mathrm{#1}}}
+
+\def\from#1{\sb{\mathrlap{#1}}}
+\def\till#1{\sp{\mathrlap{#1}}}
+
+\let\vec\boldsymbol
+
+\let\Delta\varDelta
+\let\epsilon\varepsilon
+\let\Lambda\varLambda
+\let\Sigma\varSigma
+\let\Theta\varTheta
+
+\newlength\gap
+\setlength\gap{6pt}
+
+\def\slant#1{\rlap{\rotatebox{45}{#1}}\vphantom{\rotatebox{45}{#1}}}
+
+\def\stack#1#2{\begin{tabular}{@{}r@{}}#1\\#2\end{tabular}}
+
+\def\dummy#1{\textcolor{darkblue}{$\langle$#1$\rangle$}}
+\def\dtype#1{\textcolor{darkblue}{\textsc{#1}}}
+
+\def\headline#1{\section*{%
+   \normalsize\normalfont%
+   \rlap{\rule[0.5ex]\textwidth{0.4pt}}%
+   \qquad\colorbox{white}{#1}%
+   }}
+
+\begin{document}
+   \begin{center}
+      \LARGE \texttt{ebmb} \par \bigskip
+      \large Solve multiband \textsc{Eliashberg} equations
+   \end{center}
+
+   \headline{Outline}
+
+   This software provides three programs:
+   %
+   \begin{enumerate}
+      \item
+         \texttt{ebmb} itself solves the multiband \textsc{Eliashberg} equations
+         (Eqs.~\ref{Eliashberg equations} or \ref{cDOS Eliashberg equations}) on
+         a cut-off imaginary axis and optionally continues the results to the
+         real axis via \textsc{Padé} approximants.
+
+         A material is defined by nothing but an \textsc{Einstein} phonon
+         frequency, intra- and interband electron-phonon couplings and
+         \textsc{Coulomb} pseudo-potentials and, if desired, the band densities
+         of \textsc{Bloch} states, otherwise assumed to be constant.
+
+      \item
+         \texttt{tc} finds the critical temperature for each band via the
+         bisection method. Superconductivity is defined by the order parameter
+         exceeding a certain threshold.
+
+      \item
+         \texttt{critical} finds the critical point via the bisection method
+         varying a parameter of choice. Superconductivity is defined by the
+         kernel of the linearized gap equation (Eq.~\ref{linearized gap
+         equation}) having an eigenvalue greater than or equal to unity. The
+         shape of the density of states cannot be taken into account.
+   \end{enumerate}
+
+   \headline{Installation}
+
+   The makefile is designed for the \emph{GNU} or \emph{Intel} Fortran compiler
+   and may be run in optimization or validation mode:
+   %
+   \begin{quote}
+      \verb|$ make compiler=gfortran mode=optimize| \quad (default) \\
+      \verb|          ...   ifort   ...   validate|
+   \end{quote}
+
+   \headline{I/O}
+
+   \begin{itemize}
+      \item
+         Parameters are defined on the command line:
+         %
+         \begin{quote}
+            \verb|$| \dummy{program}
+               \dummy{key\,1}\verb|=|\dummy{value\,1}
+               \dummy{key\,2}\verb|=|\dummy{value\,2} \verb|...|
+         \end{quote}
+         %
+         The available keys and default values are listed in
+         Table~\ref{parameters}.
+
+      \item
+         Unless \texttt{tell=false}, the results are printed to standard output.
+
+      \item
+         Unless \texttt{file=none}, a binary output file is created. For
+         \texttt{critical} and \texttt{tc} it simply contains one or more double
+         precision floating point numbers, for \texttt{ebmb} the format defined
+         in Tables~\ref{output} and \ref{identifiers} is used.
+
+      \item
+         The provided \emph{Python} wrapper functions load the results into
+         \emph{NumPy} arrays:
+         %
+         \begin{quote}
+            \verb|import ebmb| \\
+            \verb|results = ebmb.|%
+            \dummy{program}\verb|(file=|%
+            \dummy{file}\verb|, replace=|%
+            \dummy{replace}\verb|,| \\
+            \verb|    |%
+               \dummy{key\,1}\verb|=|\dummy{value\,1}\verb|, |%
+               \dummy{key\,2}\verb|=|\dummy{value\,2}\verb|, ...|\verb|)|
+         \end{quote}
+         %
+         \dummy{replace} decides whether an existing \dummy{file} is used or
+         overwritten.
+   \end{itemize}
+
+   \headline{\textsc{Eliashberg} theory}
+
+   Let $\hbar = k \sub B = 1$. Fermionic and bosonic \textsc{Matsubara}
+   frequencies are defined as $\omega_n = (2 n + 1) \pi T$ and $\nu_n = 2 n \pi
+   T$, respectively. The quantity of interest is the \textsc{Nambu} self-energy
+   matrix%
+   %
+   \footnote{Y. \textsc{Nambu}, Phys. Rev. \textbf{117}, 648 (1960)}
+   %
+   \begin{equation*}
+      \vec \Sigma_i(n)
+      = \I \omega_n [1 - Z_i(n)] \vec 1
+      + \underbrace{Z_i(n) \, \Delta_i(n)}
+      _ {\displaystyle \phi_i(n)} \vec \sigma_1
+      + \chi_i(n) \vec \sigma_3,
+   \end{equation*}
+   %
+   where the \textsc{Pauli} matrices are defined as usual and $i$ is a band
+   index. Renormalization $Z_i(n)$, order parameter $\phi_i(n)$ and energy shift
+   $\chi_i(n)$ are determined by the \textsc{Eliashberg} equations%
+   %
+   \footnote{%
+      G. M. \textsc{Eliashberg}, Soviet Phys. JETP \textbf{11}, 696 (1960).
+      \newline
+      A comprehensive review is given by P. B. \textsc{Allen} and B.
+      \textsc{Mitrović} in Solid state physics \textbf{37} (1982)
+      }
+   %
+   \begin{equation}
+      \begin{split}
+         Z_i(n) &= 1 + \frac T {\omega_n} \sum_j \sum_{m = 0}^{N - 1}
+         \int \from{-\infty} \till \infty \D \epsilon
+         \frac{n_j(\epsilon)}{n_j(0)}
+         \frac{\omega_m Z_j (m)}{\Theta_j(\epsilon, m)}
+         \Lambda_{i j}^-(n, m),
+         \\
+         \phi_i(n) &= T \sum_j \sum_{m = 0}^{N - 1}
+         \int \from{-\infty} \till \infty \D \epsilon
+         \frac{n_j(\epsilon)}{n_j(0)}
+         \frac{\phi_j(m)}{\Theta_j(\epsilon, m)}
+         [\Lambda_{i j}^+(n, m) - U^*_{i j}(m)],
+         \\
+         \chi_i(n) &= -T \sum_j \sum_{m = 0}^{N - 1}
+         \int \from{-\infty} \till \infty \D \epsilon
+         \frac{n_j(\epsilon)}{n_j(0)}
+         \frac{\epsilon + \chi_j(m)}{\Theta_j(\epsilon, m)}
+         \Lambda_{i j}^+(n, m),
+         \\
+         \Theta_j(\epsilon, m) &=
+         [\omega_m Z_j(m)]^2 + \phi_j^2(m) + [\epsilon + \chi_j(m)]^2
+      \end{split}
+      \label{Eliashberg equations}
+   \end{equation}
+   %
+   and may then be analytically continued to the real-axis by means of
+   \textsc{Padé} approximants.%
+   %
+   \footnote{%
+      H. J. \textsc{Vidberg} and J. W. \textsc{Serene}, J. Low Temp. Phys.
+      \textbf{29}, 179 (1977)
+      }
+
+   $n_i(\epsilon)$ is the density of \textsc{Bloch} states. Energies $\epsilon$
+   are measured relative to the \textsc{Fermi} level. The electron-phonon
+   coupling matrices and the rescaled \textsc{Coulomb} pseudo-potential are
+   connected to the corresponding input parameters via
+   %
+   \begin{align*}
+      \Lambda_{i j}^\pm(n, m) &=
+      \lambda_{i j}(n - m) \pm \lambda_{i j}(n + m + 1),
+      &
+      \lambda_{i j}(n) &=
+      \frac {\lambda_{i j}}{1 + \big[ \frac{\nu_n}{\omega \sub E} \big]^2},
+      \\
+      U^*_{i j}(m) &=
+      \begin{cases}
+         2 \mu^*_{i j}(N \sub C) & \text{for $m < N \sub C$,} \\
+         0                       & \text{otherwise,}
+      \end{cases}
+      &
+      \frac 1 {\mu^*_{i j}(N \sub C)} &=
+      \frac 1 {\mu^*_{i j}} + \ln \frac{\omega \sub E}{\omega_{N \sub C}}.
+   \end{align*}
+   %
+   Approximating $n_i(\epsilon) \approx n_i(0)$ and $\chi_i(n) \approx 0$ yields
+   the constant-DOS \textsc{Eliashberg} equations
+   %
+   \begin{equation}
+      \begin{split}
+         Z_i(n) &= 1 + \frac{\pi T}{\omega_n} \sum_j \sum_{m = 0}^{N - 1}
+         \frac{\omega_m}{\sqrt{\omega_m^2 + \Delta_j^2(m)}}
+         \Lambda_{i j}^-(n, m),
+         \\
+         \Delta_i(n) &= \frac{\pi T}{Z(n)} \sum_j \sum_{m = 0}^{N - 1}
+         \frac{\Delta_j(m)}{\sqrt{\omega_m^2 + \Delta_j^2(m)}}
+         [\Lambda_{i j}^+(n, m) - U^*_{i j}(m)].
+      \end{split}
+      \label{cDOS Eliashberg equations}
+   \end{equation}
+   %
+   At the critical temperature, $\Delta_i(m)$ is infinitesimal and negligible
+   relative to $\omega_m$. This yields
+   %
+   \begin{equation}
+      \begin{split}
+         \Delta_i(n) &= \sum_j \sum_{m = 0}^{N - 1}
+         K_{i j}(n, m) \, \Delta_j(m),
+         \\
+         K_{i j}(n, m) &= \frac 1 {2 m + 1}
+         [\Lambda_{i j}^+(n, m) - \delta_{n m} D_{i j}^N(n) - U^*_{i j}(m)],
+         \\
+         D_{i j}^N(n) &=
+         \sum_{m = 0}^{N - 1} \Lambda_{i j}^-(n, m) \overset{N = \infty} =
+         \lambda_{i j} + 2 \sum_{m = 1}^n \lambda_{i j}(m).
+      \end{split}
+      \label{linearized gap equation}
+   \end{equation}
+   %
+   $Z_i(n)$ is not biased by the cutoff if $D_{i j}^\infty(n)$ is used in place
+   of $D_{i j}^N(n)$ in the kernel $K_{i j}(n, m)$.
+
+   \headline{Acknowledgment}
+
+   Parts of the program are inspired by the EPW code%
+   %
+   \footnote{%
+      F. \textsc{Giustino}, M. L. \textsc{Cohen} and S. G. \textsc{Louie}, Phys.
+      Rev. B \textbf{76}, 165108 (2007) for a methodology review.
+      \newline
+      Results related to \textsc{Eliashberg} theory are given by E. R.
+      \textsc{Margine} and F. \textsc{Giustino}, Phys. Rev. B \textbf{87},
+      024505 (2013)
+      }
+   %
+   and work of Malte Rösner.
+
+   \headline{Contact}
+
+   Any feedback may be directed to \href
+      {mailto:jan.berges@uni-bremen.de?subject=ebmb}
+      {\tt jan.berges@uni-bremen.de}.
+
+   \begin{table}[b]
+      \centering
+      \begin{tabular}{*9l}
+         \bf key        & \bf default& \bf \slant{unit}  & \bf \slant{symbol}  & \bf description & \tt \slant{ebmb} & \tt \slant{tc} & \tt \slant{critical} & \bf \slant{variable} \\
+         \tt file       & \tt none   & --                & --                  & output file                              & $+$ & $+$ & $+$ & $-$ \\
+         \tt form       & \tt F16.12 & --                & --                  & number edit descriptor                   & $+$ & $+$ & $+$ & $-$ \\
+         \tt tell       & \tt true   & --                & --                  & use standard output?                     & $+$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt T          & 10         & K                 & $T$                 & temperature                              & $+$ & $+$ & $+$ & $+$ \\[\gap]
+         \tt omegaE     & 0.02       & eV                & $\omega \sub E$     & \textsc{Einstein} frequency              & $+$ & $+$ & $+$ & $+$ \\
+         \tt cutoff     & 15         & $\omega \sub E$   & $\omega_N$          & overall cutoff frequency                 & $+$ & $+$ & $+$ & $-$ \\
+         \tt cutout     & $\omega_N$ & $\omega \sub E$   & $\omega_{N \sub C}$ & \textsc{Coulomb} cutoff frequency        & $+$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt lambda     & $\vec 1$   & 1                 & $\lambda_{i j}$     & electron-phonon coupling                 & $+$ & $+$ & $+$ & $+$ \\
+         \tt muStar     & $\vec 0$   & 1                 & $\mu^*_{i j}$       & \textsc{Coulomb} pseudo-potential        & $+$ & $+$ & $+$ & $+$ \\[\gap]
+         \tt dos        & \tt none   & --                & --                  & file with density of states              & $+$ & $+$ & $-$ & $-$ \\[\gap]
+         \tt limit      & 250000     & 1                 & --                  & maximum number of iterations             & $+$ & $+$ & $-$ & $-$ \\[\gap]
+         \tt epsilon    & $10^{-15}$ & a.u.              & --                  & negligible float difference              & $+$ & $+$ & $+$ & $-$ \\
+         \tt error      & $10^{-5}$  & a.u.              & --                  & bisection error                          & $-$ & $+$ & $+$ & $-$ \\
+         \tt zero       & $10^{-10}$ & eV                & --                  & negligible gap at $T \sub c$ (threshold) & $-$ & $+$ & $-$ & $-$ \\
+         \tt rate       & $10^{-1}$  & 1                 & --                  & growth rate for bound search             & $-$ & $+$ & $+$ & $-$ \\
+         \tt shift      & $10$       & 1                 & --                  & eigenvalue shift for power method        & $-$ & $-$ & $+$ & $-$ \\[\gap]
+         \tt resolution & 0          & 1                 & --                  & resolution of real-axis solution         & $+$ & $-$ & $-$ & $-$ \\
+         \tt measurable & \tt false  & --                & --                  & find measurable gap?                     & $+$ & $-$ & $-$ & $-$ \\[\gap]
+         \tt imitate    & \tt false  & --                & --                  & use $Z_i(n)$ biased by cutoff?           & $-$ & $-$ & $+$ & $-$ \\
+         \tt rescale    & \tt true   & --                & --                  & use $\mu^*_{i j}$ rescaled for cutoff?   & $+$ & $+$ & $+$ & $-$
+      \end{tabular}
+      \captionsetup{singlelinecheck=off}
+      \caption[Input parameters]{
+         Input parameters.
+
+         \begin{itemize}
+            \item
+               The columns \texttt{ebmb}, \texttt{tc} and \texttt{critical} show
+               which keys are used by these programs.
+
+            \item
+               The rightmost column indicates which parameters may be chosen as
+               variable for \texttt{critical}. The variable is marked with a
+               negative sign; its absolute value is used as initial guess. If no
+               parameter is negative, the critical temperature is searched for.
+
+            \item
+               \texttt{lambda} and \texttt{muStar} expect flattened square
+               matrices of equal size the elements of which are separated by
+               commas. It is impossible to vary more than one element at once.
+
+            \item
+               The file with the density of states $n_i(\epsilon)$ contains an
+               integer $N$, followed by $N$ lines $\epsilon_l \ n_1(\epsilon_l)
+               \ n_2(\epsilon_l) \ \dots$ where $l = 1 \dots N$ and $\epsilon_1
+               \leq \dots \leq \epsilon_N$.
+         \end{itemize}
+         }
+      \label{parameters}
+   \end{table}
+
+   \begin{table}
+      \centering
+      \begin{tabular}{r l}
+         \dummy{\dtype{string} key}\verb|:|\rlap{%
+         \dummy{$n_1 \times \hdots \times n_r$ \dtype{numbers} value}}
+                      & \\
+                      & associate key with value \\[\gap]
+         \verb|DIM:|\rlap{%
+         \dummy{\dtype{integer} $r$}%
+         \dummy{$r$ \dtype{integers} $n_1 \dots n_r$}}
+                      & \\
+                      & define shape (column-major) \\[\gap]
+         \verb|INT:|  & take \dtype{numbers} as \dtype{integers} \\[\gap]
+         \verb|REAL:| & take \dtype{numbers} as \dtype{doubles}
+      \end{tabular}
+      \caption{Statements allowed in binary output.}
+      \label{output}
+   \end{table}
+
+   \begin{table}
+      \centering
+      \begin{tabular}{*2l r}
+         \hline
+         \multicolumn3l{\textbf{imaginary-axis results} \hfill} \\
+         \hline
+         \tt iomega & \textsc{Matsubara} frequency (without $\I$) & $\omega_n$        \\
+         \tt Delta  & gap                                         & $\Delta_i(n)$     \\
+         \tt Z      & renormalization                             & $Z_i(n)$          \\
+         \tt chi    & energy shift                                & $\chi_i(n)$       \\
+         \tt phiC   & constant \textsc{Coulomb} contribution      & ${\phi \sub C}_i$ \\
+         \tt status & status (steps till convergence or $-1$)     & --                \\
+         \hline
+         \multicolumn3l{\textbf{real-axis results} \hfill \texttt{resolution} > 0} \\
+         \hline
+         \tt omega                            & frequency                                        & $\omega$           \\
+         \stack{\tt Re[Delta]}{\tt Im[Delta]} & \stack{real}{imaginary} $\Big\}$ gap             & $\Delta_i(\omega)$ \\
+         \stack{\tt Re[Z]}    {\tt Im[Z]}     & \stack{real}{imaginary} $\Big\}$ renormalization & $Z_i(\omega)$      \\
+         \stack{\tt Re[chi]}  {\tt Im[chi]}   & \stack{real}{imaginary} $\Big\}$ energy shift    & $\chi_i(\omega)$   \\
+         \hline
+         \multicolumn3l{\textbf{measurable results} \hfill \texttt{measurable=true}} \\
+         \hline
+         \tt Delta0  & measurable gap           & \llap{${\Delta_0}_i = \operatorname{Re}[\Delta_i({\Delta_0}_i)]$} \\
+         \tt status0 & status of measurable gap & --
+      \end{tabular}
+      \caption{Keys used in binary output.}
+      \label{identifiers}
+   \end{table}
+\end{document}
