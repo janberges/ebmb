@@ -55,9 +55,9 @@ contains
 
             case ('T'); read (rhs, *) x%T
 
-            case ('omegaE'); read (rhs, *) x%omegaE
-            case ('cutoff'); read (rhs, *) x%cutoff
-            case ('cutout'); read (rhs, *) x%cutout
+            case ('omegaE');  read (rhs, *) x%omegaE
+            case ('cutoff');  read (rhs, *) x%cutoff
+            case ('cutoffC'); read (rhs, *) x%cutoffC
 
             case ('lambda', 'lamda')
                lambda = rhs
@@ -114,7 +114,7 @@ contains
          call load_dos(dos_file, x)
       end if
 
-      if (x%cutout .lt. 0) x%cutout = x%cutoff
+      if (x%cutoffC .lt. 0) x%cutoffC = x%cutoff
    end subroutine load
 
    integer function values(list)       ! number of ...

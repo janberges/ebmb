@@ -16,52 +16,52 @@ contains
       real(dp), allocatable :: lambda(:, :, :), mu(:, :, :)
       real(dp), allocatable :: muStar(:, :), A(:, :)
 
-      integer :: step, i, j, n, m, u, l
+      integer :: step, i, j, n, m, no, nC
       logical :: done
 
       nE = x%omegaE / (2 * pi * kB * x%T)
 
-      u = ceiling(x%cutoff * nE - 0.5_dp)
-      l = ceiling(x%cutout * nE - 0.5_dp)
+      no = ceiling(x%cutoff  * nE - 0.5_dp)
+      nC = ceiling(x%cutoffC * nE - 0.5_dp)
 
-      allocate(im%omega(0:u - 1))
+      allocate(im%omega(0:no - 1))
 
-      do n = 0, u - 1
+      do n = 0, no - 1
          im%omega(n) = (2 * n + 1) * pi * kB * x%T
       end do
 
-      allocate(lambda(1 - u:2 * u - 1, x%bands, x%bands))
+      allocate(lambda(1 - no:2 * no - 1, x%bands, x%bands))
 
-      do n = 1 - u, 2 * u - 1
+      do n = 1 - no, 2 * no - 1
          lambda(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
       end do
 
       allocate(muStar(x%bands, x%bands))
 
       if (x%rescale) then
-         muStar = x%muStar / (1 + x%muStar * log(nE / (l + 0.5_dp)))
+         muStar = x%muStar / (1 + x%muStar * log(nE / (nC + 0.5_dp)))
       else
          muStar = x%muStar
       end if
 
-      allocate(mu(0:u - 1, x%bands, x%bands))
+      allocate(mu(0:no - 1, x%bands, x%bands))
 
-      do n = 0, l - 1
+      do n = 0, nC - 1
          mu(n, :, :) = -2 * muStar
       end do
 
-      mu(l:, :, :) = 0
+      mu(nC:, :, :) = 0
 
-      allocate(im%Z(0:u - 1, x%bands))
+      allocate(im%Z(0:no - 1, x%bands))
 
       im%Z(:, :) = 1
 
-      allocate(im%Delta(0:u - 1, x%bands))
+      allocate(im%Delta(0:no - 1, x%bands))
 
       im%Delta(:, :) = 0
       im%Delta(0, :) = 1
 
-      allocate(A(0:u - 1, x%bands))
+      allocate(A(0:no - 1, x%bands))
 
       do i = 1, x%bands
          A(:, i) = 1 / sqrt(im%omega ** 2 + im%Delta(:, i) ** 2)
@@ -73,12 +73,12 @@ contains
          done = .true.
 
          do i = 1, x%bands
-            do n = 0, u - 1
+            do n = 0, no - 1
                Z = 0
                Delta = 0
 
                do j = 1, x%bands
-                  do m = 0, u - 1
+                  do m = 0, no - 1
                      Z = Z + im%omega(m) * A(m, j) &
                         * (lambda(n - m, j, i) - lambda(n + m + 1, j, i))
 
