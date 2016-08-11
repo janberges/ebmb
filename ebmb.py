@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from os import path
+import itertools
 import numpy as np
+from os import path
 import subprocess
 
 try:
@@ -103,8 +104,60 @@ def squareDOSfile(name='dos.in', n=401, t=0.25, bands=1, replace=True):
         for i in range(n):
             print >> file, '% .10f' % e[i] + ' %.10f' % dos[i] * bands
 
+def DOSfile(file, epsilon, axes, filters=[], n=101, replace=True):
+    if not replace and path.exists(name):
+        return
+
+    points = np.prod(map(len, axes))
+
+    pocket = np.empty(points, dtype=int)
+    energy = np.empty(points)
+
+    for i, x in enumerate(itertools.product(*axes)):
+        energy[i] = epsilon(*x)
+        pocket[i] = 0
+
+        for element in filters:
+            if element(*x): break
+            pocket[i] += 1
+
+    emin = energy.min()
+    emax = energy.max()
+
+    binned = ((n - 1) * (energy - emin) / (emax - emin)).round().astype(int)
+
+    p = len(filters) + 1
+
+    count = np.zeros((n, p), dtype=int)
+
+    for i in range(points):
+        count[binned[i], pocket[i]] += 1
+
+    e, de = np.linspace(emin, emax, n, retstep=True)
+
+    dos = count / (de * count.sum())
+    dos[(0, -1), :] *= 2
+
+    with open(file, 'w') as out:
+        for i in range(n):
+            out.write('% .10f' % e[i])
+
+            for j in range(p):
+                out.write(' %.10f' % dos[i, j])
+
+            out.write('\n')
+
+def epsilon(*k):
+    return -0.5 * np.cos(k).sum()
+
+def kpoints(n=500):
+    return np.linspace(-np.pi, np.pi, n, endpoint=False)
+
 if __name__ == '__main__':
+    DOSfile('dos.in', epsilon, [kpoints()] * 2,
+        [lambda *k: np.pi ** 2 / 2 <= np.dot(k, k) <= np.pi ** 2])
+
     np.set_printoptions(threshold=9, edgeitems=1)
 
-    for item in sorted(ebmb(tell=False).items()):
+    for item in sorted(ebmb(tell=False, dos='dos.in').items()):
         print ('%9s = %s' % item).replace('\n', '\n' + ' ' * 12)
