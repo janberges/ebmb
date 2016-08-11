@@ -85,7 +85,7 @@ def squareDOSGauss(e, t=0.25, n=200, sigma=0.02, cutoff=None):
 
     return sum(np.exp(-(r / sigma) ** 2) / (np.sqrt(np.pi) * sigma)) / n ** 2
 
-def squareDOSfile(name='dos.in', eF=0.5, n=401, t=0.25, bands=1, replace=True):
+def squareDOSfile(name='dos.in', n=401, t=0.25, bands=1, replace=True):
     if not replace and path.exists(name):
         return
 
@@ -98,8 +98,6 @@ def squareDOSfile(name='dos.in', eF=0.5, n=401, t=0.25, bands=1, replace=True):
 
     dos[n // 2] = 0.0
     dos[n // 2] = 1 / de - (dos[0] + 2 * sum(dos[1:-1]) + dos[-1]) / 2
-
-    e -= e[0] + eF
 
     with open(name, 'w') as file:
         for i in range(n):

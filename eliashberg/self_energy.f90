@@ -160,13 +160,13 @@ contains
       allocate(weight(size(x%energy), x%bands))
       allocate(trapezoids(size(x%energy)))
 
-      call differential(x%energy, weight(:, 1))
+      n = minloc(abs(x%energy - x%mu), 1)
+
+      call differential(x%energy - x%energy(n), weight(:, 1))
 
       do i = 2, x%bands
          weight(:, i) = weight(:, 1)
       end do
-
-      n = minloc(abs(x%energy), 1)
 
       do i = 1, x%bands
          weight(:, i) = weight(:, i) * x%dos(:, i) / x%dos(n, i)

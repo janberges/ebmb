@@ -31,6 +31,8 @@ module global
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
       real(dp), allocatable :: dos(:, :) ! density of Bloch states (a.u.)
 
+      real(dp) :: mu = 0.0_dp ! Fermi level (eV)
+
       logical :: chi = .false. ! find energy shift?
 
       integer :: limit = 250000 ! maximum number of iterations

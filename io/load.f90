@@ -57,6 +57,8 @@ contains
 
             case ('dos'); dos_file = rhs
 
+            case ('mu'); read (rhs, *) x%mu
+
             case ('limit'); read (rhs, *) x%limit
 
             case ('epsilon'); read (rhs, *) epsilon
