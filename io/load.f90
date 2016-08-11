@@ -110,11 +110,21 @@ contains
       type(parameters), intent(inout) :: x
 
       integer :: n, m
-      integer, parameter :: unit = 11
+
+      real(dp) :: test
+      integer :: error
 
       open (unit, file=file, action='read', status='old')
 
-      read (unit, *) n ! density-of-states resolution
+      n = 0 ! density-of-states resolution
+
+      do
+         read (unit, *, iostat=error) test
+         if (error .ne. 0) exit
+         n = n + 1
+      end do
+
+      rewind unit
 
       allocate(x%energy(n)) ! free-electron energy (eV)
       allocate(x%dos(n, x%bands)) ! density of states (a.u.)

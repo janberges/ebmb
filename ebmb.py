@@ -102,8 +102,6 @@ def squareDOSfile(name='dos.in', eF=0.5, n=401, t=0.25, bands=1, replace=True):
     e -= e[0] + eF
 
     with open(name, 'w') as file:
-        file.write('%d\n\n' % n)
-
         for i in range(n):
             print >> file, '% .10f' % e[i] + ' %.10f' % dos[i] * bands
 
