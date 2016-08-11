@@ -3,7 +3,7 @@ module tools
    implicit none
 
    private
-   public :: argument, interval, matches
+   public :: argument, interval, matches, differential
 
 contains
 
@@ -19,6 +19,20 @@ contains
 
       call get_command_argument(n, value=argument)
    end function argument
+
+   subroutine differential(x, dx)
+      real(dp), intent(in) :: x(:)
+      real(dp), intent(out) :: dx(:)
+
+      integer :: n
+      n = size(x)
+
+      dx(1) = x(2) - x(1)
+      dx(2:n - 1) = x(3:n) - x(1:n - 2)
+      dx(n) = x(n) - x(n - 1)
+
+      dx(:) = dx / 2
+   end subroutine differential
 
    subroutine interval(x, a, b, lower, upper)
       real(dp), intent(out) :: x(:)

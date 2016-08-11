@@ -46,7 +46,7 @@ ebmb: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o io/store.
 tc: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o programs/tc.o universal/formatting.o universal/global.o universal/tools.o
 
 eliashberg/eigenvalue.o: universal/global.o
-eliashberg/self_energy.o: universal/global.o
+eliashberg/self_energy.o: universal/global.o universal/tools.o
 eliashberg/self_energy_cdos.o: universal/global.o
 io/load.o: universal/global.o universal/tools.o
 io/store.o: universal/global.o
