@@ -46,6 +46,8 @@ module global
 
       logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
       logical :: imitate = .false. ! cut off renormalization function?
+
+      logical :: power = .false. ! use power method for single band?
    end type parameters
 
    type matsubara

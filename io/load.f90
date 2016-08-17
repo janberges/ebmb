@@ -72,6 +72,8 @@ contains
             case ('rescale'); read (rhs, *) x%rescale
             case ('imitate'); read (rhs, *) x%imitate
 
+            case ('power'); read (rhs, *) x%power
+
             case default
                print "('Ignored unknown parameter ''', A, '''')", lhs
          end select

@@ -1,5 +1,6 @@
 module eliashberg_eigenvalue
    use global
+   use lapack
    use tools, only: bound
    implicit none
 
@@ -13,6 +14,8 @@ contains
 
       real(dp), intent(out) :: status  ! greatest eigenvalue
       real(dp), save        :: status0 ! ... in previous step
+
+      complex(dp), allocatable, save :: values(:) ! all eigenvalues
 
       real(dp), allocatable, save :: &
          lambda(:, :, :), & ! frequency-dependent electron-phonon coupling
@@ -48,6 +51,7 @@ contains
             deallocate(muStar)
             deallocate(matrix)
             deallocate(vector)
+            deallocate(values)
          end if
 
          allocate(lambda(0:2 * no - 1, 0:x%bands - 1, 0:x%bands - 1))
@@ -57,6 +61,7 @@ contains
 
          allocate(matrix(0:x%bands * no - 1, 0:x%bands * no - 1))
          allocate(vector(0:x%bands * no - 1))
+         allocate(values(0:x%bands * no - 1))
 
          vector = (x%bands * no) ** (-0.5_dp)
          status0 = 1
@@ -115,24 +120,29 @@ contains
          matrix(m::no, :) = matrix(m::no, :) / (2 * m + 1)
       end do
 
-      shift = bound(matrix)
+      if (x%power .and. x%bands .eq. 1) then
+         shift = bound(matrix)
 
-      do p = 0, x%bands * no - 1
-         matrix(p, p) = matrix(p, p) + shift
-      end do
+         do p = 0, x%bands * no - 1
+            matrix(p, p) = matrix(p, p) + shift
+         end do
 
-      done = .false.
+         done = .false.
 
-      do while (.not. done)
-         vector = matmul(matrix, vector)
-         status = sqrt(dot_product(vector, vector))
+         do while (.not. done)
+            vector = matmul(matrix, vector)
+            status = sqrt(dot_product(vector, vector))
 
-         if (status .ap. status0) done = .true.
+            if (status .ap. status0) done = .true.
 
-         vector = vector / status
-         status0 = status
-      end do
+            vector = vector / status
+            status0 = status
+         end do
 
-      status = status - shift
+         status = status - shift
+      else
+         call eigenvalues(matrix, values)
+         status = maxval(real(values))
+      end if
    end subroutine eigenvalue
 end module eliashberg_eigenvalue
