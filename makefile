@@ -45,7 +45,7 @@ critical: eliashberg/eigenvalue.o io/load.o programs/critical.o universal/global
 ebmb: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o io/store.o io/tell.o programs/ebmb.o real_axis/pade.o real_axis/real_axis.o universal/formatting.o universal/global.o universal/tools.o
 tc: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o programs/tc.o universal/formatting.o universal/global.o universal/tools.o
 
-eliashberg/eigenvalue.o: universal/global.o
+eliashberg/eigenvalue.o: universal/global.o universal/tools.o
 eliashberg/self_energy.o: universal/global.o universal/tools.o
 eliashberg/self_energy_cdos.o: universal/global.o
 io/load.o: universal/global.o universal/tools.o

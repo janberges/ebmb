@@ -3,7 +3,7 @@ module tools
    implicit none
 
    private
-   public :: argument, interval, matches, differential
+   public :: argument, bound, interval, matches, differential
 
 contains
 
@@ -19,6 +19,28 @@ contains
 
       call get_command_argument(n, value=argument)
    end function argument
+
+   real(dp) function bound(matrix)
+      real(dp), intent(in) :: matrix(:, :)
+
+      real(dp) :: R, C, S
+
+      integer :: i
+
+      R = 0
+      do i = 1, size(matrix, 1)
+         S = sum(abs(matrix(i, :)))
+         if (S .gt. R) R = S
+      end do
+
+      C = 0
+      do i = 1, size(matrix, 2)
+         S = sum(abs(matrix(:, i)))
+         if (S .gt. C) C = S
+      end do
+
+      bound = min(R, C)
+   end function bound
 
    subroutine differential(x, dx)
       real(dp), intent(in) :: x(:)

@@ -40,7 +40,6 @@ module global
       real(dp) :: error = 1e-05_dp ! bisection error (a.u.)
       real(dp) ::  zero = 1e-10_dp ! negligible gap at critical temperature (eV)
       real(dp) ::  rate = 1e-01_dp ! growth rate for bound search
-      real(dp) :: shift = 1e+02_dp ! eigenvalue shift for power method
 
       integer :: resolution = 0       ! real-axis resolution
       logical :: measurable = .false. ! find measurable gap?

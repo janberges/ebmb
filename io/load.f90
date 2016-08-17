@@ -65,7 +65,6 @@ contains
             case ('error');   read (rhs, *) x%error
             case ('zero');    read (rhs, *) x%zero
             case ('rate');    read (rhs, *) x%rate
-            case ('shift');   read (rhs, *) x%shift
 
             case ('resolution'); read (rhs, *) x%resolution
             case ('measurable'); read (rhs, *) x%measurable

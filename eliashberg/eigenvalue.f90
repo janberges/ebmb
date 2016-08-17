@@ -1,5 +1,6 @@
 module eliashberg_eigenvalue
    use global
+   use tools, only: bound
    implicit none
 
    private
@@ -19,6 +20,8 @@ contains
          muStar(:, :),    & ! rescaled Coulomb pseudo-potential
          matrix(:, :),    & ! Eliashberg matrix
          vector(:)          ! energy gap
+
+      real(dp) :: shift ! temporary eigenvalue shift for power method
 
       integer :: no ! index of overall cutoff frequency
       integer :: nC ! index of Coulomb cutoff frequency
@@ -112,8 +115,10 @@ contains
          matrix(m::no, :) = matrix(m::no, :) / (2 * m + 1)
       end do
 
+      shift = bound(matrix)
+
       do p = 0, x%bands * no - 1
-         matrix(p, p) = matrix(p, p) + x%shift
+         matrix(p, p) = matrix(p, p) + shift
       end do
 
       done = .false.
@@ -128,6 +133,6 @@ contains
          status0 = status
       end do
 
-      status = status - x%shift
+      status = status - shift
    end subroutine eigenvalue
 end module eliashberg_eigenvalue

@@ -283,28 +283,27 @@
    \begin{table}[b]
       \centering
       \begin{tabular}{*9l}
-         \bf key        & \bf default& \bf \slant{unit}  & \bf \slant{symbol}  & \bf description & \tt \slant{ebmb} & \tt \slant{tc} & \tt \slant{critical} & \bf \slant{variable} \\
-         \tt file       & \tt none   & --                & --                  & output file                              & $+$ & $+$ & $+$ & $-$ \\
-         \tt form       & \tt F16.12 & --                & --                  & number edit descriptor                   & $+$ & $+$ & $+$ & $-$ \\
-         \tt tell       & \tt true   & --                & --                  & use standard output?                     & $+$ & $+$ & $+$ & $-$ \\[\gap]
-         \tt T          & 10         & K                 & $T$                 & temperature                              & $+$ & $+$ & $+$ & $+$ \\[\gap]
-         \tt omegaE     & 0.02       & eV                & $\omega \sub E$     & \textsc{Einstein} frequency              & $+$ & $+$ & $+$ & $+$ \\
-         \tt cutoff     & 15         & $\omega \sub E$   & $\omega_N$          & overall cutoff frequency                 & $+$ & $+$ & $+$ & $-$ \\
-         \tt cutoffC    & $\omega_N$ & $\omega \sub E$   & $\omega_{N \sub C}$ & \textsc{Coulomb} cutoff frequency        & $+$ & $+$ & $+$ & $-$ \\[\gap]
-         \tt lambda     & $\vec 1$   & 1                 & $\lambda_{i j}$     & electron-phonon coupling                 & $+$ & $+$ & $+$ & $+$ \\
-         \tt muStar     & $\vec 0$   & 1                 & $\mu^*_{i j}$       & \textsc{Coulomb} pseudo-potential        & $+$ & $+$ & $+$ & $+$ \\[\gap]
-         \tt dos        & \tt none   & --                & --                  & file with density of states              & $+$ & $+$ & $-$ & $-$ \\
-         \tt mu         & 0.0        & eV                & $\epsilon \sub F$   & \textsc{Fermi} level                     & $+$ & $+$ & $-$ & $-$ \\[\gap]
-         \tt limit      & 250000     & 1                 & --                  & maximum number of iterations             & $+$ & $+$ & $-$ & $-$ \\[\gap]
-         \tt epsilon    & $10^{-15}$ & a.u.              & --                  & negligible float difference              & $+$ & $+$ & $+$ & $-$ \\
-         \tt error      & $10^{-5}$  & a.u.              & --                  & bisection error                          & $-$ & $+$ & $+$ & $-$ \\
-         \tt zero       & $10^{-10}$ & eV                & --                  & negligible gap at $T \sub c$ (threshold) & $-$ & $+$ & $-$ & $-$ \\
-         \tt rate       & $10^{-1}$  & 1                 & --                  & growth rate for bound search             & $-$ & $+$ & $+$ & $-$ \\
-         \tt shift      & $10$       & 1                 & --                  & eigenvalue shift for power method        & $-$ & $-$ & $+$ & $-$ \\[\gap]
-         \tt resolution & 0          & 1                 & --                  & resolution of real-axis solution         & $+$ & $-$ & $-$ & $-$ \\
-         \tt measurable & \tt false  & --                & --                  & find measurable gap?                     & $+$ & $-$ & $-$ & $-$ \\[\gap]
-         \tt imitate    & \tt false  & --                & --                  & use $Z_i(n)$ biased by cutoff?           & $-$ & $-$ & $+$ & $-$ \\
-         \tt rescale    & \tt true   & --                & --                  & use $\mu^*_{i j}$ rescaled for cutoff?   & $+$ & $+$ & $+$ & $-$
+         \bf key        & \bf default & \bf \slant{unit} & \bf \slant{symbol}  & \bf description & \tt \slant{ebmb} & \tt \slant{tc} & \tt \slant{critical} & \bf \slant{variable} \\
+         \tt file       & \tt none    & --               & --                  & output file                              & $+$ & $+$ & $+$ & $-$ \\
+         \tt form       & \tt F16.12  & --               & --                  & number edit descriptor                   & $+$ & $+$ & $+$ & $-$ \\
+         \tt tell       & \tt true    & --               & --                  & use standard output?                     & $+$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt T          & 10          & K                & $T$                 & temperature                              & $+$ & $+$ & $+$ & $+$ \\[\gap]
+         \tt omegaE     & 0.02        & eV               & $\omega \sub E$     & \textsc{Einstein} frequency              & $+$ & $+$ & $+$ & $+$ \\
+         \tt cutoff     & 15          & $\omega \sub E$  & $\omega_N$          & overall cutoff frequency                 & $+$ & $+$ & $+$ & $-$ \\
+         \tt cutoffC    & $\omega_N$  & $\omega \sub E$  & $\omega_{N \sub C}$ & \textsc{Coulomb} cutoff frequency        & $+$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt lambda     & $\vec 1$    & 1                & $\lambda_{i j}$     & electron-phonon coupling                 & $+$ & $+$ & $+$ & $+$ \\
+         \tt muStar     & $\vec 0$    & 1                & $\mu^*_{i j}$       & \textsc{Coulomb} pseudo-potential        & $+$ & $+$ & $+$ & $+$ \\[\gap]
+         \tt dos        & \tt none    & --               & --                  & file with density of states              & $+$ & $+$ & $-$ & $-$ \\
+         \tt mu         & 0.0         & eV               & $\epsilon \sub F$   & \textsc{Fermi} level                     & $+$ & $+$ & $-$ & $-$ \\[\gap]
+         \tt limit      & 250000      & 1                & --                  & maximum number of iterations             & $+$ & $+$ & $-$ & $-$ \\[\gap]
+         \tt epsilon    & $10^{-15}$  & a.u.             & --                  & negligible float difference              & $+$ & $+$ & $+$ & $-$ \\
+         \tt error      & $10^{-5}$   & a.u.             & --                  & bisection error                          & $-$ & $+$ & $+$ & $-$ \\
+         \tt zero       & $10^{-10}$  & eV               & --                  & negligible gap at $T \sub c$ (threshold) & $-$ & $+$ & $-$ & $-$ \\
+         \tt rate       & $10^{-1}$   & 1                & --                  & growth rate for bound search             & $-$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt resolution & 0           & 1                & --                  & resolution of real-axis solution         & $+$ & $-$ & $-$ & $-$ \\
+         \tt measurable & \tt false   & --               & --                  & find measurable gap?                     & $+$ & $-$ & $-$ & $-$ \\[\gap]
+         \tt imitate    & \tt false   & --               & --                  & use $Z_i(n)$ biased by cutoff?           & $-$ & $-$ & $+$ & $-$ \\
+         \tt rescale    & \tt true    & --               & --                  & use $\mu^*_{i j}$ rescaled for cutoff?   & $+$ & $+$ & $+$ & $-$
       \end{tabular}
       \captionsetup{singlelinecheck=off}
       \caption[Input parameters]{
