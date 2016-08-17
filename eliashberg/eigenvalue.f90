@@ -130,18 +130,18 @@ contains
          done = .false.
 
          do while (.not. done)
-            vector = matmul(matrix, vector)
+            vector(:) = matmul(matrix, vector)
             status = sqrt(dot_product(vector, vector))
 
             if (status .ap. status0) done = .true.
 
-            vector = vector / status
+            vector(:) = vector / status
             status0 = status
          end do
 
          status = status - shift
       else
-         values = real(eigenvalues(matrix), dp)
+         values(:) = real(eigenvalues(matrix), dp)
          status = maxval(values)
       end if
    end subroutine eigenvalue

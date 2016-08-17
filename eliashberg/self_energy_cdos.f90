@@ -39,9 +39,9 @@ contains
       allocate(muStar(x%bands, x%bands))
 
       if (x%rescale) then
-         muStar = x%muStar / (1 + x%muStar * log(nE / (nC + 0.5_dp)))
+         muStar(:, :) = x%muStar / (1 + x%muStar * log(nE / (nC + 0.5_dp)))
       else
-         muStar = x%muStar
+         muStar(:, :) = x%muStar
       end if
 
       allocate(mu(0:no - 1, x%bands, x%bands))
