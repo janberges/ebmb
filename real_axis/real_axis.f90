@@ -39,7 +39,7 @@ contains
                re%status(i) = -1
 
                do n = 1, x%limit
-                  Delta0 = real(continuation(re%Delta0(i)), dp)
+                  Delta0 = real(continuation(re%Delta0(i)))
 
                   if (re%Delta0(i) .ap. Delta0) re%status(i) = n
 
