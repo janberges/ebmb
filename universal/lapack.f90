@@ -23,10 +23,11 @@ module lapack
 
 contains
 
-   subroutine eigenvalues(matrix, values, error)
+   function eigenvalues(matrix, error)
       real(dp), intent(in) :: matrix(:, :)
-      complex(dp), intent(out) :: values(:)
       integer, intent(out), optional :: error
+
+      complex(dp) :: eigenvalues(size(matrix, 1))
 
       integer :: n, lwork, info
 
@@ -54,8 +55,8 @@ contains
          & lwork = 3 * n,   &
          &  info = info     )
 
-      values = cmplx(wr, wi, dp)
+      eigenvalues = cmplx(wr, wi, dp)
 
       if (present(error)) error = info
-   end subroutine eigenvalues
+   end function eigenvalues
 end module lapack

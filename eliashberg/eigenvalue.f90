@@ -15,14 +15,13 @@ contains
       real(dp), intent(out) :: status  ! greatest eigenvalue
       real(dp), save        :: status0 ! ... in previous step
 
-      complex(dp), allocatable, save :: values(:) ! all eigenvalues
-
       real(dp), allocatable, save :: &
          lambda(:, :, :), & ! frequency-dependent electron-phonon coupling
          renorm(:, :, :), & ! frequency-diagonal renormalization contribution
          muStar(:, :),    & ! rescaled Coulomb pseudo-potential
          matrix(:, :),    & ! Eliashberg matrix
-         vector(:)          ! energy gap
+         vector(:),       & ! energy gap
+         values(:)          ! all eigenvalues
 
       real(dp) :: shift ! temporary eigenvalue shift for power method
 
@@ -142,8 +141,8 @@ contains
 
          status = status - shift
       else
-         call eigenvalues(matrix, values)
-         status = maxval(real(values))
+         values = real(eigenvalues(matrix), dp)
+         status = maxval(values)
       end if
    end subroutine eigenvalue
 end module eliashberg_eigenvalue
