@@ -63,7 +63,8 @@ contains
          allocate(vector(0:x%bands * no - 1))
          allocate(values(0:x%bands * no - 1))
 
-         vector = (x%bands * no) ** (-0.5_dp)
+         vector(:) = 0
+         vector(0) = 1
          status0 = 1
 
          no0 = no
