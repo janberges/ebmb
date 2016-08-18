@@ -8,12 +8,12 @@ program critical
 
    real(dp), pointer :: variable => null() ! parameter to be optimized
 
-   real(dp) :: inner ! bound within superconducting phase
-   real(dp) :: outer ! bound beyond superconducting phase
+   real(dp) :: bound(2) ! bisection bounds
 
    real(dp) :: status  ! greatest eigenvalue
    real(dp) :: status0 ! ... in previous step
 
+   logical :: sc1 ! bound(1) within superconducting phase?
    logical :: try ! still trying out direction?
 
    integer :: i, j ! band indices
@@ -46,68 +46,50 @@ program critical
       end do
    end do
 
-   try = .true.
-
    call eigenvalue(status, x)
+
    status0 = status
 
-   if (status .ge. 1) then
-      do while (status .ge. 1)
-         inner = variable
-
-         variable = variable * (1 + x%rate)
-
-         call eigenvalue(status, x)
-
-         if (status .gt. status0) then
-            if (try) then
-               variable = variable / (1 + x%rate)
-               x%rate = -x%rate
-               try = .false.
-            else
-               stop 'stuck at local minimum'
-            end if
-         else
-            status0 = status
-         end if
-      end do
-
-      outer = variable
-   else
-      do while (status .lt. 1)
-         outer = variable
-
-         variable = variable * (1 - x%rate)
-
-         call eigenvalue(status, x)
-
-         if (status .lt. status0) then
-            if (try) then
-               variable = variable / (1 - x%rate)
-               x%rate = -x%rate
-               try = .false.
-            else
-               stop 'stuck at local maximum'
-            end if
-         else
-            status0 = status
-         end if
-      end do
-
-      inner = variable
-   end if
+   sc1 = status .ge. 1
+   try = .true.
 
    do
-      variable = (inner + outer) / 2
-
-      if (abs(outer - inner) .le. 2 * x%error) exit
+      bound(1) = variable
+      variable = variable * (1 + x%rate)
 
       call eigenvalue(status, x)
 
-      if (status .ge. 1) then
-         inner = variable
+      if (status .eq. status0) stop 'stationary point'
+
+      if (sc1 .neqv. status .ge. 1) exit
+
+      if (sc1 .eqv. status .gt. status0) then
+         if (try) then
+            variable = bound(1)
+            x%rate = -x%rate
+            try = .false.
+            cycle
+         end if
+
+         stop 'local extremum'
+      end if
+
+      status0 = status
+   end do
+
+   bound(2) = variable
+
+   do
+      variable = sum(bound) / 2
+
+      if (abs(variable - bound(1)) .le. x%error) exit
+
+      call eigenvalue(status, x)
+
+      if (sc1 .eqv. status .ge. 1) then
+         bound(1) = variable
       else
-         outer = variable
+         bound(2) = variable
       end if
    end do
 
