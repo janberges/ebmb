@@ -1,7 +1,7 @@
 module eliashberg_eigenvalue
+   use eigenvalues
    use global
-   use lapack
-   use tools, only: bound, sort
+   use tools, only: sort
    implicit none
 
    private
@@ -12,8 +12,7 @@ contains
    subroutine eigenvalue(status, x)
       type(parameters), intent(in) :: x
 
-      real(dp), intent(out) :: status  ! greatest eigenvalue
-      real(dp), save        :: status0 ! ... in previous step
+      real(dp), intent(out) :: status ! greatest eigenvalue
 
       real(dp), allocatable, save :: &
          lambda(:, :, :), & ! frequency-dependent electron-phonon coupling
@@ -23,8 +22,6 @@ contains
          vector(:),       & ! energy gap
          values(:)          ! all eigenvalues
 
-      real(dp) :: shift ! temporary eigenvalue shift for power method
-
       integer :: no ! index of overall cutoff frequency
       integer :: nC ! index of Coulomb cutoff frequency
 
@@ -33,8 +30,6 @@ contains
       integer :: i, j ! band indices
       integer :: n, m ! frequency indices
       integer :: p, q ! index offsets
-
-      logical :: done ! eigenvalue converged?
 
       real(dp) :: nE ! 'index' defining omegaE as bosonic Matsubara frequency
 
@@ -64,7 +59,6 @@ contains
 
          vector(:) = 0
          vector(0) = 1
-         status0 = 1
 
          no0 = no
       end if
@@ -109,8 +103,8 @@ contains
                matrix(q + n, p + n) = matrix(q + n, p + n) - renorm(n, j, i)
 
                do m = 0, no - 1
-                  matrix(q + m, p + n) = (matrix(q + m, p + n) &
-                     + lambda(abs(n - m), j, i) + lambda(n + m + 1, j, i))
+                  matrix(q + m, p + n) = matrix(q + m, p + n) &
+                     + lambda(abs(n - m), j, i) + lambda(n + m + 1, j, i)
                end do
             end do
          end do
@@ -121,27 +115,9 @@ contains
       end do
 
       if (x%power .and. x%bands .eq. 1) then
-         shift = bound(matrix)
-
-         do p = 0, x%bands * no - 1
-            matrix(p, p) = matrix(p, p) + shift
-         end do
-
-         done = .false.
-
-         do while (.not. done)
-            vector(:) = matmul(matrix, vector)
-            status = sqrt(dot_product(vector, vector))
-
-            if (status .ap. status0) done = .true.
-
-            vector(:) = vector / status
-            status0 = status
-         end do
-
-         status = status - shift
+         call power_method(matrix, vector, status)
       else
-         values(:) = real(eigenvalues(matrix), dp)
+         values(:) = real(spectrum(matrix), dp)
          call sort(values, 1)
          status = values(0)
       end if

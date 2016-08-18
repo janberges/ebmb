@@ -1,9 +1,10 @@
-module lapack
+module eigenvalues
    use global
+   use tools, only: bound
    implicit none
    private
 
-   public :: eigenvalues
+   public :: spectrum, power_method
 
    interface
       subroutine dgeev(jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr, &
@@ -23,11 +24,11 @@ module lapack
 
 contains
 
-   function eigenvalues(matrix, error)
+   function spectrum(matrix, error)
       real(dp), intent(in) :: matrix(:, :)
       integer, intent(out), optional :: error
 
-      complex(dp) :: eigenvalues(size(matrix, 1))
+      complex(dp) :: spectrum(size(matrix, 1))
 
       integer :: n, lwork, info
 
@@ -55,8 +56,38 @@ contains
          & lwork = 3 * n,   &
          &  info = info     )
 
-      eigenvalues = cmplx(wr, wi, dp)
+      spectrum = cmplx(wr, wi, dp)
 
       if (present(error)) error = info
-   end function eigenvalues
-end module lapack
+   end function spectrum
+
+   subroutine power_method(matrix, vector, value)
+      real(dp), intent(inout) :: matrix(:, :), vector(:)
+      real(dp), intent(out) :: value
+
+      real(dp) :: shift, value0
+
+      integer :: i
+
+      shift = bound(matrix)
+
+      do i = 1, size(matrix, 1)
+         matrix(i, i) = matrix(i, i) + shift
+      end do
+
+      value0 = -1
+
+      do
+         vector(:) = matmul(matrix, vector)
+
+         value = sqrt(sum(vector ** 2))
+         vector(:) = vector / value
+
+         if (value .ap. value0) exit
+
+         value0 = value
+      end do
+
+      value = value - shift
+   end subroutine power_method
+end module eigenvalues
