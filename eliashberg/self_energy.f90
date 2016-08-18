@@ -6,7 +6,7 @@ module eliashberg_self_energy
    private
    public :: self_energy, initialize
 
-   real(dp), allocatable :: weight(:, :), trapezoids(:)
+   real(dp), allocatable :: energy(:), weight(:, :), trapezoids(:)
 
 contains
 
@@ -142,10 +142,10 @@ contains
          integer, intent(in) :: n, i
 
          trapezoids(:) = weight(:, i) / ((im%omega(n) * im%Z(n, i)) ** 2 &
-            + (x%energy + im%chi(n, i)) ** 2 + im%phi(n, i) ** 2)
+            + (energy + im%chi(n, i)) ** 2 + im%phi(n, i) ** 2)
 
          A(n, i) = sum(trapezoids)
-         B(n, i) = sum(trapezoids * x%energy)
+         B(n, i) = sum(trapezoids * energy)
       end subroutine integrate
 
    end subroutine self_energy
@@ -155,15 +155,19 @@ contains
 
       integer :: i, n
 
+      if (allocated(energy))     deallocate(energy)
       if (allocated(weight))     deallocate(weight)
       if (allocated(trapezoids)) deallocate(trapezoids)
 
-      allocate(weight(size(x%energy), x%bands))
+      allocate(energy    (size(x%energy)))
+      allocate(weight    (size(x%energy), x%bands))
       allocate(trapezoids(size(x%energy)))
 
       n = minloc(abs(x%energy - x%mu), 1)
 
-      call differential(x%energy - x%energy(n), weight(:, 1))
+      energy(:) = x%energy - x%energy(n)
+
+      call differential(energy, weight(:, 1))
 
       do i = 2, x%bands
          weight(:, i) = weight(:, 1)
