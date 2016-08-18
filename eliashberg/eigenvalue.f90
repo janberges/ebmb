@@ -1,7 +1,6 @@
 module eliashberg_eigenvalue
    use eigenvalues
    use global
-   use tools, only: sort
    implicit none
 
    private
@@ -118,8 +117,7 @@ contains
          call power_method(matrix, vector, status)
       else
          values(:) = real(spectrum(matrix), dp)
-         call sort(values, 1)
-         status = values(0)
+         status = maxval(values)
       end if
    end subroutine eigenvalue
 end module eliashberg_eigenvalue
