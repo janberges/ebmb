@@ -15,8 +15,6 @@ module global
 
       logical :: tell = .true. ! use standard output?
 
-      real(dp), pointer :: variable => null() ! parameter to be optimized
-
       real(dp) :: T = 10.0_dp ! temperature (K)
 
       real(dp) :: omegaE  = 0.02_dp ! Einstein frequency (eV)
