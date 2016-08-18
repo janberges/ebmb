@@ -1,7 +1,7 @@
 module eliashberg_eigenvalue
    use global
    use lapack
-   use tools, only: bound
+   use tools, only: bound, sort
    implicit none
 
    private
@@ -142,7 +142,8 @@ contains
          status = status - shift
       else
          values(:) = real(eigenvalues(matrix), dp)
-         status = maxval(values)
+         call sort(values, 1)
+         status = values(0)
       end if
    end subroutine eigenvalue
 end module eliashberg_eigenvalue

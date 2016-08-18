@@ -3,7 +3,7 @@ module tools
    implicit none
 
    private
-   public :: argument, bound, interval, matches, differential
+   public :: argument, bound, differential, interval, matches, sort
 
 contains
 
@@ -95,4 +95,19 @@ contains
          if (str(c:c) .eq. char) matches = matches + 1
       end do
    end function matches
+
+   subroutine sort(list, n)
+      real(dp), intent(inout) :: list(:)
+      integer, intent(in), optional :: n
+
+      integer :: i, j, m
+
+      m = size(list)
+      if (present(n)) m = min(n, m)
+
+      do i = 1, m
+         j = i + maxloc(list(i:), 1) - 1
+         list([i, j]) = list([j, i])
+      end do
+   end subroutine sort
 end module tools
