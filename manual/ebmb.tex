@@ -338,7 +338,7 @@
    \begin{table}
       \centering
       \begin{tabular}{r l}
-         \dummy{\dtype{string} key}\verb|:|\rlap{%
+         \dummy{\dtype{characters} key}\verb|:|\rlap{%
          \dummy{$n_1 \times \hdots \times n_r$ \dtype{numbers} value}}
                       & \\
                       & associate key with value \\[\gap]
@@ -350,7 +350,12 @@
          \verb|INT:|  & take \dtype{numbers} as \dtype{integers} \\[\gap]
          \verb|REAL:| & take \dtype{numbers} as \dtype{doubles}
       \end{tabular}
-      \caption{Statements allowed in binary output.}
+      \captionsetup{width=0.5\textwidth}
+      \caption{
+         Statements allowed in binary output. The data types \dtype{character},
+         \dtype{integer} and \dtype{double} take 1, 4 and 8 bytes of storage,
+         respectively.
+         }
       \label{output}
    \end{table}
 

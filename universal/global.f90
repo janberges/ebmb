@@ -1,8 +1,9 @@
 module global
    implicit none
 
-   integer, parameter :: dp = selected_real_kind(15) ! double precision
-   integer, parameter :: qp = selected_real_kind(30) ! quad precision
+   integer, parameter :: dp = selected_real_kind(15) ! double precision (8 B)
+   integer, parameter :: qp = selected_real_kind(30) ! quad precision (16 B)
+   integer, parameter :: i4 = selected_int_kind(9)   ! signed integer (4 B)
 
    real(dp), parameter :: pi = 4 * atan(1.0_dp) ! 3.14159...
    real(dp), parameter :: kB = 8.61733e-05_dp   ! Boltzmann constant (meV/K)
@@ -21,7 +22,7 @@ module global
       real(dp) :: cutoff  = 15.0_dp  ! overall cutoff frequency (omegaE)
       real(dp) :: cutoffC = -1.0_dp  ! Coulomb cutoff frequency (omegaE)
 
-      integer :: bands = 1 ! number of electronic bands
+      integer(i4) :: bands = 1 ! number of electronic bands
 
       real(dp), allocatable :: lambda(:, :) ! electron-phonon coupling
       real(dp), allocatable :: muStar(:, :) ! Coulomb pseudo-potential
@@ -33,14 +34,14 @@ module global
 
       logical :: chi = .false. ! find energy shift?
 
-      integer :: limit = 250000 ! maximum number of iterations
+      integer(i4) :: limit = 250000 ! maximum number of iterations
 
       real(dp) :: error = 1e-05_dp ! bisection error (a.u.)
       real(dp) ::  zero = 1e-10_dp ! negligible gap at critical temperature (eV)
       real(dp) ::  rate = 1e-01_dp ! growth rate for bound search
 
-      integer :: resolution = 0       ! real-axis resolution
-      logical :: measurable = .false. ! find measurable gap?
+      integer(i4) :: resolution = 0       ! real-axis resolution
+      logical     :: measurable = .false. ! find measurable gap?
 
       logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
       logical :: imitate = .false. ! cut off renormalization function?
@@ -56,7 +57,7 @@ module global
       real(dp), allocatable :: phi  (:, :) ! order parameter (eV)
       real(dp), allocatable :: phiC (:)    ! constant Coulomb contribution (eV)
 
-      integer :: status ! convergence status
+      integer(i4) :: status ! convergence status
    end type matsubara
 
    type continued
@@ -66,7 +67,7 @@ module global
       complex(dp), allocatable :: Delta (:, :) ! gap (eV)
       real   (dp), allocatable :: Delta0(:)    ! measurable gap (eV)
 
-      integer, allocatable :: status(:) ! convergence status
+      integer(i4), allocatable :: status(:) ! convergence status
    end type continued
 
    real(dp) :: epsilon = 1e-15_dp ! negligible float difference (a.u.)

@@ -15,13 +15,14 @@ contains
       open (unit, &
          file=x%file, action='write', status='replace', access='stream')
 
-      write (unit) 'INT:DIM:', 0
+      write (unit) 'INT:DIM:', 0_i4
       write (unit) 'status:', im%status
 
-      write (unit) 'REAL:DIM:', 1, size(im%omega)
+      write (unit) 'REAL:DIM:', 1_i4, size(im%omega, kind=i4)
       write (unit) 'iomega:', im%omega
 
-      if (x%bands .gt. 1) write (unit) 'DIM:', 2, x%bands, size(im%omega)
+      if (x%bands .gt. 1) &
+         write (unit) 'DIM:', 2_i4, x%bands, size(im%omega, kind=i4)
 
       write (unit) 'Z:', im%Z
       write (unit) 'Delta:', im%Delta
@@ -31,9 +32,9 @@ contains
       write (unit) 'DIM:'
 
       if (x%bands .gt. 1) then
-         write (unit) 1, x%bands
+         write (unit) 1_i4, x%bands
       else
-         write (unit) 0
+         write (unit) 0_i4
       end if
 
       write (unit) 'phiC:', im%phiC
@@ -44,11 +45,11 @@ contains
       end if
 
       if (x%resolution .gt. 0) then
-         write (unit) 'DIM:', 1, x%resolution
+         write (unit) 'DIM:', 1_i4, x%resolution
 
          write (unit) 'omega:', re%omega
 
-         if (x%bands .gt. 1) write (unit) 'DIM:', 2, x%bands, x%resolution
+         if (x%bands .gt. 1) write (unit) 'DIM:', 2_i4, x%bands, x%resolution
 
          write (unit) 'Re[Z]:', real(re%Z)
          write (unit) 'Im[Z]:', aimag(re%Z)
