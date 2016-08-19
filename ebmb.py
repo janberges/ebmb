@@ -8,7 +8,7 @@ import subprocess
 try:
     from scipy.special import ellipk
 except ImportError:
-    print 'Warning: Elliptic integral not available'
+    print "'squareDOSfile' not available"
 
 def load(filename):
     data = {}
@@ -53,7 +53,7 @@ def get(file='~temporary.dat', replace=True, program='ebmb', **parameters):
     if replace or not path.exists(file):
         run(program, file=file, **parameters)
 
-    if program == 'ebmb':
+    if program.endswith('ebmb'):
         return load(file)
     else:
         with open(file, 'rb') as file:
@@ -70,23 +70,7 @@ def tc(**parameters):
 def critical(**parameters):
     return get(program='critical', **parameters)
 
-def squareDOS(e, t=0.25):
-    return ellipk(1 - (0.25 * e / t) ** 2) / (2 * np.pi ** 2 * t)
-
-def squareDOSGauss(e, t=0.25, n=200, sigma=0.02, cutoff=None):
-    k = np.linspace(-np.pi, np.pi, n, endpoint=False)
-
-    e1 = -2 * t * np.cos(k)
-    e2 = np.array([I + II for I in e1 for II in e1])
-
-    r = abs(e2 - e)
-
-    if cutoff is not None:
-        r = r[np.where(r < cutoff)]
-
-    return sum(np.exp(-(r / sigma) ** 2) / (np.sqrt(np.pi) * sigma)) / n ** 2
-
-def squareDOSfile(name='dos.in', n=401, t=0.25, bands=1, replace=True):
+def squareDOSfile(file='dos.in', n=401, t=0.25, replace=True):
     if not replace and path.exists(name):
         return
 
@@ -95,14 +79,14 @@ def squareDOSfile(name='dos.in', n=401, t=0.25, bands=1, replace=True):
 
     e, de = np.linspace(-4 * t, 4 * t, n, retstep=True)
 
-    dos = squareDOS(e, t)
+    dos = ellipk(1 - (e / (4 * t)) ** 2) / (2 * np.pi ** 2 * t)
 
     dos[n // 2] = 0.0
     dos[n // 2] = 1 / de - (dos[0] + 2 * sum(dos[1:-1]) + dos[-1]) / 2
 
-    with open(name, 'w') as file:
+    with open(file, 'w') as out:
         for i in range(n):
-            print >> file, '% .10f' % e[i] + ' %.10f' % dos[i] * bands
+            out.write('% .10f %.10f\n' % (e[i], dos[i]))
 
 def DOSfile(file, epsilon, domain, filters=[], n=101, replace=True):
     if not replace and path.exists(name):
@@ -147,17 +131,8 @@ def DOSfile(file, epsilon, domain, filters=[], n=101, replace=True):
 
             out.write('\n')
 
-def epsilon(*k):
-    return -0.5 * np.cos(k).sum()
-
-def kpoints(n=500):
-    return np.linspace(-np.pi, np.pi, n, endpoint=False)
-
 if __name__ == '__main__':
-    DOSfile('dos.in', epsilon, [kpoints()] * 2,
-        [lambda *k: np.pi ** 2 / 2 <= np.dot(k, k) <= np.pi ** 2])
-
     np.set_printoptions(threshold=9, edgeitems=1)
 
-    for item in sorted(ebmb(tell=False, dos='dos.in').items()):
+    for item in sorted(ebmb(tell=False).items()):
         print ('%9s = %s' % item).replace('\n', '\n' + ' ' * 12)
