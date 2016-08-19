@@ -136,6 +136,17 @@
          %
          \dummy{replace} decides whether an existing \dummy{file} is used or
          overwritten.
+
+         Given a band structure, its discretized domain and $n - 1$ filters, an
+         input file with the density of states resolved for $n$ subdomains is
+         generated like that:
+         %
+         \begin{quote}
+            \verb|from numpy import cos, dot, linspace, pi| \\
+            \verb|DOSfile('dos.in', epsilon=lambda *k: -cos(k).sum() / 2, | \\
+            \verb|    domain=[linspace(-pi, pi, 1000, endpoint=False)] * 2,| \\
+            \verb|    filters=[lambda *k: pi ** 2 / 2 <= dot(k, k) <= pi ** 2])|
+         \end{quote}
    \end{itemize}
 
    \headline{\textsc{Eliashberg} theory}

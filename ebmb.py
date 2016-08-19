@@ -104,16 +104,16 @@ def squareDOSfile(name='dos.in', n=401, t=0.25, bands=1, replace=True):
         for i in range(n):
             print >> file, '% .10f' % e[i] + ' %.10f' % dos[i] * bands
 
-def DOSfile(file, epsilon, axes, filters=[], n=101, replace=True):
+def DOSfile(file, epsilon, domain, filters=[], n=101, replace=True):
     if not replace and path.exists(name):
         return
 
-    points = np.prod(map(len, axes))
+    points = np.prod(map(len, domain))
 
     pocket = np.empty(points, dtype=int)
     energy = np.empty(points)
 
-    for i, x in enumerate(itertools.product(*axes)):
+    for i, x in enumerate(itertools.product(*domain)):
         energy[i] = epsilon(*x)
         pocket[i] = 0
 
