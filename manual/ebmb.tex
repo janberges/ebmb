@@ -19,6 +19,7 @@
 \def\bottomfraction{0.9}
 
 \def\D{\mathrm d}
+\def\E{\mathrm e}
 \def\I{\mathrm i}
 
 \def\sub#1{\sb{\mathrm{#1}}}
@@ -181,24 +182,24 @@
       \begin{split}
          Z_i(n) &= 1 + \frac T {\omega_n} \sum_j \sum_{m = 0}^{N - 1}
          \int \from{-\infty} \till \infty \D \epsilon
-         \frac{n_j(\epsilon)}{n_j(0)}
+         \frac{n_j(\epsilon)}{n_j(\mu_0)}
          \frac{\omega_m Z_j (m)}{\Theta_j(\epsilon, m)}
          \Lambda_{i j}^-(n, m),
          \\
          \phi_i(n) &= T \sum_j \sum_{m = 0}^{N - 1}
          \int \from{-\infty} \till \infty \D \epsilon
-         \frac{n_j(\epsilon)}{n_j(0)}
+         \frac{n_j(\epsilon)}{n_j(\mu_0)}
          \frac{\phi_j(m)}{\Theta_j(\epsilon, m)}
          [\Lambda_{i j}^+(n, m) - U^*_{i j}(m)],
          \\
          \chi_i(n) &= -T \sum_j \sum_{m = 0}^{N - 1}
          \int \from{-\infty} \till \infty \D \epsilon
-         \frac{n_j(\epsilon)}{n_j(0)}
-         \frac{\epsilon + \chi_j(m)}{\Theta_j(\epsilon, m)}
+         \frac{n_j(\epsilon)}{n_j(\mu_0)}
+         \frac{\epsilon - \mu + \chi_j(m)}{\Theta_j(\epsilon, m)}
          \Lambda_{i j}^+(n, m),
          \\
-         \Theta_j(\epsilon, m) &=
-         [\omega_m Z_j(m)]^2 + \phi_j^2(m) + [\epsilon + \chi_j(m)]^2
+         \Theta_i(\epsilon, n) &=
+         [\omega_n Z_i(n)]^2 + \phi_i^2(n) + [\epsilon - \mu + \chi_i(n)]^2,
       \end{split}
       \label{Eliashberg equations}
    \end{equation}
@@ -210,11 +211,10 @@
       H. J. \textsc{Vidberg} and J. W. \textsc{Serene}, J. Low Temp. Phys.
       \textbf{29}, 179 (1977)
       }
-
-   $n_i(\epsilon)$ is the density of \textsc{Bloch} states. Energies $\epsilon$
-   are measured relative to the \textsc{Fermi} level. The electron-phonon
-   coupling matrices and the rescaled \textsc{Coulomb} pseudo-potential are
-   connected to the corresponding input parameters via
+   %
+   The electron-phonon coupling matrices and the
+   rescaled \textsc{Coulomb} pseudo-potential are connected to the corresponding
+   input parameters via
    %
    \begin{align*}
       \Lambda_{i j}^\pm(n, m) &=
@@ -233,7 +233,23 @@
       \frac 1 {\mu^*_{i j}} + \ln \frac{\omega \sub E}{\omega_{N \sub C}}.
    \end{align*}
    %
-   Approximating $n_i(\epsilon) \approx n_i(0)$ and $\chi_i(n) \approx 0$ yields
+   $n_i(\epsilon)$ is the density of \textsc{Bloch} states with energy
+   $\epsilon$ per band and unit cell. $\mu_0$ and $\mu$ are the corresponding
+   and self-consistent chemical potentials, respectively. The latter ensures
+   that the electron number is conserved:
+   %
+   \begin{align*}
+      2 \sum_i \int \from{-\infty} \till \infty \D \epsilon
+      \frac{n_i(\epsilon)}{\E^{(\epsilon - \mu_0) / T} + 1} \overset ! \approx 1
+      - 4 T \sum_i \int \from{-\infty} \till \infty \D \epsilon \, n_i(\epsilon)
+      \Bigg[
+         \sum_{n = 0}^{N - 1}
+         \frac{\epsilon - \mu + \chi_i(n)}{\Theta_i(\epsilon, n)}
+         + \frac 1 {2 \pi T} \arctan \frac{\epsilon - \mu}{\omega_N}
+      \Bigg].
+   \end{align*}
+   %
+   Approximating $n_i(\epsilon) \approx n_i(\mu_0)$ yields $\chi_i(n) = 0$ and
    the constant-DOS \textsc{Eliashberg} equations
    %
    \begin{equation}
@@ -305,7 +321,7 @@
          \tt lambda     & $\vec 1$    & 1                & $\lambda_{i j}$     & electron-phonon coupling                 & $+$ & $+$ & $+$ & $+$ \\
          \tt muStar     & $\vec 0$    & 1                & $\mu^*_{i j}$       & \textsc{Coulomb} pseudo-potential        & $+$ & $+$ & $+$ & $+$ \\[\gap]
          \tt dos        & \tt none    & --               & --                  & file with density of states              & $+$ & $+$ & $-$ & $-$ \\
-         \tt mu         & 0.0         & eV               & $\epsilon \sub F$   & \textsc{Fermi} level                     & $+$ & $+$ & $-$ & $-$ \\[\gap]
+         \tt mu         & 0           & eV               & $\mu_0$             & free-particle chemical potential         & $+$ & $+$ & $-$ & $-$ \\[\gap]
          \tt limit      & 250000      & 1                & --                  & maximum number of iterations             & $+$ & $+$ & $-$ & $-$ \\[\gap]
          \tt epsilon    & $10^{-15}$  & a.u.             & --                  & negligible float difference              & $+$ & $+$ & $+$ & $-$ \\
          \tt error      & $10^{-5}$   & a.u.             & --                  & bisection error                          & $-$ & $+$ & $+$ & $-$ \\
@@ -380,6 +396,7 @@
          \tt Delta  & gap                                         & $\Delta_i(n)$     \\
          \tt Z      & renormalization                             & $Z_i(n)$          \\
          \tt chi    & energy shift                                & $\chi_i(n)$       \\
+         \tt mu     & self-consistent chemical potential          & $\mu$             \\
          \tt phiC   & constant \textsc{Coulomb} contribution      & ${\phi \sub C}_i$ \\
          \tt status & status (steps till convergence or $-1$)     & --                \\
          \hline

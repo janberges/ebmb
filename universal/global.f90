@@ -58,6 +58,8 @@ module global
       real(dp), allocatable :: phiC (:)    ! constant Coulomb contribution (eV)
 
       integer(i4) :: status ! convergence status
+
+      real(dp) :: mu ! self-consistent chemical potential
    end type matsubara
 
    type continued

@@ -46,9 +46,15 @@ contains
          end do
       end if
 
-      print "(/, 'constant Coulomb contribution (eV):', /)"
+      form = edit('(x)')
 
-      print edit('(x)'), im%phiC
+      if (x%chi) then
+         print "(/, 'self-consistent chemical potential (eV):', /)"
+         print edit(form), im%mu
+      end if
+
+      print "(/, 'constant Coulomb contribution (eV):', /)"
+      print edit(form), im%phiC
 
       if (x%measurable) then
          print "(/, 'measurable gap (eV):', /)"

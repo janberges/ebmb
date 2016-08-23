@@ -27,7 +27,11 @@ contains
       write (unit) 'Z:', im%Z
       write (unit) 'Delta:', im%Delta
 
-      if (x%chi) write (unit) 'chi:', im%chi
+      if (x%chi) then
+         write (unit) 'chi:', im%chi
+         write (unit) 'DIM:', 0_i4
+         write (unit) 'mu:', im%mu
+      end if
 
       write (unit) 'DIM:'
 
