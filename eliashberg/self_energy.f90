@@ -8,6 +8,7 @@ module eliashberg_self_energy
 
    logical :: initial = .true.
 
+   real(dp) :: states
    real(dp), allocatable :: weight(:, :), trapezia(:), matsum(:)
 
 contains
@@ -61,7 +62,7 @@ contains
          g(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
 
          do i = 1, x%bands
-            g(n, :, i) = g(n, :, i) / x%dos(f, :)
+            g(n, :, i) = g(n, :, i) * states / x%dos(f, :)
          end do
       end do
 
@@ -79,7 +80,7 @@ contains
          U(n, :, :) = -2 * muStar
 
          do i = 1, x%bands
-            U(n, :, i) = U(n, :, i) / x%dos(f, :)
+            U(n, :, i) = U(n, :, i) * states / x%dos(f, :)
          end do
       end do
 
@@ -233,5 +234,9 @@ contains
       end do
 
       weight(:, :) = weight * x%dos
+
+      states = sum(weight)
+
+      weight(:, :) = weight / states
    end subroutine initialize
 end module eliashberg_self_energy
