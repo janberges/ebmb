@@ -30,7 +30,7 @@ contains
 
       complex(dp) :: spectrum(size(matrix, 1))
 
-      integer :: n, lwork, info
+      integer :: n, info
 
       real(dp) :: a(size(matrix, 1), size(matrix, 2))
       real(dp) :: wr(size(matrix, 1)), wi(size(matrix, 1))
