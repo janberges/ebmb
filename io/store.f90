@@ -7,10 +7,11 @@ module io_store
 
 contains
 
-   subroutine store(x, im, re)
+   subroutine store(x, im, re, oc)
       type(parameters), intent(in) :: x
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
+      type(occupancy), intent(in) :: oc
 
       open (unit, &
          file=x%file, action='write', status='replace', access='stream')
@@ -29,8 +30,14 @@ contains
 
       if (x%chi) then
          write (unit) 'chi:', im%chi
+
          write (unit) 'DIM:', 0_i4
-         write (unit) 'mu:', im%mu
+
+         write (unit) 'n:', oc%n0
+         write (unit) "n':", oc%n
+
+         write (unit) 'mu:', oc%mu0
+         write (unit) "mu':", oc%mu
       end if
 
       write (unit) 'DIM:'

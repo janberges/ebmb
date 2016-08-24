@@ -13,11 +13,12 @@ module eliashberg_self_energy
 
 contains
 
-   subroutine self_energy(x, im)
+   subroutine self_energy(x, im, oc)
       type(parameters), intent(in) :: x
       type(matsubara), intent(out) :: im
+      type(occupancy), intent(out) :: oc
 
-      real(dp) :: nE, Z, phi, chi, mu, domega, occupation, A0, B0
+      real(dp) :: nE, Z, phi, chi, mu, domega, A0, B0, residue
 
       real(dp), allocatable :: g(:, :, :), U(:, :, :)
       real(dp), allocatable :: muStar(:, :), A(:, :), B(:, :)
@@ -31,17 +32,45 @@ contains
 
       if (initial) call initialize(x)
 
-      matsum(:) = 1 - tanh((x%energy - x%mu) / (2 * kB * x%T))
+      if (0 .lt. x%n .and. x%n .lt. 2) then
+         oc%n = x%n
 
-      occupation = 0
+         oc%mu = (minval(x%energy) * (2 - oc%n) + maxval(x%energy) * oc%n ) / 2
 
-      do i = 1, x%bands
-         occupation = occupation + sum(weight(:, i) * matsum)
-      end do
+         done = .false.
 
-      f = minloc(abs(x%energy - x%mu), 1)
+         do while (.not. done)
+            where (x%energy .ap. oc%mu)
+               matsum = 1 / (2 * kB * x%T)
+            elsewhere
+               matsum = x%energy - oc%mu
+               matsum = tanh(matsum / (2 * kB * x%T)) / matsum
+            end where
 
-      im%mu = x%energy(f)
+            call residues
+
+            mu = (oc%n - 1 + B0) / A0
+
+            if (oc%mu .ap. mu) done = .true.
+
+            oc%mu = mu
+         end do
+      else
+         oc%mu = x%mu
+
+         oc%n = 0
+
+         matsum(:) = 1 - tanh((x%energy - x%mu) / (2 * kB * x%T))
+
+         do i = 1, x%bands
+            oc%n = oc%n + sum(weight(:, i) * matsum)
+         end do
+      end if
+
+      oc%n0  = oc%n
+      oc%mu0 = oc%mu
+
+      f = minloc(abs(x%energy - oc%mu), 1)
 
       domega = 2 * pi * kB * x%T
 
@@ -153,29 +182,24 @@ contains
             end do
          end do
 
-         where (x%energy .ap. im%mu)
-            matsum = 1 / ((no + 0.5_dp) * domega ** 2)
-         elsewhere
-            matsum = x%energy - im%mu
-            matsum = atan(matsum / (domega * (no + 0.5_dp))) / (domega * matsum)
-         end where
+         if (x%conserve) then
+            where (x%energy .ap. oc%mu)
+               matsum = 1 / ((no + 0.5_dp) * domega ** 2)
+            elsewhere
+               matsum = x%energy - oc%mu
+               matsum = atan(matsum / (domega * (no + 0.5_dp))) &
+                  / (domega * matsum)
+            end where
 
-         A0 = 0
-         B0 = 0
+            call residues
 
-         do i = 1, x%bands
-            trapezia(:) = weight(:, i) * matsum
+            mu = ((oc%n - 1) / (4 * kB * x%T) + sum(A * im%chi + B) + B0) &
+               / (sum(A) + A0)
 
-            A0 = A0 + sum(trapezia)
-            B0 = B0 + sum(trapezia * x%energy)
-         end do
+            done = done .and. (oc%mu .ap. mu)
 
-         mu = ((occupation - 1) / (4 * kB * x%T) + sum(A * im%chi + B) + B0) &
-            / (sum(A) + A0)
-
-         done = done .and. (im%mu .ap. mu)
-
-         im%mu = mu
+            oc%mu = mu
+         end if
 
          if (done) then
             im%status = step
@@ -193,20 +217,42 @@ contains
          im%phiC(i) = kB * x%T * sum(im%phi * integral_phi * U(:, :, i))
       end do
 
+      matsum = atan((x%energy - oc%mu) / (domega * (no + 0.5_dp))) / domega
+
+      residue = 0
+
+      do i = 1, x%bands
+         residue = residue + sum(weight(:, i) * matsum)
+      end do
+
+      oc%n = 1 - 4 * kB * x%T * (sum(integral_chi) + residue)
+
    contains
+
+      subroutine residues
+         A0 = 0
+         B0 = 0
+
+         do i = 1, x%bands
+            trapezia(:) = weight(:, i) * matsum
+
+            A0 = A0 + sum(trapezia)
+            B0 = B0 + sum(trapezia * x%energy)
+         end do
+      end subroutine residues
 
       subroutine integrate(n, i)
          integer, intent(in) :: n, i
 
          trapezia(:) = weight(:, i) / ((im%omega(n) * im%Z(n, i)) ** 2 &
-            + (x%energy - im%mu + im%chi(n, i)) ** 2 + im%phi(n, i) ** 2)
+            + (x%energy - oc%mu + im%chi(n, i)) ** 2 + im%phi(n, i) ** 2)
 
          A(n, i) = sum(trapezia)
          B(n, i) = sum(trapezia * x%energy)
 
          integral_Z  (n, i) = A(n, i) *  im%Z  (n, i) * im%omega(n)
          integral_phi(n, i) = A(n, i) *  im%phi(n, i)
-         integral_chi(n, i) = A(n, i) * (im%chi(n, i) - im%mu) + B(n, i)
+         integral_chi(n, i) = A(n, i) * (im%chi(n, i) - oc%mu) + B(n, i)
       end subroutine integrate
 
    end subroutine self_energy

@@ -57,7 +57,10 @@ contains
 
             case ('dos'); dos_file = rhs
 
+            case ('n');  read (rhs, *) x%n
             case ('mu'); read (rhs, *) x%mu
+
+            case ('conserve'); read (rhs, *) x%conserve
 
             case ('limit'); read (rhs, *) x%limit
 

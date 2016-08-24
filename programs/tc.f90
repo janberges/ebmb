@@ -8,6 +8,7 @@ program tc
 
    type(parameters) :: x
    type(matsubara) :: im
+   type(occupancy) :: oc
 
    integer :: i, j
 
@@ -89,7 +90,7 @@ contains
       if (x%tell) print body, x%T
 
       if (x%chi) then
-         call self_energy(x, im)
+         call self_energy(x, im, oc)
       else
          call self_energy_cDOS(x, im)
       end if

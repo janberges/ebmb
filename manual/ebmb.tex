@@ -40,7 +40,7 @@
 
 \def\slant#1{\rlap{\rotatebox{45}{#1}}\vphantom{\rotatebox{45}{#1}}}
 
-\def\stack#1#2{\begin{tabular}{@{}r@{}}#1\\#2\end{tabular}}
+\def\stack#1#2#3{\begin{tabular}{@{}#1@{}}#2\\#3\end{tabular}}
 
 \def\dummy#1{\textcolor{darkblue}{$\langle$#1$\rangle$}}
 \def\dtype#1{\textcolor{darkblue}{\textsc{#1}}}
@@ -182,24 +182,24 @@
       \begin{split}
          Z_i(n) &= 1 + \frac T {\omega_n} \sum_j \sum_{m = 0}^{N - 1}
          \int \from{-\infty} \till \infty \D \epsilon
-         \frac{n_j(\epsilon)}{n_j(\mu_0)}
+         \frac{n_j(\epsilon)}{n_j(\mu)}
          \frac{\omega_m Z_j (m)}{\Theta_j(\epsilon, m)}
          \Lambda_{i j}^-(n, m),
          \\
          \phi_i(n) &= T \sum_j \sum_{m = 0}^{N - 1}
          \int \from{-\infty} \till \infty \D \epsilon
-         \frac{n_j(\epsilon)}{n_j(\mu_0)}
+         \frac{n_j(\epsilon)}{n_j(\mu)}
          \frac{\phi_j(m)}{\Theta_j(\epsilon, m)}
          [\Lambda_{i j}^+(n, m) - U^*_{i j}(m)],
          \\
          \chi_i(n) &= -T \sum_j \sum_{m = 0}^{N - 1}
          \int \from{-\infty} \till \infty \D \epsilon
-         \frac{n_j(\epsilon)}{n_j(\mu_0)}
-         \frac{\epsilon - \mu + \chi_j(m)}{\Theta_j(\epsilon, m)}
+         \frac{n_j(\epsilon)}{n_j(\mu)}
+         \frac{\epsilon - \mu' + \chi_j(m)}{\Theta_j(\epsilon, m)}
          \Lambda_{i j}^+(n, m),
          \\
          \Theta_i(\epsilon, n) &=
-         [\omega_n Z_i(n)]^2 + \phi_i^2(n) + [\epsilon - \mu + \chi_i(n)]^2,
+         [\omega_n Z_i(n)]^2 + \phi_i^2(n) + [\epsilon - \mu' + \chi_i(n)]^2,
       \end{split}
       \label{Eliashberg equations}
    \end{equation}
@@ -234,23 +234,25 @@
    \end{align*}
    %
    $n_i(\epsilon)$ is the density of \textsc{Bloch} states with energy
-   $\epsilon$ per band and unit cell. $\mu_0$ and $\mu$ are the corresponding
-   and self-consistent chemical potentials, respectively. The latter ensures
-   that the electron number is conserved:
+   $\epsilon$ per band and unit cell. $\mu$ and $\mu'$ are the chemical
+   potentials for free and interacting particles, respectively. The latter
+   ensures that the particle number is conserved:
    %
-   \begin{align*}
+   \begin{equation*}
       2 \sum_i \int \from{-\infty} \till \infty \D \epsilon
-      \frac{n_i(\epsilon)}{\E^{(\epsilon - \mu_0) / T} + 1} \overset ! \approx 1
-      - 4 T \sum_i \int \from{-\infty} \till \infty \D \epsilon \, n_i(\epsilon)
+      \frac{n_i(\epsilon)}{\E^{(\epsilon - \mu) / T} + 1}
+      = n \overset ! = n'
+      \approx 1 - 4 T \sum_i \int \from{-\infty} \till \infty \D \epsilon \,
+      n_i(\epsilon)
       \Bigg[
          \sum_{n = 0}^{N - 1}
-         \frac{\epsilon - \mu + \chi_i(n)}{\Theta_i(\epsilon, n)}
-         + \frac 1 {2 \pi T} \arctan \frac{\epsilon - \mu}{\omega_N}
+         \frac{\epsilon - \mu' + \chi_i(n)}{\Theta_i(\epsilon, n)}
+         + \frac{\arctan \frac{\epsilon - \mu'}{\omega_N}}{2 \pi T}
       \Bigg].
-   \end{align*}
+   \end{equation*}
    %
-   Approximating $n_i(\epsilon) \approx n_i(\mu_0)$ yields $\chi_i(n) = 0$ and
-   the constant-DOS \textsc{Eliashberg} equations
+   Approximating $n_i(\epsilon) \approx n_i(\mu)$ yields $\chi_i(n) = 0$ and the
+   constant-DOS \textsc{Eliashberg} equations
    %
    \begin{equation}
       \begin{split}
@@ -321,7 +323,9 @@
          \tt lambda     & $\vec 1$    & 1                & $\lambda_{i j}$     & electron-phonon coupling                 & $+$ & $+$ & $+$ & $+$ \\
          \tt muStar     & $\vec 0$    & 1                & $\mu^*_{i j}$       & \textsc{Coulomb} pseudo-potential        & $+$ & $+$ & $+$ & $+$ \\[\gap]
          \tt dos        & \tt none    & --               & --                  & file with density of states              & $+$ & $+$ & $-$ & $-$ \\
-         \tt mu         & 0           & eV               & $\mu_0$             & free-particle chemical potential         & $+$ & $+$ & $-$ & $-$ \\[\gap]
+         \tt n          & --          & 1                & $n$                 & initial occupancy number                 & $+$ & $+$ & $-$ & $-$ \\
+         \tt mu         & 0           & eV               & $\mu$               & initial chemical potential               & $+$ & $+$ & $-$ & $-$ \\
+         \tt conserve   & \tt true    & --               & --                  & conserve particle number?                & $+$ & $+$ & $-$ & $-$ \\[\gap]
          \tt limit      & 250000      & 1                & --                  & maximum number of iterations             & $+$ & $+$ & $-$ & $-$ \\[\gap]
          \tt epsilon    & $10^{-15}$  & a.u.             & --                  & negligible float difference              & $+$ & $+$ & $+$ & $-$ \\
          \tt error      & $10^{-5}$   & a.u.             & --                  & bisection error                          & $-$ & $+$ & $+$ & $-$ \\
@@ -396,16 +400,20 @@
          \tt Delta  & gap                                         & $\Delta_i(n)$     \\
          \tt Z      & renormalization                             & $Z_i(n)$          \\
          \tt chi    & energy shift                                & $\chi_i(n)$       \\
-         \tt mu     & self-consistent chemical potential          & $\mu$             \\
          \tt phiC   & constant \textsc{Coulomb} contribution      & ${\phi \sub C}_i$ \\
          \tt status & status (steps till convergence or $-1$)     & --                \\
          \hline
+         \multicolumn3l{\textbf{occupancy results}} \\
+         \hline
+         \tt \stack{l}{n} {n'}  & \stack{r}{initial}{final} $\Big\}$ occupancy number   & \stack{r}{$n$}  {$n'$}   \\
+         \tt \stack{l}{mu}{mu'} & \stack{r}{initial}{final} $\Big\}$ chemical potential & \stack{r}{$\mu$}{$\mu'$} \\
+         \hline
          \multicolumn3l{\textbf{real-axis results} \hfill \texttt{resolution} > 0} \\
          \hline
-         \tt omega                            & frequency                                        & $\omega$           \\
-         \stack{\tt Re[Delta]}{\tt Im[Delta]} & \stack{real}{imaginary} $\Big\}$ gap             & $\Delta_i(\omega)$ \\
-         \stack{\tt Re[Z]}    {\tt Im[Z]}     & \stack{real}{imaginary} $\Big\}$ renormalization & $Z_i(\omega)$      \\
-         \stack{\tt Re[chi]}  {\tt Im[chi]}   & \stack{real}{imaginary} $\Big\}$ energy shift    & $\chi_i(\omega)$   \\
+         \tt omega                           & frequency                                           & $\omega$           \\
+         \tt \stack{l}{Re[Delta]}{Im[Delta]} & \stack{r}{real}{imaginary} $\Big\}$ gap             & $\Delta_i(\omega)$ \\
+         \tt \stack{l}{Re[Z]}    {Im[Z]}     & \stack{r}{real}{imaginary} $\Big\}$ renormalization & $Z_i(\omega)$      \\
+         \tt \stack{l}{Re[chi]}  {Im[chi]}   & \stack{r}{real}{imaginary} $\Big\}$ energy shift    & $\chi_i(\omega)$   \\
          \hline
          \multicolumn3l{\textbf{measurable results} \hfill \texttt{measurable=true}} \\
          \hline

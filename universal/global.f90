@@ -30,7 +30,10 @@ module global
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
       real(dp), allocatable :: dos(:, :) ! density of Bloch states (a.u.)
 
-      real(dp) :: mu = 0.0_dp ! Fermi level (eV)
+      real(dp) ::  n = 0.0_dp ! initial occupancy number
+      real(dp) :: mu = 0.0_dp ! initial chemical potential (eV)
+
+      logical :: conserve = .true. ! conserve particle number?
 
       logical :: chi = .false. ! find energy shift?
 
@@ -58,8 +61,6 @@ module global
       real(dp), allocatable :: phiC (:)    ! constant Coulomb contribution (eV)
 
       integer(i4) :: status ! convergence status
-
-      real(dp) :: mu ! self-consistent chemical potential
    end type matsubara
 
    type continued
@@ -71,6 +72,11 @@ module global
 
       integer(i4), allocatable :: status(:) ! convergence status
    end type continued
+
+   type occupancy
+      real(dp) :: n0, n   ! initial and final occupancy number
+      real(dp) :: mu0, mu ! initial and final chemical potential (eV)
+   end type occupancy
 
    real(dp) :: epsilon = 1e-15_dp ! negligible float difference (a.u.)
 

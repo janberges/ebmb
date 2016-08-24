@@ -8,10 +8,11 @@ module io_tell
 
 contains
 
-   subroutine tell(x, im, re)
+   subroutine tell(x, im, re, oc)
       type(parameters), intent(in) :: x
       type(matsubara), intent(in) :: im
       type(continued), intent(in) :: re
+      type(occupancy), intent(in) :: oc
 
       integer :: i, n
 
@@ -49,8 +50,11 @@ contains
       form = edit('(x)')
 
       if (x%chi) then
-         print "(/, 'self-consistent chemical potential (eV):', /)"
-         print edit(form), im%mu
+         print "(/, 'initial and final occupancy number:', /)"
+         print edit(form), oc%n0, oc%n
+
+         print "(/, 'initial and final chemical potential (eV):', /)"
+         print edit(form), oc%mu0, oc%mu
       end if
 
       print "(/, 'constant Coulomb contribution (eV):', /)"
