@@ -70,6 +70,8 @@ contains
             case ('zero');    read (rhs, *) x%zero
             case ('rate');    read (rhs, *) x%rate
 
+            case ('clip'); read (rhs, *) x%clip
+
             case ('resolution'); read (rhs, *) x%resolution
             case ('measurable'); read (rhs, *) x%measurable
 

@@ -43,6 +43,8 @@ module global
       real(dp) ::  zero = 1e-10_dp ! negligible gap at critical temperature (eV)
       real(dp) ::  rate = 1e-01_dp ! growth rate for bound search
 
+      real(dp) :: clip = 15.0_dp ! maximum real-axis frequency (omegaE)
+
       integer(i4) :: resolution = 0       ! real-axis resolution
       logical     :: measurable = .false. ! find measurable gap?
 

@@ -50,8 +50,8 @@ contains
             end if
 
             if (x%resolution .gt. 0) then
-               call interval(re%omega, 0.0_dp, x%cutoff, &
-                  lower=.true., upper=.false.)
+               call interval(re%omega, 0.0_dp, x%clip * x%omegaE, &
+                  lower=.true., upper=.true.)
 
                do n = 1, x%resolution
                   re%Delta(n, i) = continuation(re%omega(n))
