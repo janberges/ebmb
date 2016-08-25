@@ -33,19 +33,11 @@ def load(filename):
             else:
                 return data
 
-def escape(value):
-    string = str(value)
-
-    if any(character in string for character in '/ '):
-        string = "'%s'" % string.replace("'", "''")
-
-    return string
-
 def run(program='ebmb', **parameters):
     command = [program]
 
     for key, value in parameters.items():
-        command.append('='.join([key, ','.join(map(escape, np.ravel(value)))]))
+        command.append('='.join([key, ','.join(map(str, np.ravel(value)))]))
 
     subprocess.call(command)
 
@@ -71,7 +63,7 @@ def critical(**parameters):
     return get(program='critical', **parameters)
 
 def squareDOSfile(file='dos.in', n=401, t=0.25, replace=True):
-    if not replace and path.exists(name):
+    if not replace and path.exists(file):
         return
 
     if not n % 2:
@@ -89,7 +81,7 @@ def squareDOSfile(file='dos.in', n=401, t=0.25, replace=True):
             out.write('% .10f %.10f\n' % (e[i], dos[i]))
 
 def DOSfile(file, epsilon, domain, filters=[], n=101, replace=True):
-    if not replace and path.exists(name):
+    if not replace and path.exists(file):
         return
 
     points = np.prod(map(len, domain))

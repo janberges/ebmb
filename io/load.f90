@@ -37,8 +37,9 @@ contains
          rhs = setting(equals + 1:)
 
          select case (lhs)
-            case ('file'); read (rhs, *) x%file
-            case ('form'); read (rhs, *) x%form
+            case ('file'); read (rhs, '(A)') x%file
+            case ('form'); read (rhs, '(A)') x%form
+
             case ('tell'); read (rhs, *) x%tell
 
             case ('T'); read (rhs, *) x%T
