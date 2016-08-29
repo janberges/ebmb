@@ -207,15 +207,18 @@ def square_dos(file='dos.in', resolution=401, t=0.25, replace=True):
     if not replace and path.exists(file):
         return
 
-    if not resolution % 2:
-        resolution += 1
-
     e, de = np.linspace(-4 * t, 4 * t, resolution, retstep=True)
 
-    dos = ellipk(1 - (e / (4 * t)) ** 2) / (2 * np.pi ** 2 * t)
+    mid = resolution // 2
 
-    dos[resolution // 2] = 0.0
-    dos[resolution // 2] = 1 / de - (dos[0] + 2 * sum(dos[1:-1]) + dos[-1]) / 2
+    dos = np.empty(resolution)
+
+    dos[:mid] = ellipk(1 - (e[:mid] / (4 * t)) ** 2) / (2 * np.pi ** 2 * t)
+    dos[-mid:] = dos[mid - 1::-1]
+
+    if resolution % 2:
+        dos[mid] = 0.0
+        dos[mid] = 1 / de - dos[0] / 2 - sum(dos[1:-1]) - dos[-1] / 2
 
     with open(file, 'w') as out:
         for i in range(resolution):
