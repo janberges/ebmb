@@ -33,11 +33,11 @@ contains
 
          write (unit) 'DIM:', 0_i4
 
-         write (unit) 'n:', oc%n0
-         write (unit) "n':", oc%n
+         write (unit) 'n0:', oc%n0
+         write (unit) "n:", oc%n
 
-         write (unit) 'mu:', oc%mu0
-         write (unit) "mu':", oc%mu
+         write (unit) 'mu0:', oc%mu0
+         write (unit) "mu:", oc%mu
       end if
 
       write (unit) 'DIM:'

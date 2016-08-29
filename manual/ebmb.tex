@@ -182,24 +182,24 @@
       \begin{split}
          Z_i(n) &= 1 + \frac T {\omega_n} \sum_j \sum_{m = 0}^{N - 1}
          \int \from{-\infty} \till \infty \D \epsilon
-         \frac{n_j(\epsilon)}{n_j(\mu)}
+         \frac{n_j(\epsilon)}{n_j(\mu_0)}
          \frac{\omega_m Z_j (m)}{\Theta_j(\epsilon, m)}
          \Lambda_{i j}^-(n, m),
          \\
          \phi_i(n) &= T \sum_j \sum_{m = 0}^{N - 1}
          \int \from{-\infty} \till \infty \D \epsilon
-         \frac{n_j(\epsilon)}{n_j(\mu)}
+         \frac{n_j(\epsilon)}{n_j(\mu_0)}
          \frac{\phi_j(m)}{\Theta_j(\epsilon, m)}
          [\Lambda_{i j}^+(n, m) - U^*_{i j}(m)],
          \\
          \chi_i(n) &= -T \sum_j \sum_{m = 0}^{N - 1}
          \int \from{-\infty} \till \infty \D \epsilon
-         \frac{n_j(\epsilon)}{n_j(\mu)}
-         \frac{\epsilon - \mu' + \chi_j(m)}{\Theta_j(\epsilon, m)}
+         \frac{n_j(\epsilon)}{n_j(\mu_0)}
+         \frac{\epsilon - \mu + \chi_j(m)}{\Theta_j(\epsilon, m)}
          \Lambda_{i j}^+(n, m),
          \\
          \Theta_i(\epsilon, n) &=
-         [\omega_n Z_i(n)]^2 + \phi_i^2(n) + [\epsilon - \mu' + \chi_i(n)]^2,
+         [\omega_n Z_i(n)]^2 + \phi_i^2(n) + [\epsilon - \mu + \chi_i(n)]^2,
       \end{split}
       \label{Eliashberg equations}
    \end{equation}
@@ -234,25 +234,25 @@
    \end{align*}
    %
    $n_i(\epsilon)$ is the density of \textsc{Bloch} states with energy
-   $\epsilon$ per band and unit cell. $\mu$ and $\mu'$ are the chemical
+   $\epsilon$ per band and unit cell. $\mu_0$ and $\mu$ are the chemical
    potentials for free and interacting particles, respectively. The latter
    ensures that the particle number is conserved:
    %
    \begin{equation*}
       2 \sum_i \int \from{-\infty} \till \infty \D \epsilon
-      \frac{n_i(\epsilon)}{\E^{(\epsilon - \mu) / T} + 1}
-      = n \overset ! = n'
+      \frac{n_i(\epsilon)}{\E^{(\epsilon - \mu_0) / T} + 1}
+      = n_0 \overset ! = n
       \approx 1 - 4 T \sum_i \int \from{-\infty} \till \infty \D \epsilon \,
       n_i(\epsilon)
       \Bigg[
          \sum_{n = 0}^{N - 1}
-         \frac{\epsilon - \mu' + \chi_i(n)}{\Theta_i(\epsilon, n)}
-         + \frac{\arctan \frac{\epsilon - \mu'}{\omega_N}}{2 \pi T}
+         \frac{\epsilon - \mu + \chi_i(n)}{\Theta_i(\epsilon, n)}
+         + \frac{\arctan \frac{\epsilon - \mu}{\omega_N}}{2 \pi T}
       \Bigg].
    \end{equation*}
    %
-   Approximating $n_i(\epsilon) \approx n_i(\mu)$ yields $\chi_i(n) = 0$ and the
-   constant-DOS \textsc{Eliashberg} equations
+   Approximating $n_i(\epsilon) \approx n_i(\mu_0)$ yields $\chi_i(n) = 0$ and
+   the constant-DOS \textsc{Eliashberg} equations
    %
    \begin{equation}
       \begin{split}
@@ -323,8 +323,8 @@
          \tt lambda     & $\vec 1$    & 1                & $\lambda_{i j}$     & electron-phonon coupling                 & $+$ & $+$ & $+$ & $+$ \\
          \tt muStar     & $\vec 0$    & 1                & $\mu^*_{i j}$       & \textsc{Coulomb} pseudo-potential        & $+$ & $+$ & $+$ & $+$ \\[\gap]
          \tt dos        & \tt none    & --               & --                  & file with density of states              & $+$ & $+$ & $-$ & $-$ \\
-         \tt n          & --          & 1                & $n$                 & initial occupancy number                 & $+$ & $+$ & $-$ & $-$ \\
-         \tt mu         & 0           & eV               & $\mu$               & initial chemical potential               & $+$ & $+$ & $-$ & $-$ \\
+         \tt n          & --          & 1                & $n_0$               & initial occupancy number                 & $+$ & $+$ & $-$ & $-$ \\
+         \tt mu         & 0           & eV               & $\mu_0$             & initial chemical potential               & $+$ & $+$ & $-$ & $-$ \\
          \tt conserve   & \tt true    & --               & --                  & conserve particle number?                & $+$ & $+$ & $-$ & $-$ \\[\gap]
          \tt limit      & 250000      & 1                & --                  & maximum number of iterations             & $+$ & $+$ & $-$ & $-$ \\[\gap]
          \tt epsilon    & $10^{-15}$  & a.u.             & --                  & negligible float difference              & $+$ & $+$ & $+$ & $-$ \\
@@ -406,8 +406,8 @@
          \hline
          \multicolumn3l{\textbf{occupancy results}} \\
          \hline
-         \tt \stack{l}{n} {n'}  & \stack{r}{initial}{final} $\Big\}$ occupancy number   & \stack{r}{$n$}  {$n'$}   \\
-         \tt \stack{l}{mu}{mu'} & \stack{r}{initial}{final} $\Big\}$ chemical potential & \stack{r}{$\mu$}{$\mu'$} \\
+         \tt \stack{l}{n0} {n}  & \stack{r}{initial}{final} $\Big\}$ occupancy number   & \stack{r}{$n_0$}  {$n$}   \\
+         \tt \stack{l}{mu0}{mu} & \stack{r}{initial}{final} $\Big\}$ chemical potential & \stack{r}{$\mu_0$}{$\mu$} \\
          \hline
          \multicolumn3l{\textbf{real-axis results} \hfill \texttt{resolution} > 0} \\
          \hline
