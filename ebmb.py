@@ -60,12 +60,12 @@ def run(program='ebmb', **parameters):
 
     subprocess.call(command)
 
-def load(filename):
+def load(file):
     """Load output file of 'ebmb'.
 
     Parameters
     ----------
-    filename : str
+    file : str
         Path to output file.
 
     Returns
@@ -75,7 +75,7 @@ def load(filename):
     """
     data = {}
 
-    with open(filename, 'rb') as file:
+    with open(file, 'rb') as file:
         while True:
             name = ''.join(iter(lambda: file.read(1) or ':', ':'))
 
@@ -95,12 +95,12 @@ def load(filename):
             else:
                 return data
 
-def load_floats(filename):
+def load_floats(file):
     """Load output file of 'tc' or 'critical'.
 
     Parameters
     ----------
-    filename : str
+    file : str
         Path to output file.
 
     Returns
@@ -108,12 +108,12 @@ def load_floats(filename):
     ndarray
         Critical parameter(s).
     """
-    with open(filename, 'rb') as file:
+    with open(file, 'rb') as file:
         data = np.fromfile(file, np.float64)
 
     return data if data.size > 1 else data[0]
 
-def dos(file, epsilon, domain, filters=[], n=101, replace=True):
+def dos(file, epsilon, domain, filters=[], resolution=101, replace=True):
     """Calculate subdomain-resolved density of states and save it to file.
 
     Parameters
@@ -126,7 +126,7 @@ def dos(file, epsilon, domain, filters=[], n=101, replace=True):
         Discretized domains of arguments of `epsilon`.
     filters : list of function
         N filters defining N + 1 subdomains.
-    n : int
+    resolution : int
         Resolution of density of states.
     replace : bool
         Overwrite existing output file?
@@ -143,8 +143,8 @@ def dos(file, epsilon, domain, filters=[], n=101, replace=True):
 
     points = np.prod(map(len, domain))
 
-    pocket = np.empty(points, dtype=int)
     energy = np.empty(points)
+    pocket = np.empty(points, dtype=int)
 
     for i, x in enumerate(itertools.product(*domain)):
         energy[i] = epsilon(*x)
@@ -157,39 +157,40 @@ def dos(file, epsilon, domain, filters=[], n=101, replace=True):
     emin = energy.min()
     emax = energy.max()
 
-    binned = ((n - 1) * (energy - emin) / (emax - emin)).round().astype(int)
+    binned = ((resolution - 1)
+        * (energy - emin) / (emax - emin)).round().astype(int)
 
-    p = len(filters) + 1
+    pockets = len(filters) + 1
 
-    count = np.zeros((n, p), dtype=int)
+    count = np.zeros((resolution, pockets), dtype=int)
 
     for i in range(points):
         count[binned[i], pocket[i]] += 1
 
-    e, de = np.linspace(emin, emax, n, retstep=True)
+    e, de = np.linspace(emin, emax, resolution, retstep=True)
 
     dos = count / (de * count.sum())
     dos[(0, -1), :] *= 2
 
     with open(file, 'w') as out:
-        for i in range(n):
+        for i in range(resolution):
             out.write('% .10f' % e[i])
 
-            for j in range(p):
+            for j in range(pockets):
                 out.write(' %.10f' % dos[i, j])
 
             out.write('\n')
 
-    return e, dos if p > 1 else dos[:, 0]
+    return e, dos if pockets > 1 else dos[:, 0]
 
-def square_dos(file='dos.in', n=401, t=0.25, replace=True):
+def square_dos(file='dos.in', resolution=401, t=0.25, replace=True):
     """Calculate density of states of square lattice and save it to file.
 
     Parameters
     ----------
     file : str
         Path to output file.
-    n : int
+    resolution : int
         Resolution of density of states.
     t : float
         Hopping parameter.
@@ -206,18 +207,18 @@ def square_dos(file='dos.in', n=401, t=0.25, replace=True):
     if not replace and path.exists(file):
         return
 
-    if not n % 2:
-        n += 1
+    if not resolution % 2:
+        resolution += 1
 
-    e, de = np.linspace(-4 * t, 4 * t, n, retstep=True)
+    e, de = np.linspace(-4 * t, 4 * t, resolution, retstep=True)
 
     dos = ellipk(1 - (e / (4 * t)) ** 2) / (2 * np.pi ** 2 * t)
 
-    dos[n // 2] = 0.0
-    dos[n // 2] = 1 / de - (dos[0] + 2 * sum(dos[1:-1]) + dos[-1]) / 2
+    dos[resolution // 2] = 0.0
+    dos[resolution // 2] = 1 / de - (dos[0] + 2 * sum(dos[1:-1]) + dos[-1]) / 2
 
     with open(file, 'w') as out:
-        for i in range(n):
+        for i in range(resolution):
             out.write('% .10f %.10f\n' % (e[i], dos[i]))
 
     return e, dos
