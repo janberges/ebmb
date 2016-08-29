@@ -126,9 +126,9 @@
          %
          \begin{quote}
             \verb|import ebmb| \\
-            \verb|results = ebmb.|%
-            \dummy{program}\verb|(file=|%
-            \dummy{file}\verb|, replace=|%
+            \verb|results = ebmb.get(|%
+            \dummy{program}\verb|, |%
+            \dummy{file}\verb|, |%
             \dummy{replace}\verb|,| \\
             \verb|    |%
                \dummy{key\,1}\verb|=|\dummy{value\,1}\verb|, |%
@@ -140,7 +140,7 @@
 
          Given a band structure, its discretized domain and $n - 1$ filters, an
          input file with the density of states resolved for $n$ subdomains is
-         generated like that:
+         generated like this:
          %
          \begin{quote}
             \verb|from numpy import cos, dot, linspace, pi| \\
