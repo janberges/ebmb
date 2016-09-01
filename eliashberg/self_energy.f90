@@ -35,7 +35,8 @@ contains
       if (0 .lt. x%n .and. x%n .lt. 2) then
          oc%n = x%n
 
-         oc%mu = (minval(x%energy) * (2 - oc%n) + maxval(x%energy) * oc%n ) / 2
+         oc%mu &
+            = (x%energy(1) * (2 - oc%n) + x%energy(size(x%energy)) * oc%n) / 2
 
          done = .false.
 
@@ -47,7 +48,15 @@ contains
                matsum = tanh(matsum / (2 * kB * x%T)) / matsum
             end where
 
-            call residues
+            A0 = 0
+            B0 = 0
+
+            do i = 1, x%bands
+               trapezia(:) = weight(:, i) * matsum
+
+               A0 = A0 + sum(trapezia)
+               B0 = B0 + sum(trapezia * x%energy)
+            end do
 
             mu = (oc%n - 1 + B0) / A0
 
@@ -58,12 +67,12 @@ contains
       else
          oc%mu = x%mu
 
-         oc%n = 0
+         oc%n = 1
 
-         matsum(:) = 1 - tanh((x%energy - x%mu) / (2 * kB * x%T))
+         matsum(:) = tanh((x%energy - x%mu) / (2 * kB * x%T))
 
          do i = 1, x%bands
-            oc%n = oc%n + sum(weight(:, i) * matsum)
+            oc%n = oc%n - sum(weight(:, i) * matsum)
          end do
       end if
 
@@ -183,18 +192,17 @@ contains
          end do
 
          if (x%conserve) then
-            where (x%energy .ap. oc%mu)
-               matsum = 1 / ((no + 0.5_dp) * domega ** 2)
-            elsewhere
-               matsum = x%energy - oc%mu
-               matsum = atan(matsum / (domega * (no + 0.5_dp))) &
-                  / (domega * matsum)
-            end where
+            matsum(:) = atan((x%energy - oc%mu) / (domega * (no + 0.5_dp))) &
+               / domega
 
-            call residues
+            residue = 0
 
-            mu = ((oc%n - 1) / (4 * kB * x%T) + sum(A * im%chi + B) + B0) &
-               / (sum(A) + A0)
+            do i = 1, x%bands
+               residue = residue + sum(weight(:, i) * matsum)
+            end do
+
+            mu = ((oc%n - 1) / (4 * kB * x%T) + sum(A * im%chi + B) + residue) &
+               / sum(A)
 
             done = done .and. (oc%mu .ap. mu)
 
@@ -217,29 +225,9 @@ contains
          im%phiC(i) = kB * x%T * sum(im%phi * integral_phi * U(:, :, i))
       end do
 
-      matsum = atan((x%energy - oc%mu) / (domega * (no + 0.5_dp))) / domega
-
-      residue = 0
-
-      do i = 1, x%bands
-         residue = residue + sum(weight(:, i) * matsum)
-      end do
-
       oc%n = 1 - 4 * kB * x%T * (sum(integral_chi) + residue)
 
    contains
-
-      subroutine residues
-         A0 = 0
-         B0 = 0
-
-         do i = 1, x%bands
-            trapezia(:) = weight(:, i) * matsum
-
-            A0 = A0 + sum(trapezia)
-            B0 = B0 + sum(trapezia * x%energy)
-         end do
-      end subroutine residues
 
       subroutine integrate(n, i)
          integer, intent(in) :: n, i
