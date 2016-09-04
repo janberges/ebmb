@@ -1,14 +1,14 @@
-module eliashberg_eigenvalue
+module eliashberg_eigenvalue_cdos
    use eigenvalues
    use global
    implicit none
 
    private
-   public :: eigenvalue
+   public :: eigenvalue_cdos
 
 contains
 
-   subroutine eigenvalue(status, x)
+   subroutine eigenvalue_cdos(status, x)
       type(parameters), intent(in) :: x
 
       real(dp), intent(out) :: status ! greatest eigenvalue
@@ -119,5 +119,5 @@ contains
          values(:) = real(spectrum(matrix), dp)
          status = maxval(values)
       end if
-   end subroutine eigenvalue
-end module eliashberg_eigenvalue
+   end subroutine eigenvalue_cdos
+end module eliashberg_eigenvalue_cdos

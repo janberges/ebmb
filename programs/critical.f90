@@ -1,5 +1,5 @@
 program critical
-   use eliashberg_eigenvalue
+   use eliashberg_eigenvalue_cdos
    use global
    use io_load
    implicit none
@@ -46,7 +46,7 @@ program critical
       end do
    end do
 
-   call eigenvalue(status, x)
+   call eigenvalue_cdos(status, x)
 
    status0 = status
 
@@ -57,7 +57,7 @@ program critical
       bound(1) = variable
       variable = variable * (1 + x%rate)
 
-      call eigenvalue(status, x)
+      call eigenvalue_cdos(status, x)
 
       if (status .eq. status0) stop 'stationary point'
 
@@ -84,7 +84,7 @@ program critical
 
       if (abs(variable - bound(1)) .le. x%error) exit
 
-      call eigenvalue(status, x)
+      call eigenvalue_cdos(status, x)
 
       if (sc1 .eqv. status .ge. 1) then
          bound(1) = variable
