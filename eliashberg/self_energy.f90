@@ -13,10 +13,12 @@ module eliashberg_self_energy
 
 contains
 
-   subroutine self_energy(x, im, oc)
+   subroutine self_energy(x, im, oc, kernel)
       type(parameters), intent(in) :: x
       type(matsubara), intent(out) :: im
       type(occupancy), intent(out) :: oc
+
+      real(dp), allocatable, intent(out), optional :: kernel(:, :)
 
       real(dp) :: nE, Z, phi, chi, mu, domega, A0, B0, residue
 
@@ -27,7 +29,7 @@ contains
       real(dp), allocatable :: integral_phi(:, :)
       real(dp), allocatable :: integral_chi(:, :)
 
-      integer :: step, i, j, n, m, no, nC, f
+      integer :: step, i, j, n, m, p, q, no, nC, f
       logical :: done
 
       if (initial) call initialize(x)
@@ -131,7 +133,8 @@ contains
       allocate(im%phi(0:no - 1, x%bands))
 
       im%phi(:, :) = 0
-      im%phi(0, :) = 1
+
+      if (.not. present(kernel)) im%phi(0, :) = 1
 
       allocate(im%chi(0:no - 1, x%bands))
 
@@ -226,6 +229,23 @@ contains
       end do
 
       oc%n = 1 - 4 * kB * x%T * (sum(integral_chi) + residue)
+
+      if (present(kernel)) then
+         allocate(kernel(x%bands * no, x%bands * no))
+
+         do i = 1, x%bands
+            p = i * no
+            do j = 1, x%bands
+               q = j * no
+               do n = 0, no - 1
+                  do m = 0, no - 1
+                     kernel(q - m, p - n) = kB * x%T * A(m, j) &
+                        * (g(n - m, j, i) + g(n + m + 1, j, i) + U(m, j, i))
+                  end do
+               end do
+            end do
+         end do
+      end if
 
    contains
 

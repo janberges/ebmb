@@ -1,4 +1,5 @@
 program critical
+   use eliashberg_eigenvalue
    use eliashberg_eigenvalue_cdos
    use global
    use io_load
@@ -7,6 +8,8 @@ program critical
    type(parameters), target :: x
 
    real(dp), pointer :: variable => null() ! parameter to be optimized
+
+   procedure(eigenvalue), pointer :: solver => null() ! solver to be used
 
    real(dp) :: bound(2) ! bisection bounds
 
@@ -46,7 +49,13 @@ program critical
       end do
    end do
 
-   call eigenvalue_cdos(status, x)
+   if (x%chi) then
+      solver => eigenvalue
+   else
+      solver => eigenvalue_cdos
+   end if
+
+   call solver(status, x)
 
    status0 = status
 
@@ -57,7 +66,7 @@ program critical
       bound(1) = variable
       variable = variable * (1 + x%rate)
 
-      call eigenvalue_cdos(status, x)
+      call solver(status, x)
 
       if (status .eq. status0) stop 'stationary point'
 
@@ -84,7 +93,7 @@ program critical
 
       if (abs(variable - bound(1)) .le. x%error) exit
 
-      call eigenvalue_cdos(status, x)
+      call solver(status, x)
 
       if (sc1 .eqv. status .ge. 1) then
          bound(1) = variable

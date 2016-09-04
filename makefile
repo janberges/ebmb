@@ -30,7 +30,7 @@ programs = critical ebmb tc
 all: $(programs)
 
 clean:
-	@rm -f $(needless) eliashberg/eigenvalue_cdos.o eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o io/store.o io/tell.o programs/critical.o programs/ebmb.o programs/tc.o real_axis/pade.o real_axis/real_axis.o universal/eigenvalues.o universal/formatting.o universal/global.o universal/tools.o
+	@rm -f $(needless) eliashberg/eigenvalue.o eliashberg/eigenvalue_cdos.o eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o io/store.o io/tell.o programs/critical.o programs/ebmb.o programs/tc.o real_axis/pade.o real_axis/real_axis.o universal/eigenvalues.o universal/formatting.o universal/global.o universal/tools.o
 
 cleaner: clean
 	@rm -f $(programs)
@@ -43,17 +43,18 @@ $(programs):
 	@echo compile $*
 	@$(compiler) $(options) -c $< -o $@
 
-critical: eliashberg/eigenvalue_cdos.o io/load.o programs/critical.o universal/eigenvalues.o universal/global.o universal/tools.o
+critical: eliashberg/eigenvalue.o eliashberg/eigenvalue_cdos.o eliashberg/self_energy.o io/load.o programs/critical.o universal/eigenvalues.o universal/global.o universal/tools.o
 ebmb: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o io/store.o io/tell.o programs/ebmb.o real_axis/pade.o real_axis/real_axis.o universal/formatting.o universal/global.o universal/tools.o
 tc: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o programs/tc.o universal/formatting.o universal/global.o universal/tools.o
 
+eliashberg/eigenvalue.o: eliashberg/self_energy.o universal/eigenvalues.o universal/global.o
 eliashberg/eigenvalue_cdos.o: universal/eigenvalues.o universal/global.o
 eliashberg/self_energy.o: universal/global.o universal/tools.o
 eliashberg/self_energy_cdos.o: universal/global.o
 io/load.o: universal/global.o universal/tools.o
 io/store.o: universal/global.o
 io/tell.o: universal/formatting.o universal/global.o
-programs/critical.o: eliashberg/eigenvalue_cdos.o io/load.o universal/global.o
+programs/critical.o: eliashberg/eigenvalue.o eliashberg/eigenvalue_cdos.o io/load.o universal/global.o
 programs/ebmb.o: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o io/store.o io/tell.o real_axis/real_axis.o universal/global.o
 programs/tc.o: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o universal/formatting.o universal/global.o
 real_axis/pade.o: universal/global.o
