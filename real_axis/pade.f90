@@ -5,7 +5,7 @@ module real_axis_pade
    private
    public :: coefficients, continuation
 
-   integer :: n, p, q
+   integer :: n, p
 
    complex(dp), parameter :: i = (0, 1)
 
@@ -25,10 +25,8 @@ contains
       c(1, :) = u
 
       do p = 2, n
-         do q = p, n
-            c(p, q) = (c(p - 1, p - 1) - c(p - 1, q)) &
-               / (i * (z(q) - z(p - 1)) * c(p - 1, q))
-         end do
+         c(p, p:) = (c(p - 1, p - 1) - c(p - 1, p:)) &
+            / (i * (z(p:) - z(p - 1)) * c(p - 1, p:))
 
          c(p, p - 1) = -i * z(p - 1) * c(p, p)
       end do
