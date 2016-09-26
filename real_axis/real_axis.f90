@@ -53,22 +53,14 @@ contains
                call interval(re%omega, 0.0_dp, x%clip * x%omegaE, &
                   lower=.true., upper=.true.)
 
-               do n = 1, x%resolution
-                  re%Delta(n, i) = continuation(re%omega(n))
-               end do
+               re%Delta(:, i) = continuation(re%omega)
 
                call coefficients(im%omega, im%Z(:, i))
-
-               do n = 1, x%resolution
-                  re%Z(n, i) = continuation(re%omega(n))
-               end do
+               re%Z(:, i) = continuation(re%omega)
 
                if (x%chi) then
                   call coefficients(im%omega, im%chi(:, i))
-
-                  do n = 1, x%resolution
-                     re%chi(n, i) = continuation(re%omega(n))
-                  end do
+                  re%chi(:, i) = continuation(re%omega)
                end if
             end if
          end do

@@ -5,7 +5,7 @@ module real_axis_pade
    private
    public :: coefficients, continuation
 
-   integer :: n, p
+   integer :: n
    complex(qp), allocatable :: c(:, :)
 
 contains
@@ -14,6 +14,7 @@ contains
       real(dp), intent(in) :: z(:), u(:)
 
       complex(dp), parameter :: i = (0, 1)
+      integer :: p
 
       n = size(z)
 
@@ -30,11 +31,12 @@ contains
       end do
    end subroutine coefficients
 
-   function continuation(x)
+   elemental function continuation(x)
       complex(dp) :: continuation
       real(dp), intent(in) :: x
 
       complex(qp) :: frac
+      integer :: p
 
       frac = 1
 
