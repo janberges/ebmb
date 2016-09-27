@@ -78,6 +78,8 @@ contains
             case ('rescale'); read (rhs, *) x%rescale
             case ('imitate'); read (rhs, *) x%imitate
 
+            case ('normal'); read (rhs, *) x%normal
+
             case ('power'); read (rhs, *) x%power
 
             case default

@@ -59,7 +59,8 @@ contains
       allocate(im%Delta(0:no - 1, x%bands))
 
       im%Delta(:, :) = 0
-      im%Delta(0, :) = 1
+
+      if (.not. x%normal) im%Delta(0, :) = 1
 
       allocate(A(0:no - 1, x%bands))
 

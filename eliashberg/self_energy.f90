@@ -134,7 +134,7 @@ contains
 
       im%phi(:, :) = 0
 
-      if (.not. present(kernel)) im%phi(0, :) = 1
+      if (.not. (x%normal .or. present(kernel))) im%phi(0, :) = 1
 
       allocate(im%chi(0:no - 1, x%bands))
 
