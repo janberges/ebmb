@@ -108,10 +108,26 @@ contains
 
       allocate(muStar(x%bands, x%bands))
 
+      muStar(:, :) = x%muStar / (1 + x%muStar &
+         * log(2 * x%omegaE / (x%energy(size(x%energy)) - x%energy(1))))
+
       if (x%rescale) then
-         muStar(:, :) = x%muStar / (1 + x%muStar * log(nE / (nC + 0.5_dp)))
-      else
-         muStar(:, :) = x%muStar
+         where (x%energy .ap. oc%mu)
+            matsum = 1 / (domega * (nC + 0.5_dp))
+         elsewhere
+            matsum = x%energy - oc%mu
+            matsum = atan(matsum / (domega * (nC + 0.5_dp))) / matsum
+         end where
+
+         residue = 0
+
+         do i = 1, x%bands
+            residue = residue + sum(weight(:, i) / x%dos(f, i) * matsum)
+         end do
+
+         residue = residue * states / pi
+
+         muStar(:, :) = muStar / (1 + muStar * residue)
       end if
 
       allocate(U(0:no - 1, x%bands, x%bands))

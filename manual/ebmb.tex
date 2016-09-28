@@ -230,11 +230,27 @@
       \end{cases}
       &
       \frac 1 {\mu^*_{i j}(N \sub C)} &=
-      \frac 1 {\mu^*_{i j}} + \ln \frac{\omega \sub E}{\omega_{N \sub C}}.
+      \frac 1 {\mu^*_{i j}} + \ln \frac{\omega \sub E}{\omega_{N \sub C}},
    \end{align*}
    %
-   $n_i(\epsilon)$ is the density of \textsc{Bloch} states with energy
-   $\epsilon$ per band and unit cell. $\mu_0$ and $\mu$ are the chemical
+   or, if the band density $n_i(\epsilon)$ of \textsc{Bloch} states with energy
+   $\epsilon$ per spin, band and unit cell is given,
+   %
+   \begin{equation*}
+       \frac 1 {\mu^*_{i j}(N \sub C)} =
+       \frac 1 {\mu^*_{i j}} + \ln \frac {2 \omega \sub E} D +
+       \frac 1 \pi \sum_i \int \from{-\infty} \till \infty \D \epsilon
+       \frac{n_i(\epsilon)}{n_i(\mu_0)}
+       \begin{cases}
+           \frac 1 {\epsilon - \mu_0}
+           \arctan \frac{\epsilon - \mu_0}{\omega_{N \sub C}}
+               & \text{for $\epsilon \neq \mu_0$,} \\
+           \frac 1 {\omega_{N \sub C}}
+               & \text{otherwise,}
+       \end{cases}
+   \end{equation*}
+   %
+   where $D$ is the electronic bandwidth. $\mu_0$ and $\mu$ are the chemical
    potentials for free and interacting particles, respectively. The latter
    ensures that the particle number is conserved:
    %
