@@ -21,6 +21,11 @@ contains
       if (allocated(c)) deallocate(c)
       allocate(c(n, n))
 
+      if (all(u .ap. 0.0_dp)) then
+         c(:, :) = 0
+         return
+      end if
+
       c(1, :) = u
 
       do p = 2, n
