@@ -22,7 +22,7 @@ contains
       integer :: i ! band index
       integer :: n ! argument number
 
-      character(:), allocatable :: dos_file
+      character(99) :: dos_file = 'none'
 
       real(dp) :: elements ! number of elements in lambda and muStar
 
@@ -56,7 +56,7 @@ contains
                muStar = rhs
                elements = matches(rhs, ',') + 1
 
-            case ('dos'); dos_file = rhs
+            case ('dos'); read (rhs, *) dos_file
 
             case ('n');  read (rhs, *) x%n
             case ('mu'); read (rhs, *) x%mu
@@ -108,7 +108,7 @@ contains
          x%muStar(:, :) = 0
       end if
 
-      if (allocated(dos_file)) then
+      if (dos_file .ne. 'none') then
          x%chi = .true.
          call load_dos(dos_file, x)
       end if
