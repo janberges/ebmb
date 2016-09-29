@@ -291,18 +291,18 @@
          \Delta_i(n) &= \sum_j \sum_{m = 0}^{N - 1}
          K_{i j}(n, m) \, \Delta_j(m),
          \\
-         K_{i j}(n, m) &= \frac 1 {2 m + 1}
-         [\Lambda_{i j}^+(n, m) - \delta_{n m} D_{i j}^N(n) - U^*_{i j}(m)],
+         K_{i j}(n, m) &= \frac 1 {2 m + 1} [\Lambda_{i j}^+(n, m)
+         - \delta_{i j} \delta_{n m} D_i^N(n) - U^*_{i j}(m)],
          \\
-         D_{i j}^N(n) &=
-         \sum_{m = 0}^{N - 1} \Lambda_{i j}^-(n, m) \overset{N = \infty} =
-         \lambda_{i j} + 2 \sum_{m = 1}^n \lambda_{i j}(m).
+         D_i^N(n) &= \sum_j \sum_{m = 0}^{N - 1} \Lambda_{i j}^-(n, m)
+         \overset{N = \infty} =
+         \sum_j \Big[ \lambda_{i j} + 2 \sum_{m = 1}^n \lambda_{i j}(m) \Big].
       \end{split}
       \label{linearized gap equation}
    \end{equation}
    %
-   $Z_i(n)$ is not biased by the cutoff if $D_{i j}^\infty(n)$ is used in place
-   of $D_{i j}^N(n)$ in the kernel $K_{i j}(n, m)$.
+   $Z_i(n)$ is not biased by the cutoff if $D_i^\infty(n)$ is used in place of
+   $D_i^N(n)$ in the kernel $K_{i j}(n, m)$.
 
    \headline{Acknowledgment}
 
