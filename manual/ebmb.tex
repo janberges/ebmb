@@ -10,11 +10,10 @@
 \usepackage[T1]{fontenc}
 
 \usepackage[labelfont=bf]{caption}
-\usepackage[colorlinks, allcolors=darkblue]{hyperref}
 
 \usepackage{mathtools, xcolor}
 
-\definecolor{darkblue}{rgb}{0, 0, 0.5}
+\usepackage[hidelinks]{hyperref}
 
 \def\bottomfraction{0.9}
 
@@ -42,8 +41,8 @@
 
 \def\stack#1#2#3{\begin{tabular}{@{}#1@{}}#2\\#3\end{tabular}}
 
-\def\dummy#1{\textcolor{darkblue}{$\langle$#1$\rangle$}}
-\def\dtype#1{\textcolor{darkblue}{\textsc{#1}}}
+\def\dummy#1{\textcolor{darkgray}{$\langle$#1$\rangle$}}
+\def\dtype#1{\textcolor{darkgray}{\textsc{#1}}}
 
 \def\headline#1{\section*{%
    \normalsize\normalfont%
