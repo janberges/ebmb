@@ -241,7 +241,7 @@ contains
       allocate(im%phiC(x%bands))
 
       do i = 1, x%bands
-         im%phiC(i) = kB * x%T * sum(im%phi * integral_phi * U(:, :, i))
+         im%phiC(i) = kB * x%T * sum(integral_phi * U(:, :, i))
       end do
 
       oc%n = 1 - 4 * kB * x%T * (sum(integral_chi) + residue)
