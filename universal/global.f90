@@ -19,8 +19,8 @@ module global
       real(dp) :: T = 10.0_dp ! temperature (K)
 
       real(dp) :: omegaE  = 0.02_dp ! Einstein frequency (eV)
-      real(dp) :: cutoff  = 15.0_dp  ! overall cutoff frequency (omegaE)
-      real(dp) :: cutoffC = -1.0_dp  ! Coulomb cutoff frequency (omegaE)
+      real(dp) :: cutoff  = 15.0_dp ! overall cutoff frequency (omegaE)
+      real(dp) :: cutoffC = -1.0_dp ! Coulomb cutoff frequency (omegaE)
 
       integer(i4) :: bands = 1 ! number of electronic bands
 

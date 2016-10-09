@@ -12,10 +12,10 @@ contains
    subroutine eigenvalue(status, x)
       type(parameters), intent(in) :: x
 
-      real(dp), intent(out) :: status
+      real(dp), intent(out) :: status ! greatest eigenvalue
 
-      real(dp), allocatable :: kernel(:, :)
-      real(dp), allocatable, save :: phi(:)
+      real(dp), allocatable :: kernel(:, :) ! Eliashberg kernel
+      real(dp), allocatable, save :: phi(:) ! order parameter
 
       type(matsubara) :: im
       type(occupancy) :: oc

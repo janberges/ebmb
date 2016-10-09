@@ -10,11 +10,11 @@ program tc
    type(matsubara) :: im
    type(occupancy) :: oc
 
-   integer :: i, j
+   integer :: i, j ! band indices
 
-   real(dp), allocatable :: upper(:), lower(:), T(:)
+   real(dp), allocatable :: upper(:), lower(:), T(:) ! bounds and Tc's
 
-   character(:), allocatable :: head, body
+   character(:), allocatable :: head, body ! edit descriptors
 
    call load(x)
 

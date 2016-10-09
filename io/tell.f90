@@ -14,9 +14,9 @@ contains
       type(continued), intent(in) :: re
       type(occupancy), intent(in) :: oc
 
-      integer :: i, n
+      integer :: i, n ! band and Matsubara indices
 
-      character(:), allocatable :: head, body, form
+      character(:), allocatable :: head, body, form ! edit descriptors
 
       call measure(x%form)
 

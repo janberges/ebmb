@@ -22,7 +22,7 @@ contains
       integer :: i ! band index
       integer :: n ! argument number
 
-      character(99) :: dos_file = 'none'
+      character(99) :: dos_file = 'none' ! file with density of states
 
       real(dp) :: elements ! number of elements in lambda and muStar
 

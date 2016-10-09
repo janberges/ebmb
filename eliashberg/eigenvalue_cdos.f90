@@ -14,10 +14,10 @@ contains
       real(dp), intent(out) :: status ! greatest eigenvalue
 
       real(dp), allocatable, save :: &
-         lambda(:, :, :), & ! frequency-dependent electron-phonon coupling
-         muStar(:, :),    & ! rescaled Coulomb pseudo-potential
-         matrix(:, :),    & ! Eliashberg matrix
-         vector(:),       & ! energy gap
+         lambda(:, :, :), & ! adjusted phonon Green function
+         muStar(:, :),    & ! Coulomb pseudo-potential
+         matrix(:, :),    & ! Eliashberg kernel
+         vector(:),       & ! order parameter
          values(:),       & ! all eigenvalues
          diag  (:)          ! diagonal renormalization contribution
 

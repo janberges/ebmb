@@ -92,10 +92,10 @@ contains
                Delta = pi * kB * x%T * Delta / Z
 
                done = done &
-                  .and. (im%Z(n, i) .ap. Z) &
+                  .and. (im%Z    (n, i) .ap. Z) &
                   .and. (im%Delta(n, i) .ap. Delta)
 
-               im%Z(n, i) = Z
+               im%Z    (n, i) = Z
                im%Delta(n, i) = Delta
 
                A(n, i) = 1 / sqrt(im%omega(n) ** 2 + Delta ** 2)
