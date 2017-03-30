@@ -75,8 +75,8 @@ contains
 
          do i = 1, x%bands
             do n = 0, no - 1
-               Z = 0
-               Delta = 0
+               Z = 0     !!! The self-energy is not updated as a whole,
+               Delta = 0 !!! but for each band and frequency separately.
 
                do j = 1, x%bands
                   do m = 0, no - 1

@@ -176,9 +176,9 @@ contains
 
          do i = 1, x%bands
             do n = 0, no - 1
-               Z = 0
-               phi = 0
-               chi = 0
+               Z = 0   !!! The self-energy is not updated as a whole,
+               phi = 0 !!! but for each band and frequency separately.
+               chi = 0 !!!
 
                do j = 1, x%bands
                   do m = 0, no - 1
