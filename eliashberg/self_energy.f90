@@ -211,14 +211,7 @@ contains
          end do
 
          if (x%conserve) then
-            matsum(:) = atan((x%energy - oc%mu) / (domega * (no + 0.5_dp))) &
-               / domega
-
-            residue = 0
-
-            do i = 1, x%bands
-               residue = residue + sum(weight(:, i) * matsum)
-            end do
+            call calculate_residue
 
             mu = ((oc%n - 1) / (4 * kB * x%T) + sum(A * im%chi + B) + residue) &
                / sum(A)
@@ -243,6 +236,8 @@ contains
       do i = 1, x%bands
          im%phiC(i) = kB * x%T * sum(integral_phi * U(:, :, i))
       end do
+
+      call calculate_residue
 
       oc%n = 1 - 4 * kB * x%T * (sum(integral_chi) + residue)
 
@@ -278,6 +273,17 @@ contains
          integral_phi(n, i) = A(n, i) *  im%phi(n, i)
          integral_chi(n, i) = A(n, i) * (im%chi(n, i) - oc%mu) + B(n, i)
       end subroutine integrate
+
+      subroutine calculate_residue
+         matsum(:) = atan((x%energy - oc%mu) / (domega * (no + 0.5_dp))) &
+            / domega
+
+         residue = 0
+
+         do i = 1, x%bands
+            residue = residue + sum(weight(:, i) * matsum)
+         end do
+      end subroutine calculate_residue
 
    end subroutine self_energy
 
