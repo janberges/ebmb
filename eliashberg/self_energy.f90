@@ -108,7 +108,9 @@ contains
 
       allocate(muStar(x%bands, x%bands))
 
-      muStar(:, :) = x%muStar / (1 + x%muStar &
+      muStar(:, :) = x%muStar
+
+      if (x%unscale) muStar(:, :) = muStar / (1 + muStar &
          * log(2 * x%omegaE / (x%energy(size(x%energy)) - x%energy(1))))
 
       if (x%rescale) then

@@ -75,6 +75,7 @@ contains
             case ('resolution'); read (rhs, *) x%resolution
             case ('measurable'); read (rhs, *) x%measurable
 
+            case ('unscale'); read (rhs, *) x%unscale
             case ('rescale'); read (rhs, *) x%rescale
             case ('imitate'); read (rhs, *) x%imitate
 

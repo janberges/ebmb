@@ -48,6 +48,7 @@ module global
       integer(i4) :: resolution = 0       ! real-axis resolution
       logical     :: measurable = .false. ! find measurable gap?
 
+      logical :: unscale = .true.  ! unscale Coulomb pseudo-potential?
       logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
       logical :: imitate = .false. ! cut off renormalization function?
 
