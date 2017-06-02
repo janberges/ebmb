@@ -72,6 +72,11 @@ contains
 
             case ('clip'); read (rhs, *) x%clip
 
+            case ('lower'); read (rhs, *) x%lower
+            case ('upper'); read (rhs, *) x%upper
+
+            case ('infinitesimal', '0+'); read (rhs, *) x%infinitesimal
+
             case ('resolution'); read (rhs, *) x%resolution
             case ('measurable'); read (rhs, *) x%measurable
 

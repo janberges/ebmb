@@ -71,6 +71,8 @@ contains
          if (x%chi) then
             write (unit) 'Re[chi]:', real(re%chi)
             write (unit) 'Im[chi]:', aimag(re%chi)
+
+            write (unit) 'DOS:', re%dos
          end if
       end if
 

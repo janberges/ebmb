@@ -4,7 +4,7 @@ module eliashberg_self_energy
    implicit none
 
    private
-   public :: self_energy, initialize
+   public :: self_energy, initialize, weight
 
    logical :: initial = .true.
 

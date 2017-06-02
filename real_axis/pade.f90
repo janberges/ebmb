@@ -38,7 +38,7 @@ contains
 
    elemental function continuation(x)
       complex(dp) :: continuation
-      real(dp), intent(in) :: x
+      complex(dp), intent(in) :: x
 
       complex(qp) :: frac
       integer :: p

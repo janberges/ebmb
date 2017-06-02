@@ -20,8 +20,8 @@ contains
 
       call measure(x%form)
 
-      head = edit('(7Aw)')
-      body = edit('(7x)')
+      head = edit('(8Aw)')
+      body = edit('(8x)')
 
       print "('imaginary-axis solution [', I0, ']:', /)", im%status
 
@@ -75,14 +75,15 @@ contains
 
          if (x%chi) then
             print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
-               'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]', 'Im[chi]'
+               'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]', 'Im[chi]', &
+               'DOS/(1/eV)'
 
             do i = 1, x%bands
-               print rule(7)
+               print rule(8)
 
                do n = 1, x%resolution
-                  print body, re%omega(n), re%Z(n, i), &
-                     re%Delta(n, i), re%chi(n, i)
+                  print body, re%omega(n), re%Z(n, i), re%Delta(n, i), &
+                     re%chi(n, i), re%dos(n, i)
                end do
             end do
          else

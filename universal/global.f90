@@ -45,6 +45,11 @@ module global
 
       real(dp) :: clip = 15.0_dp ! maximum real-axis frequency (omegaE)
 
+      real(dp) :: lower =  0.0_dp ! minimum real-axis frequency (eV)
+      real(dp) :: upper = -1.0_dp ! maximum real-axis frequency (eV)
+
+      real(dp) :: infinitesimal = 0.0_dp ! infinitesimal energy (eV)
+
       integer(i4) :: resolution = 0       ! real-axis resolution
       logical     :: measurable = .false. ! find measurable gap?
 
@@ -74,6 +79,7 @@ module global
       complex(dp), allocatable :: chi   (:, :) ! energy shift (eV)
       complex(dp), allocatable :: Delta (:, :) ! gap (eV)
       real   (dp), allocatable :: Delta0(:)    ! measurable gap (eV)
+      real   (dp), allocatable :: dos   (:, :) ! quasiparticle density (a.u.)
 
       integer(i4), allocatable :: status(:) ! convergence status
    end type continued

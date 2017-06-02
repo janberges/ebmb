@@ -1,4 +1,5 @@
 program ebmb
+   use dos
    use eliashberg_self_energy
    use eliashberg_self_energy_cdos
    use global
@@ -22,6 +23,10 @@ program ebmb
    end if
 
    call realize(x, im, re)
+
+   if (x%chi) then
+      call density_of_states(x, re, oc)
+   end if
 
    if (x%file .ne. 'none') call store(x, im, re, oc)
 

@@ -16,6 +16,7 @@ contains
 
       integer :: i, n
       real(dp) :: Delta0
+      complex(dp), allocatable :: omega(:)
 
       if (x%measurable) then
          allocate(re%Delta0(x%bands))
@@ -39,7 +40,7 @@ contains
                re%status(i) = -1
 
                do n = 1, x%limit
-                  Delta0 = real(continuation(re%Delta0(i)))
+                  Delta0 = real(continuation(cmplx(re%Delta0(i), kind=dp)))
 
                   if (re%Delta0(i) .ap. Delta0) re%status(i) = n
 
@@ -50,17 +51,26 @@ contains
             end if
 
             if (x%resolution .gt. 0) then
-               call interval(re%omega, 0.0_dp, x%clip * x%omegaE, &
-                  lower=.true., upper=.true.)
+               if (x%lower .lt. x%upper) then
+                  call interval(re%omega, x%lower, x%upper, &
+                     lower=.true., upper=.true.)
+               else
+                  call interval(re%omega, 0.0_dp, x%clip * x%omegaE, &
+                     lower=.true., upper=.true.)
+               end if
 
-               re%Delta(:, i) = continuation(re%omega)
+               allocate(omega(x%resolution))
+
+               omega(:) = cmplx(re%omega, x%infinitesimal, dp)
+
+               re%Delta(:, i) = continuation(omega)
 
                call coefficients(im%omega, im%Z(:, i))
-               re%Z(:, i) = continuation(re%omega)
+               re%Z(:, i) = continuation(omega)
 
                if (x%chi) then
                   call coefficients(im%omega, im%chi(:, i))
-                  re%chi(:, i) = continuation(re%omega)
+                  re%chi(:, i) = continuation(omega)
                end if
             end if
          end do
