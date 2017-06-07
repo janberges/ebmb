@@ -226,6 +226,85 @@ def square_dos(file='dos.in', resolution=401, t=0.25, replace=True):
 
     return e, dos
 
+def rectangular_dos(file='dos.in', resolution=401, t=0.25, replace=True):
+    """Calculate rectangular density of states and save it to file.
+
+    Parameters
+    ----------
+    file : str
+        Path to output file.
+    resolution : int
+        Resolution of density of states.
+    t : float
+        One eighth of the bandwidth.
+    replace : bool
+        Overwrite existing output file?
+
+    Returns
+    -------
+    ndarray
+        Energy.
+    ndarray
+        Density of states.
+    """
+    if not replace and path.exists(file):
+        return
+
+    e = np.linspace(-4 * t, 4 * t, resolution)
+    dos = np.full(resolution, 0.125 / t)
+
+    with open(file, 'w') as out:
+        for i in range(resolution):
+            out.write('% .10f %.10f\n' % (e[i], dos[i]))
+
+    return e, dos
+
+def steplike_dos(file='dos.in', resolution=401, t=0.25, ratio=6.0, d=0.02,
+    replace=True):
+    """Calculate and save steplike DOS [Akashi, Arita, PRB 88, 014514 (2013)]
+
+    Parameters
+    ----------
+    file : str
+        Path to output file.
+    resolution : int
+        Resolution of density of states.
+    t : float
+        One eighth of the bandwidth.
+    ratio : float
+        Quotient of densities of states after and before the step (N+/N-)
+    d : float
+        Width of the step.
+    replace : bool
+        Overwrite existing output file?
+
+    Returns
+    -------
+    ndarray
+        Energy.
+    ndarray
+        Density of states.
+    """
+    if not replace and path.exists(file):
+        return
+
+    e = np.linspace(-4 * t, 4 * t, resolution)
+
+    N0 = 0.125 / t
+    delta = (ratio - 1) / (ratio + 1) * N0
+
+    slope = 2 * delta / d
+
+    dos = N0 + slope * e
+    dos = np.minimum(dos, N0 + delta)
+    dos = np.maximum(dos, N0 - delta)
+
+    with open(file, 'w') as out:
+        for i in range(resolution):
+            out.write('% .10f %.10f\n' % (e[i], dos[i]))
+
+    return e, dos
+
 if __name__ == '__main__':
     np.set_printoptions(threshold=9, edgeitems=1)
 
