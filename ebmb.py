@@ -226,15 +226,15 @@ def square_dos(file='dos.in', resolution=401, t=0.25, replace=True):
 
     return e, dos
 
-def rectangular_dos(file='dos.in', resolution=401, t=0.25, replace=True):
+def rectangular_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
     """Calculate rectangular density of states and save it to file.
 
     Parameters
     ----------
     file : str
         Path to output file.
-    resolution : int
-        Resolution of density of states.
+    de : float
+        Energy resolution.
     t : float
         One eighth of the bandwidth.
     replace : bool
@@ -250,16 +250,18 @@ def rectangular_dos(file='dos.in', resolution=401, t=0.25, replace=True):
     if not replace and path.exists(file):
         return
 
-    e = np.linspace(-4 * t, 4 * t, resolution)
-    dos = np.full(resolution, 0.125 / t)
+    points = int(round(8 * t / de))
+
+    e = np.linspace(-4 * t, 4 * t, points)
+    dos = np.full(points, 0.125 / t)
 
     with open(file, 'w') as out:
-        for i in range(resolution):
+        for i in range(points):
             out.write('% .10f %.10f\n' % (e[i], dos[i]))
 
     return e, dos
 
-def steplike_dos(file='dos.in', resolution=401, t=0.25, ratio=6.0, d=0.02,
+def steplike_dos(file='dos.in', de=1e-3, t=0.25, ratio=6.0, d=0.02,
     replace=True):
     """Calculate and save steplike DOS [Akashi, Arita, PRB 88, 014514 (2013)]
 
@@ -267,8 +269,8 @@ def steplike_dos(file='dos.in', resolution=401, t=0.25, ratio=6.0, d=0.02,
     ----------
     file : str
         Path to output file.
-    resolution : int
-        Resolution of density of states.
+    de : float
+        Energy resolution.
     t : float
         One eighth of the bandwidth.
     ratio : float
@@ -288,7 +290,9 @@ def steplike_dos(file='dos.in', resolution=401, t=0.25, ratio=6.0, d=0.02,
     if not replace and path.exists(file):
         return
 
-    e = np.linspace(-4 * t, 4 * t, resolution)
+    points = int(round(8 * t / de))
+
+    e = np.linspace(-4 * t, 4 * t, points)
 
     N0 = 0.125 / t
     delta = (ratio - 1) / (ratio + 1) * N0
@@ -300,7 +304,7 @@ def steplike_dos(file='dos.in', resolution=401, t=0.25, ratio=6.0, d=0.02,
     dos = np.maximum(dos, N0 - delta)
 
     with open(file, 'w') as out:
-        for i in range(resolution):
+        for i in range(points):
             out.write('% .10f %.10f\n' % (e[i], dos[i]))
 
     return e, dos
