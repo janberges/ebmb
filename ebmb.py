@@ -183,15 +183,15 @@ def dos(file, epsilon, domain, filters=[], resolution=101, replace=True):
 
     return e, dos if pockets > 1 else dos[:, 0]
 
-def square_dos(file='dos.in', resolution=401, t=0.25, replace=True):
+def square_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
     """Calculate density of states of square lattice and save it to file.
 
     Parameters
     ----------
     file : str
         Path to output file.
-    resolution : int
-        Resolution of density of states.
+    de : float
+        Energy resolution.
     t : float
         Hopping parameter.
     replace : bool
@@ -207,21 +207,23 @@ def square_dos(file='dos.in', resolution=401, t=0.25, replace=True):
     if not replace and path.exists(file):
         return
 
-    e, de = np.linspace(-4 * t, 4 * t, resolution, retstep=True)
+    points = int(round(8 * t / de)) + 1
+    points += 1 - points % 2
 
-    mid = resolution // 2
+    e, de = np.linspace(-4 * t, 4 * t, points, retstep=True)
 
-    dos = np.empty(resolution)
+    mid = points // 2
+
+    dos = np.empty(points)
 
     dos[:mid] = ellipk(1 - (e[:mid] / (4 * t)) ** 2) / (2 * np.pi ** 2 * t)
-    dos[-mid:] = dos[mid - 1::-1]
+    dos[mid + 1:] = dos[mid - 1::-1]
 
-    if resolution % 2:
-        dos[mid] = 0.0
-        dos[mid] = 1 / de - dos[0] / 2 - sum(dos[1:-1]) - dos[-1] / 2
+    dos[mid] = 0.0
+    dos[mid] = 1 / de - dos[0] / 2 - sum(dos[1:-1]) - dos[-1] / 2
 
     with open(file, 'w') as out:
-        for i in range(resolution):
+        for i in range(points):
             out.write('% .10f %.10f\n' % (e[i], dos[i]))
 
     return e, dos
@@ -250,7 +252,7 @@ def rectangular_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
     if not replace and path.exists(file):
         return
 
-    points = int(round(8 * t / de))
+    points = int(round(8 * t / de)) + 1
 
     e = np.linspace(-4 * t, 4 * t, points)
     dos = np.full(points, 0.125 / t)
@@ -290,7 +292,7 @@ def steplike_dos(file='dos.in', de=1e-3, t=0.25, ratio=6.0, d=0.02,
     if not replace and path.exists(file):
         return
 
-    points = int(round(8 * t / de))
+    points = int(round(8 * t / de)) + 1
 
     e = np.linspace(-4 * t, 4 * t, points)
 
