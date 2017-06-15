@@ -297,13 +297,13 @@ def steplike_dos(file='dos.in', de=1e-3, t=0.25, ratio=6.0, d=0.02,
     e = np.linspace(-4 * t, 4 * t, points)
 
     N0 = 0.125 / t
-    delta = (ratio - 1) / (ratio + 1) * N0
+    delta = (ratio - 1.0) / (ratio + 1.0) * N0
 
     slope = 2 * delta / d
 
     dos = N0 + slope * e
-    dos = np.minimum(dos, N0 + delta)
-    dos = np.maximum(dos, N0 - delta)
+    dos = np.minimum(dos, N0 + abs(delta))
+    dos = np.maximum(dos, N0 - abs(delta))
 
     with open(file, 'w') as out:
         for i in range(points):
