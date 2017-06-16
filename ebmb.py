@@ -292,18 +292,26 @@ def steplike_dos(file='dos.in', de=1e-3, t=0.25, ratio=6.0, d=0.02,
     if not replace and path.exists(file):
         return
 
-    points = int(round(8 * t / de)) + 1
+    inner = max(2, int(round(d / de)) + 1)
+    outer = max(1, int(round((4 * t - 0.5 * d) / de)))
 
-    e = np.linspace(-4 * t, 4 * t, points)
+    points = inner + 2 * outer
+
+    e   = np.empty(points)
+    dos = np.empty(points)
+
+    e[:+outer] = np.linspace(-4 * t, -0.5 * d, outer, endpoint=False)
+    e[-outer:] = np.linspace( 4 * t,  0.5 * d, outer, endpoint=False)[::-1]
+
+    e[outer:-outer] = np.linspace(-0.5 * d, 0.5 * d, inner)
 
     N0 = 0.125 / t
     delta = (ratio - 1.0) / (ratio + 1.0) * N0
 
-    slope = 2 * delta / d
+    dos[:+outer] = N0 - delta
+    dos[-outer:] = N0 + delta
 
-    dos = N0 + slope * e
-    dos = np.minimum(dos, N0 + abs(delta))
-    dos = np.maximum(dos, N0 - abs(delta))
+    dos[outer:-outer] = np.linspace(N0 - delta, N0 + delta, inner)
 
     with open(file, 'w') as out:
         for i in range(points):
