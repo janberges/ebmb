@@ -43,13 +43,15 @@ def get(program='ebmb', file='~temporary.dat', replace=True, **parameters):
     else:
         return load_floats(file)
 
-def run(program='ebmb', **parameters):
+def run(program='ebmb', redirect=False, **parameters):
     """Run 'ebmb', 'tc' or 'critical'.
 
     Parameters
     ----------
     program : str
         Name of or path to executable.
+    redirect : bool
+        Do not print but return standard output of program.
     **parameters
         Program parameters.
     """
@@ -58,7 +60,10 @@ def run(program='ebmb', **parameters):
     for key, value in parameters.items():
         command.append('='.join([key, ','.join(map(str, np.ravel(value)))]))
 
-    subprocess.call(command)
+    if redirect:
+        return subprocess.check_output(command)
+    else:
+        subprocess.call(command)
 
 def load(file):
     """Load output file of 'ebmb'.
