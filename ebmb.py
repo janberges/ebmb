@@ -188,7 +188,7 @@ def dos(file, epsilon, domain, filters=[], resolution=101, replace=True):
 
     return e, dos if pockets > 1 else dos[:, 0]
 
-def square_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
+def square_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, replace=True):
     """Calculate density of states of square lattice and save it to file.
 
     Parameters
@@ -199,6 +199,8 @@ def square_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
         Energy resolution.
     t : float
         Hopping parameter.
+    bandwidth : float
+        Alternatively, bandwith.
     replace : bool
         Overwrite existing output file?
 
@@ -211,6 +213,9 @@ def square_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
     """
     if not replace and path.exists(file):
         return
+
+    if bandwidth is not None:
+        t = bandwidth / 8
 
     points = int(round(8 * t / de)) + 1
     points += 1 - points % 2
@@ -233,7 +238,8 @@ def square_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
 
     return e, dos
 
-def rectangular_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
+def rectangular_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None,
+        replace=True):
     """Calculate rectangular density of states and save it to file.
 
     Parameters
@@ -244,6 +250,8 @@ def rectangular_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
         Energy resolution.
     t : float
         One eighth of the bandwidth.
+    bandwidth : float
+        Alternatively, bandwith.
     replace : bool
         Overwrite existing output file?
 
@@ -257,6 +265,9 @@ def rectangular_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
     if not replace and path.exists(file):
         return
 
+    if bandwidth is not None:
+        t = bandwidth / 8
+
     points = int(round(8 * t / de)) + 1
 
     e = np.linspace(-4 * t, 4 * t, points)
@@ -268,8 +279,8 @@ def rectangular_dos(file='dos.in', de=1e-3, t=0.25, replace=True):
 
     return e, dos
 
-def steplike_dos(file='dos.in', de=1e-3, t=0.25, ratio=6.0, d=0.02,
-    replace=True):
+def steplike_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, ratio=6.0,
+        d=0.02, replace=True):
     """Calculate and save steplike DOS [Akashi, Arita, PRB 88, 014514 (2013)]
 
     Parameters
@@ -280,6 +291,8 @@ def steplike_dos(file='dos.in', de=1e-3, t=0.25, ratio=6.0, d=0.02,
         Energy resolution.
     t : float
         One eighth of the bandwidth.
+    bandwidth : float
+        Alternatively, bandwith.
     ratio : float
         Quotient of densities of states after and before the step (N+/N-)
     d : float
@@ -296,6 +309,9 @@ def steplike_dos(file='dos.in', de=1e-3, t=0.25, ratio=6.0, d=0.02,
     """
     if not replace and path.exists(file):
         return
+
+    if bandwidth is not None:
+        t = bandwidth / 8
 
     inner = max(2, int(round(d / de)) + 1)
     outer = max(1, int(round((4 * t - 0.5 * d) / de)))
