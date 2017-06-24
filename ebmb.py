@@ -238,7 +238,7 @@ def square_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, replace=True):
 
     return e, dos
 
-def rectangular_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None,
+def box_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None,
         replace=True):
     """Calculate rectangular density of states and save it to file.
 
@@ -271,7 +271,9 @@ def rectangular_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None,
     points = int(round(8 * t / de)) + 1
 
     e = np.linspace(-4 * t, 4 * t, points)
-    dos = np.full(points, 0.125 / t)
+
+    dos = np.empty(points)
+    dos[:] = 0.125 / t
 
     with open(file, 'w') as out:
         for i in range(points):
