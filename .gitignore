@@ -13,6 +13,9 @@
 *.synctex
 *.synctex.gz
 
+dos.in
+~temporary.dat
+
 critical
 ebmb
 tc
