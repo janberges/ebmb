@@ -10,7 +10,7 @@ import subprocess
 try:
     from scipy.special import ellipk
 except ImportError:
-    print 'square_dos not available'
+    print('square_dos not available')
 
 def get(program='ebmb', file='~temporary.dat', replace=True, **parameters):
     """Run 'ebmb', 'tc' or 'critical' and load results.
@@ -65,6 +65,26 @@ def run(program='ebmb', redirect=False, **parameters):
     else:
         subprocess.call(command)
 
+def read_char(file):
+    """Read character from binary or text file (for Python-3 compatibility).
+
+    Parameters
+    ----------
+    file : File Object
+        File opened in binary or text mode.
+
+    Returns
+    ------
+    str
+        Next character from file.
+    """
+    char = file.read(1)
+
+    if isinstance(char, str):
+        return char
+    else:
+        return str(char, 'utf-8')
+
 def load(file):
     """Load output file of 'ebmb'.
 
@@ -82,7 +102,7 @@ def load(file):
 
     with open(file, 'rb') as file:
         while True:
-            name = ''.join(iter(lambda: file.read(1) or ':', ':'))
+            name = ''.join(iter(lambda: read_char(file) or ':', ':'))
 
             if name == 'REAL':
                 dtype = np.float64
@@ -348,4 +368,4 @@ if __name__ == '__main__':
     square_dos('dos.in')
 
     for item in sorted(get(dos='dos.in', n=0.5, tell=False).items()):
-        print ('%9s = %s' % item).replace('\n', '\n' + ' ' * 12)
+        print(('%9s = %s' % item).replace('\n', '\n' + ' ' * 12))
