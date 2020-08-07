@@ -62,6 +62,7 @@ contains
             case ('mu'); read (rhs, *) x%mu
 
             case ('conserve'); read (rhs, *) x%conserve
+            case ('chi');      read (rhs, *) x%chi
 
             case ('limit'); read (rhs, *) x%limit
 

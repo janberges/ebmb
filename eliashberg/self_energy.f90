@@ -190,8 +190,10 @@ contains
                      phi = phi + integral_phi(m, j) &
                         * (g(n - m, j, i) + g(n + m + 1, j, i) + U(m, j, i))
 
-                     chi = chi - integral_chi(m, j) &
-                        * (g(n - m, j, i) + g(n + m + 1, j, i))
+                     if (x%chi) then
+                        chi = chi - integral_chi(m, j) &
+                           * (g(n - m, j, i) + g(n + m + 1, j, i))
+                     end if
                   end do
                end do
 

@@ -36,6 +36,7 @@ module global
       real(dp) :: mu = 0.0_dp ! initial chemical potential (eV)
 
       logical :: conserve = .true. ! conserve particle number?
+      logical :: chi      = .true. ! consider energy shift?
 
       integer(i4) :: limit = 250000 ! maximum number of iterations
 
