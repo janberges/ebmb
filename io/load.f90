@@ -26,6 +26,8 @@ contains
 
       real(dp) :: elements ! number of elements in lambda and muStar
 
+      real(dp) :: clip = 15.0_dp ! maximum real-axis frequency (omegaE)
+
       elements = x%bands ** 2
 
       do n = 1, command_argument_count()
@@ -71,8 +73,7 @@ contains
             case ('zero');    read (rhs, *) x%zero
             case ('rate');    read (rhs, *) x%rate
 
-            case ('clip'); read (rhs, *) x%clip
-
+            case ('clip');  read (rhs, *) clip
             case ('lower'); read (rhs, *) x%lower
             case ('upper'); read (rhs, *) x%upper
 
@@ -121,6 +122,8 @@ contains
       end if
 
       if (x%cutoffC .lt. 0) x%cutoffC = x%cutoff
+
+      if (x%upper .lt. x%lower) x%upper = clip * x%omegaE
    end subroutine load
 
    subroutine load_dos(file, x)

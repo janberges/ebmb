@@ -51,13 +51,8 @@ contains
             end if
 
             if (x%resolution .gt. 0) then
-               if (x%lower .lt. x%upper) then
-                  call interval(re%omega, x%lower, x%upper, &
-                     lower=.true., upper=.true.)
-               else
-                  call interval(re%omega, 0.0_dp, x%clip * x%omegaE, &
-                     lower=.true., upper=.true.)
-               end if
+               call interval(re%omega, x%lower, x%upper, &
+                  lower=.true., upper=.true.)
 
                allocate(omega(x%resolution))
 

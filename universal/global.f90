@@ -44,8 +44,6 @@ module global
       real(dp) ::  zero = 1e-10_dp ! negligible gap at critical temperature (eV)
       real(dp) ::  rate = 1e-01_dp ! growth rate for bound search
 
-      real(dp) :: clip = 15.0_dp ! maximum real-axis frequency (omegaE)
-
       real(dp) :: lower =  0.0_dp ! minimum real-axis frequency (eV)
       real(dp) :: upper = -1.0_dp ! maximum real-axis frequency (eV)
 
