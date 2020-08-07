@@ -30,12 +30,12 @@ module global
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
       real(dp), allocatable :: dos(:, :) ! density of Bloch states (a.u.)
 
+      logical :: ldos = .false. ! density of states given?
+
       real(dp) ::  n = 0.0_dp ! initial occupancy number
       real(dp) :: mu = 0.0_dp ! initial chemical potential (eV)
 
       logical :: conserve = .true. ! conserve particle number?
-
-      logical :: chi = .false. ! find energy shift?
 
       integer(i4) :: limit = 250000 ! maximum number of iterations
 

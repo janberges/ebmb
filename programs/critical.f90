@@ -49,7 +49,7 @@ program critical
       end do
    end do
 
-   if (x%chi) then
+   if (x%ldos) then
       solver => eigenvalue
    else
       solver => eigenvalue_cdos

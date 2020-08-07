@@ -16,7 +16,7 @@ program ebmb
 
    call load(x)
 
-   if (x%chi) then
+   if (x%ldos) then
       call self_energy(x, im, oc)
    else
       call self_energy_cdos(x, im)
@@ -24,7 +24,7 @@ program ebmb
 
    call realize(x, im, re)
 
-   if (x%chi) then
+   if (x%ldos) then
       call density_of_states(x, re, oc)
    end if
 

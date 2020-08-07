@@ -28,7 +28,7 @@ contains
       write (unit) 'Z:', im%Z
       write (unit) 'Delta:', im%Delta
 
-      if (x%chi) then
+      if (x%ldos) then
          write (unit) 'chi:', im%chi
 
          write (unit) 'DIM:', 0_i4
@@ -68,7 +68,7 @@ contains
          write (unit) 'Re[Delta]:', real(re%Delta)
          write (unit) 'Im[Delta]:', aimag(re%Delta)
 
-         if (x%chi) then
+         if (x%ldos) then
             write (unit) 'Re[chi]:', real(re%chi)
             write (unit) 'Im[chi]:', aimag(re%chi)
 

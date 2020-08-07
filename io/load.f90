@@ -115,7 +115,7 @@ contains
       end if
 
       if (dos_file .ne. 'none') then
-         x%chi = .true.
+         x%ldos = .true.
          call load_dos(dos_file, x)
       end if
 

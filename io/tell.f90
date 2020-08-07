@@ -25,7 +25,7 @@ contains
 
       print "('imaginary-axis solution [', I0, ']:', /)", im%status
 
-      if (x%chi) then
+      if (x%ldos) then
          print head, 'omega/eV', 'Z', 'Delta/eV', 'chi/eV'
 
          do i = 1, x%bands
@@ -49,7 +49,7 @@ contains
 
       form = edit('(x)')
 
-      if (x%chi) then
+      if (x%ldos) then
          print "(/, 'initial and final occupancy number:', /)"
          print edit(form), oc%n0, oc%n
 
@@ -73,7 +73,7 @@ contains
       if (x%resolution .gt. 0) then
          print "(/, 'real-axis solution:', /)"
 
-         if (x%chi) then
+         if (x%ldos) then
             print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
                'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]', 'Im[chi]', &
                'DOS/(1/eV)'

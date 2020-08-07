@@ -28,7 +28,7 @@ contains
          allocate(re%Delta(x%resolution, x%bands))
          allocate(re%Z(x%resolution, x%bands))
 
-         if (x%chi) allocate(re%chi(x%resolution, x%bands))
+         if (x%ldos) allocate(re%chi(x%resolution, x%bands))
       end if
 
       if (x%measurable .or. x%resolution .gt. 0) then
@@ -68,7 +68,7 @@ contains
                call coefficients(im%omega, im%Z(:, i))
                re%Z(:, i) = continuation(omega)
 
-               if (x%chi) then
+               if (x%ldos) then
                   call coefficients(im%omega, im%chi(:, i))
                   re%chi(:, i) = continuation(omega)
                end if

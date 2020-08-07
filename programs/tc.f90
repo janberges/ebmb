@@ -89,7 +89,7 @@ contains
    subroutine bounds
       if (x%tell) print body, x%T
 
-      if (x%chi) then
+      if (x%ldos) then
          call self_energy(x, im, oc)
       else
          call self_energy_cDOS(x, im)
