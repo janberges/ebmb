@@ -56,7 +56,7 @@ contains
 
                allocate(omega(x%resolution))
 
-               omega(:) = cmplx(re%omega, x%infinitesimal, dp)
+               omega(:) = cmplx(re%omega, x%eta, dp)
 
                re%Delta(:, i) = continuation(omega)
 

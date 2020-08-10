@@ -73,11 +73,11 @@ contains
             case ('zero');    read (rhs, *) x%zero
             case ('rate');    read (rhs, *) x%rate
 
-            case ('clip');  read (rhs, *) clip
             case ('lower'); read (rhs, *) x%lower
             case ('upper'); read (rhs, *) x%upper
+            case ('clip');  read (rhs, *) clip
 
-            case ('infinitesimal', '0+'); read (rhs, *) x%infinitesimal
+            case ('eta', '0+'); read (rhs, *) x%eta
 
             case ('resolution'); read (rhs, *) x%resolution
             case ('measurable'); read (rhs, *) x%measurable

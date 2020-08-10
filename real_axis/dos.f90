@@ -22,7 +22,7 @@ contains
 
       do i = 1, x%bands
          do n = 1, x%resolution
-            omg = re%Z(n, i) * cmplx(re%omega(n), x%infinitesimal, dp)
+            omg = re%Z(n, i) * cmplx(re%omega(n), x%eta, dp)
             phi = re%Z(n, i) * re%Delta(n, i)
 
             eps(:) = x%energy - oc%mu + re%chi(n, i)

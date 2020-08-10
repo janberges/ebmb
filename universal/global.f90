@@ -47,7 +47,7 @@ module global
       real(dp) :: lower =  0.0_dp ! minimum real-axis frequency (eV)
       real(dp) :: upper = -1.0_dp ! maximum real-axis frequency (eV)
 
-      real(dp) :: infinitesimal = 0.0_dp ! infinitesimal energy (eV)
+      real(dp) :: eta = 0.0_dp ! infinitesimal energy (eV)
 
       integer(i4) :: resolution = 0       ! real-axis resolution
       logical     :: measurable = .false. ! find measurable gap?
