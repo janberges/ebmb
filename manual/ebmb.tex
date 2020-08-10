@@ -306,8 +306,8 @@
    Parts of the program are inspired by the EPW code%
    %
    \footnote{%
-      F. \textsc{Giustino}, M. L. \textsc{Cohen} and S. G. \textsc{Louie}, Phys.
-      Rev. B \textbf{76}, 165108 (2007) for a methodology review.
+      See F. \textsc{Giustino}, M. L. \textsc{Cohen} and S. G. \textsc{Louie},
+      Phys.  Rev. B \textbf{76}, 165108 (2007) for a methodology review.
       \newline
       Results related to \textsc{Eliashberg} theory are given by E. R.
       \textsc{Margine} and F. \textsc{Giustino}, Phys. Rev. B \textbf{87},
@@ -325,32 +325,38 @@
    \begin{table}[b]
       \centering
       \begin{tabular}{*9l}
-         \bf key        & \bf default & \bf \slant{unit} & \bf \slant{symbol}  & \bf description & \tt \slant{ebmb} & \tt \slant{tc} & \tt \slant{critical} & \bf \slant{variable} \\
-         \tt file       & \tt none    & --               & --                  & output file                              & $+$ & $+$ & $+$ & $-$ \\
-         \tt form       & \tt F16.12  & --               & --                  & number edit descriptor                   & $+$ & $+$ & $+$ & $-$ \\
-         \tt tell       & \tt true    & --               & --                  & use standard output?                     & $+$ & $+$ & $+$ & $-$ \\[\gap]
-         \tt T          & 10          & K                & $T$                 & temperature                              & $+$ & $+$ & $+$ & $+$ \\[\gap]
-         \tt omegaE     & 0.02        & eV               & $\omega \sub E$     & \textsc{Einstein} frequency              & $+$ & $+$ & $+$ & $+$ \\
-         \tt cutoff     & 15          & $\omega \sub E$  & $\omega_N$          & overall cutoff frequency                 & $+$ & $+$ & $+$ & $-$ \\
-         \tt cutoffC    & $\omega_N$  & $\omega \sub E$  & $\omega_{N \sub C}$ & \textsc{Coulomb} cutoff frequency        & $+$ & $+$ & $+$ & $-$ \\[\gap]
-         \tt lambda     & $\vec 1$    & 1                & $\lambda_{i j}$     & electron-phonon coupling                 & $+$ & $+$ & $+$ & $+$ \\
-         \tt muStar     & $\vec 0$    & 1                & $\mu^*_{i j}$       & \textsc{Coulomb} pseudo-potential        & $+$ & $+$ & $+$ & $+$ \\[\gap]
-         \tt dos        & \tt none    & --               & --                  & file with density of states              & $+$ & $+$ & $+$ & $-$ \\
-         \tt n          & --          & 1                & $n_0$               & initial occupancy number                 & $+$ & $+$ & $+$ & $-$ \\
-         \tt mu         & 0           & eV               & $\mu_0$             & initial chemical potential               & $+$ & $+$ & $+$ & $-$ \\
-         \tt conserve   & \tt true    & --               & --                  & conserve particle number?                & $+$ & $+$ & $+$ & $-$ \\[\gap]
-         \tt limit      & 250000      & 1                & --                  & maximum number of iterations             & $+$ & $+$ & $+$ & $-$ \\[\gap]
-         \tt epsilon    & $10^{-15}$  & a.u.             & --                  & negligible float difference              & $+$ & $+$ & $+$ & $-$ \\
-         \tt error      & $10^{-5}$   & a.u.             & --                  & bisection error                          & $-$ & $+$ & $+$ & $-$ \\
-         \tt zero       & $10^{-10}$  & eV               & --                  & negligible gap at $T \sub c$ (threshold) & $-$ & $+$ & $-$ & $-$ \\
-         \tt rate       & $10^{-1}$   & 1                & --                  & growth rate for bound search             & $-$ & $+$ & $+$ & $-$ \\[\gap]
-         \tt clip       & 15          & $\omega \sub E$  & --                  & maximum real-axis frequency              & $+$ & $-$ & $-$ & $-$ \\
-         \tt resolution & 0           & 1                & --                  & resolution of real-axis solution         & $+$ & $-$ & $-$ & $-$ \\
-         \tt measurable & \tt false   & --               & --                  & find measurable gap?                     & $+$ & $-$ & $-$ & $-$ \\[\gap]
-         \tt imitate    & \tt false   & --               & --                  & use $Z_i(n)$ biased by cutoff?           & $-$ & $-$ & $+$ & $-$ \\
-         \tt rescale    & \tt true    & --               & --                  & use $\mu^*_{i j}$ rescaled for cutoff?   & $+$ & $+$ & $+$ & $-$ \\[\gap]
-         \tt normal     & \tt false   & --               & --                  & enforce normal state?                    & $+$ & $-$ & $-$ & $-$ \\[\gap]
-         \tt power      & \tt true    & --               & --                  & power method for single band?            & $-$ & $-$ & $+$ & $-$
+         \bf key           & \bf default & \bf \slant{unit} & \bf \slant{symbol}  & \bf description & \tt \slant{ebmb} & \tt \slant{tc} & \tt \slant{critical} & \bf \slant{variable} \\
+         \tt file          & \tt none    & --               & --                  & output file                                & $+$ & $+$ & $+$ & $-$ \\
+         \tt form          & \tt F16.12  & --               & --                  & number edit descriptor                     & $+$ & $+$ & $+$ & $-$ \\
+         \tt tell          & \tt true    & --               & --                  & use standard output?                       & $+$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt T             & 10          & K                & $T$                 & temperature                                & $+$ & $+$ & $+$ & $+$ \\[\gap]
+         \tt omegaE        & 0.02        & eV               & $\omega \sub E$     & \textsc{Einstein} frequency                & $+$ & $+$ & $+$ & $+$ \\
+         \tt cutoff        & 15          & $\omega \sub E$  & $\omega_N$          & overall cutoff frequency                   & $+$ & $+$ & $+$ & $-$ \\
+         \tt cutoffC       & $\omega_N$  & $\omega \sub E$  & $\omega_{N \sub C}$ & \textsc{Coulomb} cutoff frequency          & $+$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt lambda, lamda & 1           & 1                & $\lambda_{i j}$     & electron-phonon coupling                   & $+$ & $+$ & $+$ & $+$ \\
+         \tt muStar, mu*   & 0           & 1                & $\mu^*_{i j}$       & rescaled \textsc{Coulomb} potential        & $+$ & $+$ & $+$ & $+$ \\
+         \tt muC           & 0           & 1                & $\mu_{i j}$         & unscaled \textsc{Coulomb} parameter        & $+$ & $+$ & $+$ & $+$ \\[\gap]
+         \tt dos           & \tt none    & --               & --                  & file with density of states                & $+$ & $+$ & $+$ & $-$ \\
+         \tt n             & --          & 1                & $n_0$               & initial occupancy number                   & $+$ & $+$ & $+$ & $-$ \\
+         \tt mu            & 0           & eV               & $\mu_0$             & initial chemical potential                 & $+$ & $+$ & $+$ & $-$ \\
+         \tt conserve      & \tt true    & --               & --                  & conserve particle number?                  & $+$ & $+$ & $+$ & $-$ \\
+         \tt chi           & \tt true    & --               & --                  & consider energy shift?                     & $+$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt limit         & 250000      & 1                & --                  & maximum number of iterations               & $+$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt epsilon       & $10^{-15}$  & a.u.             & --                  & negligible float difference                & $+$ & $+$ & $+$ & $-$ \\
+         \tt error         & $10^{-5}$   & a.u.             & --                  & bisection error                            & $-$ & $+$ & $+$ & $-$ \\
+         \tt zero          & $10^{-10}$  & eV               & --                  & negligible gap at $T \sub c$ (threshold)   & $-$ & $+$ & $-$ & $-$ \\
+         \tt rate          & $10^{-1}$   & 1                & --                  & growth rate for bound search               & $-$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt lower         & 0           & eV               & --                  & minimum real-axis frequency                & $+$ & $-$ & $-$ & $-$ \\
+         \tt upper         & --          & eV               & --                  & maximum real-axis frequency                & $+$ & $-$ & $-$ & $-$ \\
+         \tt clip          & 15          & $\omega \sub E$  & --                  & maximum real-axis frequency                & $+$ & $-$ & $-$ & $-$ \\
+         \tt eta, 0+       & 0           & eV               & --                  & infinitesimal energy $0^+$                 & $+$ & $-$ & $-$ & $-$ \\
+         \tt resolution    & 0           & 1                & --                  & resolution of real-axis solution           & $+$ & $-$ & $-$ & $-$ \\
+         \tt measurable    & \tt false   & --               & --                  & find measurable gap?                       & $+$ & $-$ & $-$ & $-$ \\[\gap]
+         \tt unscale       & \tt true    & --               & --                  & estimate missing {\tt muC} from {\tt mu*}? & $+$ & $+$ & $+$ & $-$ \\
+         \tt rescale       & \tt true    & --               & --                  & use $\mu^*_{i j}$ rescaled for cutoff?     & $+$ & $+$ & $+$ & $-$ \\
+         \tt imitate       & \tt false   & --               & --                  & use $Z_i(n)$ biased by cutoff?             & $-$ & $-$ & $+$ & $-$ \\[\gap]
+         \tt normal        & \tt false   & --               & --                  & enforce normal state?                      & $+$ & $-$ & $-$ & $-$ \\[\gap]
+         \tt power         & \tt true    & --               & --                  & power method for single band?              & $-$ & $-$ & $+$ & $-$
       \end{tabular}
       \captionsetup{singlelinecheck=off}
       \caption[Input parameters]{
@@ -368,9 +374,10 @@
                parameter is negative, the critical temperature is searched for.
 
             \item
-               \texttt{lambda} and \texttt{muStar} expect flattened square
-               matrices of equal size the elements of which are separated by
-               commas. It is impossible to vary more than one element at once.
+               \texttt{lambda}, \texttt{muStar}, and \texttt{muC} expect
+               flattened square matrices of equal size the elements of which
+               are separated by commas. It is impossible to vary more than one
+               element at once.
 
             \item
                \texttt{dos} has lines $\epsilon$/eV $n_1$/a.u. $n_2$/a.u.
