@@ -16,6 +16,7 @@ contains
 
       character(:), allocatable :: lambda ! string defining lambda
       character(:), allocatable :: muStar ! string defining muStar
+      character(:), allocatable :: muC    ! string defining muC
 
       integer :: equals ! position of '='
 
@@ -56,6 +57,10 @@ contains
 
             case ('muStar', 'mu*')
                muStar = rhs
+               elements = matches(rhs, ',') + 1
+
+            case ('muC')
+               muC = rhs
                elements = matches(rhs, ',') + 1
 
             case ('dos'); read (rhs, *) dos_file
@@ -110,7 +115,10 @@ contains
          end do
       end if
 
-      if (allocated(muStar)) then
+      if (allocated(muC)) then
+         read (muC, *) x%muStar
+         x%unscale = .false.
+      else if (allocated(muStar)) then
          read (muStar, *) x%muStar
       else
          x%muStar(:, :) = 0
