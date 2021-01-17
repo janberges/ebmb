@@ -1,3 +1,6 @@
+! Copyright (C) 2021 Jan Berges
+! This program is free software under the terms of the GNU GPLv3 or later.
+
 program tc
    use eliashberg_self_energy
    use eliashberg_self_energy_cdos

@@ -1,3 +1,6 @@
+! Copyright (C) 2021 Jan Berges
+! This program is free software under the terms of the GNU GPLv3 or later.
+
 module io_load
    use global
    use tools, only: argument, matches

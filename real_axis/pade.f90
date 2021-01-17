@@ -1,3 +1,6 @@
+! Copyright (C) 2021 Jan Berges
+! This program is free software under the terms of the GNU GPLv3 or later.
+
 module real_axis_pade
    use global
    implicit none

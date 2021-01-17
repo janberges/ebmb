@@ -1,3 +1,6 @@
+! Copyright (C) 2021 Jan Berges
+! This program is free software under the terms of the GNU GPLv3 or later.
+
 module eliashberg_eigenvalue
    use eigenvalues
    use eliashberg_self_energy

@@ -1,3 +1,6 @@
+! Copyright (C) 2021 Jan Berges
+! This program is free software under the terms of the GNU GPLv3 or later.
+
 program critical
    use eliashberg_eigenvalue
    use eliashberg_eigenvalue_cdos
