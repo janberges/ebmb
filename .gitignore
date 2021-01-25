@@ -4,6 +4,7 @@
 *.mod
 *.o
 
+*.egg-info
 *.pyc
 
 *.aux
