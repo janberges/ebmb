@@ -1,4 +1,4 @@
-# ebmb
+![ebmb logo](logo/logo.svg)
 
 Solve multiband Eliashberg equations.
 

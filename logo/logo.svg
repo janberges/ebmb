@@ -1,0 +1,9 @@
+<?xml version='1.0'?>
+<svg xmlns='http://www.w3.org/2000/svg' width='300' height='120' viewBox='0 0 15 6'>
+<g stroke-width='0.7' stroke-linejoin='miter' stroke-linecap='butt' fill='none'>
+<path stroke='#193bda' d='M1,4 H3 A1,1,0,1,0,2.707107,4.707107'/>
+<path stroke='#193bda' d='M4,1 V5 H5 A1,1,0,1,0,5,3 H4'/>
+<path stroke='#da193b' d='M11,5 V4 A1,1,0,0,0,9,4 V5 M9,4 A1,1,0,0,0,7,4 V5'/>
+<path stroke='#da193b' d='M12,1 V5 H13 A1,1,0,1,0,13,3 H12'/>
+</g>
+</svg>

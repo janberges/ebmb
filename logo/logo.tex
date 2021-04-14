@@ -1,0 +1,13 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\definecolor{myblue}{RGB}{25,59,218}
+\definecolor{unired}{RGB}{218,25,59}
+\begin{document}
+\begin{tikzpicture}[line width=7mm, line join=miter, line cap=butt]
+\useasboundingbox (0,0) rectangle (15,6);
+\draw[myblue] (1,2)--(3,2) arc(0:315:1);
+\draw[myblue] (4,5)--(4,1)--(5,1) arc (270:450:1)--(4,3);
+\draw[unired] (11,1)--(11,2) arc(0:180:1)--(9,1) (9,2) arc(0:180:1)--(7,1);
+\draw[unired] (12,5)--(12,1)--(13,1) arc (270:450:1)--(12,3);
+\end{tikzpicture}
+\end{document}
