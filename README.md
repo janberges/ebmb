@@ -6,11 +6,9 @@ For further information typeset and read `manual/ebmb.tex`.
 
 ## Installation
 
-The makefile is designed for the GNU or Intel Fortran compiler and may be run in
-optimization or validation mode:
+The makefile is designed for the GNU or Intel Fortran compiler:
 
-    make compiler=gfortran mode=optimize   (default)
-            ...   ifort   ...   validate
+    make FC=gfortran FFLAGS=-O3
 
 ## Acknowledgment
 

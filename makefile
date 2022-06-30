@@ -1,23 +1,16 @@
-compiler = gfortran
-mode = optimize
+FC = gfortran
 
-ifeq ($(compiler), gfortran)
-  ifeq ($(mode), validate)
-    options = -std=f2003 -Wall -Wno-maybe-uninitialized -pedantic
-  else ifeq ($(mode), optimize)
-    options = -O3
-  endif
-  override options += -J modules
-else ifeq ($(compiler), ifort)
-  ifeq ($(mode), validate)
-    options = -O0 -warn all
-  else ifeq ($(mode), optimize)
-    options = -O3
-  endif
-  override options += -module modules
-endif
+flags_gfortran = -std=f2003 -Wall -Wno-maybe-uninitialized -pedantic
+flags_ifort = -O0 -warn all
 
-external_critical = -llapack -lblas
+FFLAGS = ${flags_$(FC)}
+
+critical: LDLIBS = -llapack -lblas
+
+modules_gfortran = -Jmodules
+modules_ifort = -module modules
+
+override FFLAGS += ${modules_$(FC)}
 
 needless = .DS_Store ebmb.pyc manual/ebmb.aux manual/.ebmb.lb manual/ebmb.log manual/ebmb.out manual/ebmb.synctex.gz modules/*.mod ~temporary.dat
 
@@ -30,18 +23,16 @@ programs = critical ebmb tc
 all: $(programs)
 
 clean:
-	@rm -f $(needless) eliashberg/eigenvalue.o eliashberg/eigenvalue_cdos.o eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o io/store.o io/tell.o programs/critical.o programs/ebmb.o programs/tc.o real_axis/dos.o real_axis/pade.o real_axis/real_axis.o universal/eigenvalues.o universal/formatting.o universal/global.o universal/tools.o
+	rm -f $(needless) eliashberg/eigenvalue.o eliashberg/eigenvalue_cdos.o eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o io/store.o io/tell.o programs/critical.o programs/ebmb.o programs/tc.o real_axis/dos.o real_axis/pade.o real_axis/real_axis.o universal/eigenvalues.o universal/formatting.o universal/global.o universal/tools.o
 
 cleaner: clean
-	@rm -f $(programs)
+	rm -f $(programs)
 
 $(programs):
-	@echo link $@
-	@$(compiler) -o $@ $^ $(external) $(external_$@)
+	$(FC) $(FFLAGS) -o $@ $^ $(LDLIBS)
 
 %.o: %.f90
-	@echo compile $*
-	@$(compiler) $(options) -c $< -o $@
+	$(FC) $(FFLAGS) -c $< -o $@
 
 critical: eliashberg/eigenvalue.o eliashberg/eigenvalue_cdos.o eliashberg/self_energy.o io/load.o programs/critical.o universal/eigenvalues.o universal/global.o universal/tools.o
 ebmb: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o io/store.o io/tell.o programs/ebmb.o real_axis/dos.o real_axis/pade.o real_axis/real_axis.o universal/formatting.o universal/global.o universal/tools.o
