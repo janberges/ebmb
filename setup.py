@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2021 Jan Berges
+# Copyright (C) 2016-2022 Jan Berges
 # This program is free software under the terms of the GNU GPLv3 or later.
 
 import setuptools
