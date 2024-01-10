@@ -16,6 +16,7 @@ dist
 *.synctex.gz
 
 *.png
+!ebmb.png
 
 dos.in
 ~temporary.dat
