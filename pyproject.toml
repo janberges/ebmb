@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ebmb"
+version = "2021.1"
+authors = [{name = "Jan Berges"}]
+description = "Solve multiband Eliashberg equations"
+readme = "README.md"
+urls = {Homepage = "https://bitbucket.org/berges/ebmb"}
+classifiers = [
+    "Programming Language :: Python",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Operating System :: POSIX :: Linux",
+]
+requires-python = ">=2.7"
+
+[tool.setuptools]
+py-modules = ['ebmb']
