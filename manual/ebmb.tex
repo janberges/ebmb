@@ -86,12 +86,10 @@
 
    \headline{Installation}
 
-   The makefile is designed for the \emph{GNU} or \emph{Intel} Fortran compiler
-   and may be run in optimization or validation mode:
+   The makefile is designed for the \emph{GNU} or \emph{Intel} Fortran compiler:
    %
    \begin{quote}
-      \verb|$ make compiler=gfortran mode=optimize| \quad (default) \\
-      \verb|          ...   ifort   ...   validate|
+      \verb|$ make FC=gfortran FFLAGS=-O3|
    \end{quote}
 
    \headline{I/O}
