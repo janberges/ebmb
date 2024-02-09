@@ -18,6 +18,7 @@ dist
 *.png
 !ebmb.png
 
+a2f.in
 dos.in
 ~temporary.dat
 

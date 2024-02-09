@@ -33,7 +33,11 @@ module global
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
       real(dp), allocatable :: dos(:, :) ! density of Bloch states (a.u.)
 
+      real(dp), allocatable :: omega(:) ! phonon energy (frequency argument)
+      real(dp), allocatable :: a2F(:, :, :) ! Eliashberg spectral function
+
       logical :: ldos = .false. ! density of states given?
+      logical :: la2F = .false. ! Eliashberg spectral function given?
 
       real(dp) ::  n = 0.0_dp ! initial occupancy number
       real(dp) :: mu = 0.0_dp ! initial chemical potential (eV)

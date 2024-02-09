@@ -67,10 +67,11 @@
          a cut-off imaginary axis and optionally continues the results to the
          real axis via \textsc{Padé} approximants.
 
-         A material is defined by nothing but an \textsc{Einstein} phonon
-         frequency, intra- and interband electron-phonon couplings and
-         \textsc{Coulomb} pseudo-potentials and, if desired, the band densities
-         of \textsc{Bloch} states, otherwise assumed to be constant.
+         A material is defined by nothing but an \textsc{Eliashberg} spectral
+         function or, as fallback, an \textsc{Einstein} phonon frequency and
+         intra- and interband electron-phonon couplings, \textsc{Coulomb}
+         pseudo-potentials and, if desired, the band densities of \textsc{Bloch}
+         states, otherwise assumed to be constant.
 
       \item
          \texttt{tc} finds the critical temperature for each band separately via
@@ -216,7 +217,10 @@
       \lambda_{i j}(n - m) \pm \lambda_{i j}(n + m + 1),
       &
       \lambda_{i j}(n) &=
-      \frac {\lambda_{i j}}{1 + \big[ \frac{\nu_n}{\omega \sub E} \big]^2},
+      \int \from 0 \till \infty \D \omega
+      \frac{2 \omega \, \alpha^2 F_{i j}(\omega)}{\omega^2 + \nu_n^2}
+      \underset {\underset{\text{Einstein}}\uparrow} =
+      \frac{\lambda_{i j}}{1 + \big[ \frac{\nu_n}{\omega \sub E} \big]^2},
       \\
       U^*_{i j}(m) &=
       \begin{cases}
@@ -225,11 +229,12 @@
       \end{cases}
       &
       \frac 1 {\mu^*_{i j}(N \sub C)} &=
-      \frac 1 {\mu^*_{i j}} + \ln \frac{\omega \sub E}{\omega_{N \sub C}},
+      \frac 1 {\mu^*_{i j}} + \ln \frac{\omega \sub E}{\omega_{N \sub C}}
    \end{align*}
    %
-   or, if the band density $n_i(\epsilon)$ of \textsc{Bloch} states with energy
-   $\epsilon$ per spin, band and unit cell is given,
+   with the \textsc{Eliashberg} spectral function $\alpha^2 F_{i j}(\omega)$.
+   Alternatively, if the band density $n_i(\epsilon)$ of \textsc{Bloch} states
+   with energy $\epsilon$ per spin, band and unit cell is given,
    %
    \begin{equation*}
        \frac 1 {\mu^*_{i j}(N \sub C)} =
@@ -320,6 +325,8 @@
       {mailto:jan.berges@uni-bremen.de?subject=ebmb}
       {\tt jan.berges@uni-bremen.de}.
 
+   \newgeometry{top=25mm, bottom=25mm}
+
    \begin{table}[b]
       \centering
       \begin{tabular}{*9l}
@@ -334,7 +341,9 @@
          \tt lambda, lamda & 1           & 1                & $\lambda_{i j}$     & electron-phonon coupling                   & $+$ & $+$ & $+$ & $+$ \\
          \tt muStar, mu*   & 0           & 1                & $\mu^*_{i j}$       & rescaled \textsc{Coulomb} potential        & $+$ & $+$ & $+$ & $+$ \\
          \tt muC           & 0           & 1                & $\mu_{i j}$         & unscaled \textsc{Coulomb} parameter        & $+$ & $+$ & $+$ & $+$ \\[\gap]
+         \tt bands         & 1           & 1                & --                  & number of bands                            & $+$ & $+$ & $+$ & $-$ \\[\gap]
          \tt dos           & \tt none    & --               & --                  & file with density of states                & $+$ & $+$ & $+$ & $-$ \\
+         \tt a2F           & \tt none    & --               & --                  & file with \textsc{Eliashberg} function     & $+$ & $+$ & $+$ & $-$ \\[\gap]
          \tt n             & --          & 1                & $n_0$               & initial occupancy number                   & $+$ & $+$ & $+$ & $-$ \\
          \tt mu            & 0           & eV               & $\mu_0$             & initial chemical potential                 & $+$ & $+$ & $+$ & $-$ \\
          \tt conserve      & \tt true    & --               & --                  & conserve particle number?                  & $+$ & $+$ & $+$ & $-$ \\
@@ -380,6 +389,11 @@
             \item
                \texttt{dos} has lines $\epsilon$/eV $n_1$/a.u. $n_2$/a.u.
                $\dots$ with $\epsilon$ ascending but not necessarily
+               equidistant.
+
+            \item
+               \texttt{a2F} has lines $\omega$/meV $\alpha^2 F_{1, 1}$ $\alpha^2
+               F_{2, 1}$ $\dots$ with $\omega$ ascending but not necessarily
                equidistant.
          \end{itemize}
          }

@@ -2,6 +2,7 @@
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
 module eliashberg_self_energy_cdos
+   use eliashberg_spectral_function
    use global
    implicit none
 
@@ -36,7 +37,11 @@ contains
       allocate(lambda(1 - no:2 * no - 1, x%bands, x%bands))
 
       do n = 1 - no, 2 * no - 1
-         lambda(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
+         if (x%la2F) then
+            call lambda_from_a2F(x, lambda(n, :, :), n)
+         else
+            lambda(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
+         end if
       end do
 
       allocate(muStar(x%bands, x%bands))

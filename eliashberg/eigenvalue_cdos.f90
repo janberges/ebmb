@@ -3,6 +3,7 @@
 
 module eliashberg_eigenvalue_cdos
    use eigenvalues
+   use eliashberg_spectral_function
    use global
    implicit none
 
@@ -66,7 +67,11 @@ contains
       end if
 
       do n = 1 - no, 2 * no - 1
-         lambda(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
+         if (x%la2F) then
+            call lambda_from_a2F(x, lambda(n, :, :), n)
+         else
+            lambda(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
+         end if
       end do
 
       if (x%rescale) then

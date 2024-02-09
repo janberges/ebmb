@@ -365,6 +365,45 @@ def steplike_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, ratio=6.0,
 
     return e, dos
 
+def gaussian_a2F(file='a2F.in', dw=1e-4, l=1.0, w0=0.02, s=0.002, replace=True):
+    """Calculate and save Gaussian example Eliashberg spectral function.
+
+    Parameters
+    ----------
+    file : str
+        Path to output file.
+    dw : float
+        Energy resolution.
+    l : float
+        Prefactor (expected value of electron-phonon coupling).
+    w0 : float
+        Center (expected value of Einstein frequency).
+    s : float
+        Broadening.
+    replace : bool
+        Overwrite existing output file?
+
+    Returns
+    -------
+    ndarray
+        Energy.
+    ndarray
+        Eliashberg spectral function.
+    """
+    if not replace and path.exists(file):
+        return
+
+    w = np.arange(w0 - 5 * s, w0 + 5 * s, dw)
+    w = w[w >= 0]
+
+    a2F = l * w0 / (2 * np.sqrt(np.pi) * s) * np.exp(-((w - w0) / s) ** 2)
+
+    with open(file, 'w') as out:
+        for i in range(len(w)):
+            out.write('% .10f %.10f\n' % (w[i], a2F[i]))
+
+    return w, a2F
+
 if __name__ == '__main__':
     np.set_printoptions(threshold=9, edgeitems=1)
 
