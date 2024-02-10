@@ -74,15 +74,17 @@
          states, otherwise assumed to be constant.
 
       \item
-         \texttt{tc} finds the critical temperature for each band separately via
-         the bisection method. Superconductivity is defined by the order
-         parameter exceeding a certain threshold.
-
-      \item
          \texttt{critical} finds the critical point via the bisection method
          varying a parameter of choice. Superconductivity is defined by the
          kernel of the linearized gap equation (Eq.~\ref{linearized gap
          equation}) having an eigenvalue greater than or equal to unity.
+
+      \item
+         \texttt{tc} finds the critical temperature for each band separately via
+         the bisection method. Superconductivity is defined by the order
+         parameter exceeding a certain threshold. Usually, it is preferable to
+         use \texttt{critical}.
+
    \end{enumerate}
 
    \headline{Installation}
