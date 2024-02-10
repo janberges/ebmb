@@ -343,11 +343,11 @@ def steplike_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, ratio=6.0,
 
     points = inner + 2 * outer
 
-    e   = np.empty(points)
+    e = np.empty(points)
     dos = np.empty(points)
 
     e[:+outer] = np.linspace(-4 * t, -0.5 * d, outer, endpoint=False)
-    e[-outer:] = np.linspace( 4 * t,  0.5 * d, outer, endpoint=False)[::-1]
+    e[-outer:] = np.linspace(4 * t, 0.5 * d, outer, endpoint=False)[::-1]
 
     e[outer:-outer] = np.linspace(-0.5 * d, 0.5 * d, inner)
 
