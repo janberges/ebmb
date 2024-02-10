@@ -2,7 +2,8 @@
 
 Solve multiband Eliashberg equations.
 
-For further information typeset and read `manual/ebmb.tex`.
+For further information typeset `manual/ebmb.tex` or read it
+[here](https://janberges.github.io/ebmb/ebmb.pdf).
 
 ## Installation
 
