@@ -101,6 +101,10 @@ module global
       module procedure ap
    end interface
 
+   interface operator(.na.)
+      module procedure na
+   end interface
+
 contains
 
    elemental function ap(lhs, rhs)
@@ -109,4 +113,12 @@ contains
 
       ap = abs(lhs - rhs) .le. epsilon
    end function ap
+
+   elemental function na(lhs, rhs)
+      logical :: na
+      real(dp), intent(in) :: lhs, rhs
+
+      na = abs(lhs - rhs) .gt. epsilon
+   end function na
+
 end module global

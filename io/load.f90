@@ -196,7 +196,7 @@ contains
       do
          read (unit, *, iostat=error) test
          if (error .ne. 0) exit
-         if (test .ne. 0.0_dp) n = n + 1
+         if (test .na. 0.0_dp) n = n + 1
       end do
 
       rewind unit
@@ -207,7 +207,7 @@ contains
       x%omega = 0.0_dp
 
       do m = 1, n
-         do while (x%omega(m) .eq. 0.0_dp)
+         do while (x%omega(m) .ap. 0.0_dp)
             read (unit, *) x%omega(m), x%a2F(m, :, :)
          end do
       end do
