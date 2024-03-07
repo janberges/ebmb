@@ -5,6 +5,8 @@
 
 """Wrapper and auxiliary functions for Eliashberg solver ebmb"""
 
+__version__ = '2024.2'
+
 import itertools
 import numpy as np
 from os import path
