@@ -22,13 +22,13 @@ contains
       character(:), allocatable :: muStar ! string defining muStar
       character(:), allocatable :: muC    ! string defining muC
 
+      character(:), allocatable :: dos_file ! file with density of states
+      character(:), allocatable :: a2F_file ! file with Eliashberg function
+
       integer :: equals ! position of '='
 
       integer :: i ! band index
       integer :: n ! argument number
-
-      character(99) :: dos_file = 'none' ! file with density of states
-      character(99) :: a2F_file = 'none' ! file with Eliashberg spectral function
 
       real(dp) :: elements ! number of elements in lambda and muStar
 
@@ -71,8 +71,8 @@ contains
 
             case ('bands'); read (rhs, *) x%bands
 
-            case ('dos'); read (rhs, '(A)') dos_file
-            case ('a2F'); read (rhs, '(A)') a2F_file
+            case ('dos'); dos_file = rhs
+            case ('a2F'); a2F_file = rhs
 
             case ('n');  read (rhs, *) x%n
             case ('mu'); read (rhs, *) x%mu
@@ -133,12 +133,12 @@ contains
          x%muStar(:, :) = 0
       end if
 
-      if (dos_file .ne. 'none') then
+      if (allocated(dos_file)) then
          x%ldos = .true.
          call load_dos(dos_file, x)
       end if
 
-      if (a2F_file .ne. 'none') then
+      if (allocated(a2F_file)) then
          x%la2F = .true.
          call load_a2F(a2F_file, x)
          call integrate_a2F(x)
