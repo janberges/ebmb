@@ -71,8 +71,8 @@ contains
 
             case ('bands'); read (rhs, *) x%bands
 
-            case ('dos'); dos_file = rhs
-            case ('a2F'); a2F_file = rhs
+            case ('dos', 'DOS'); dos_file = rhs
+            case ('a2f', 'a2F'); a2F_file = rhs
 
             case ('n');  read (rhs, *) x%n
             case ('mu'); read (rhs, *) x%mu
