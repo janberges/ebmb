@@ -14,8 +14,8 @@ module global
    integer, parameter :: unit = 11 ! file unit number
 
    type parameters
-      character(99) :: file = 'none'   ! name of output file
-      character(50) :: form = 'F16.12' ! number format
+      character(1024) :: file = 'none'   ! name of output file
+      character(50)   :: form = 'F16.12' ! number format
 
       logical :: tell = .true. ! use standard output?
 
