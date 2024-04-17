@@ -54,10 +54,10 @@ contains
 
       if (x%ldos) then
          print "(/, 'initial and final occupancy number:', /)"
-         print edit(form), oc%n0, oc%n
+         print form, oc%n0, oc%n
 
          print "(/, 'initial and final chemical potential (eV):', /)"
-         print edit(form), oc%mu0, oc%mu
+         print form, oc%mu0, oc%mu
       end if
 
       if (x%la2F) then
@@ -71,7 +71,7 @@ contains
       end if
 
       print "(/, 'constant Coulomb contribution (eV):', /)"
-      print edit(form), im%phiC
+      print form, im%phiC
 
       if (x%measurable) then
          print "(/, 'measurable gap (eV):', /)"
