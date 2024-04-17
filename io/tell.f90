@@ -23,8 +23,8 @@ contains
 
       call measure(x%form)
 
-      head = edit('(8Aw)')
-      body = edit('(8x)')
+      head = edit('(99Aw)') ! 99 replaces Fortran-2008 unlimited format control.
+      body = edit('(99x)')
 
       print "('imaginary-axis solution [', I0, ']:', /)", im%status
 
@@ -58,6 +58,16 @@ contains
 
          print "(/, 'initial and final chemical potential (eV):', /)"
          print edit(form), oc%mu0, oc%mu
+      end if
+
+      if (x%la2F) then
+         print "(/, 'effective electron-phonon coupling:', /)"
+         do i = 1, x%bands
+            print body, x%lambda(:, i)
+         end do
+
+         print "(/, 'effective phonon frequency (eV):', /)"
+         print form, x%omegaE
       end if
 
       print "(/, 'constant Coulomb contribution (eV):', /)"

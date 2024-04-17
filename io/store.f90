@@ -43,6 +43,21 @@ contains
          write (unit) "mu:", oc%mu
       end if
 
+      if (x%la2F) then
+         write (unit) 'DIM:'
+
+         if (x%bands .gt. 1) then
+            write (unit) 2_i4, x%bands, x%bands
+         else
+            write (unit) 0_i4
+         end if
+
+         write (unit) 'lambda:', x%lambda
+
+         write (unit) 'DIM:', 0_i4
+         write (unit) 'omegaE:', x%omegaE
+      end if
+
       write (unit) 'DIM:'
 
       if (x%bands .gt. 1) then
