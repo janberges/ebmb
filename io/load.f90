@@ -82,7 +82,7 @@ contains
 
             case ('limit'); read (rhs, *) x%limit
 
-            case ('epsilon'); read (rhs, *) epsilon
+            case ('epsilon'); read (rhs, *) eps
             case ('error');   read (rhs, *) x%error
             case ('zero');    read (rhs, *) x%zero
             case ('rate');    read (rhs, *) x%rate

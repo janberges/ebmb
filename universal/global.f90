@@ -95,7 +95,7 @@ module global
       real(dp) :: mu0, mu ! initial and final chemical potential (eV)
    end type occupancy
 
-   real(dp) :: epsilon = 1e-15_dp ! negligible float difference (a.u.)
+   real(dp) :: eps = 451 * epsilon(1.0_dp) ! negligible float difference (a.u.)
 
    interface operator(.ap.)
       module procedure ap
@@ -111,14 +111,14 @@ contains
       logical :: ap
       real(dp), intent(in) :: lhs, rhs
 
-      ap = abs(lhs - rhs) .le. epsilon
+      ap = abs(lhs - rhs) .le. eps
    end function ap
 
    elemental function na(lhs, rhs)
       logical :: na
       real(dp), intent(in) :: lhs, rhs
 
-      na = abs(lhs - rhs) .gt. epsilon
+      na = abs(lhs - rhs) .gt. eps
    end function na
 
 end module global
