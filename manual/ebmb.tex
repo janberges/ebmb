@@ -214,7 +214,7 @@
    The electron-phonon coupling matrices and the rescaled \textsc{Coulomb}
    pseudo-potential are connected to the corresponding input parameters via
    %
-   \begin{align*}
+   \begin{align}
       \Lambda_{i j}^\pm(n, m) &=
       \lambda_{i j}(n - m) \pm \lambda_{i j}(n + m + 1),
       &
@@ -223,6 +223,7 @@
       \frac{2 \omega \, \alpha^2 F_{i j}(\omega)}{\omega^2 + \nu_n^2}
       \underset {\underset{\text{Einstein}}\uparrow} =
       \frac{\lambda_{i j}}{1 + \big[ \frac{\nu_n}{\omega \sub E} \big]^2},
+      \notag
       \\
       U^*_{i j}(m) &=
       \begin{cases}
@@ -232,13 +233,14 @@
       &
       \frac 1 {\mu^*_{i j}(N \sub C)} &=
       \frac 1 {\mu^*_{i j}} + \ln \frac{\omega \sub E}{\omega_{N \sub C}}
-   \end{align*}
+      \label{cDOS rescaling}
+   \end{align}
    %
    with the \textsc{Eliashberg} spectral function $\alpha^2 F_{i j}(\omega)$.
    Alternatively, if the band density $n_i(\epsilon)$ of \textsc{Bloch} states
    with energy $\epsilon$ per spin, band and unit cell is given,
    %
-   \begin{equation*}
+   \begin{equation}
        \frac 1 {\mu^*_{i j}(N \sub C)} =
        \frac 1 {\mu^*_{i j}} + \ln \frac {2 \omega \sub E} D +
        \frac 1 \pi \sum_i \int \from{-\infty} \till \infty \D \epsilon
@@ -250,7 +252,8 @@
            \frac 1 {\omega_{N \sub C}}
                & \text{otherwise,}
        \end{cases}
-   \end{equation*}
+      \label{rescaling}
+   \end{equation}
    %
    where $D$ is the electronic bandwidth. $\mu_0$ and $\mu$ are the chemical
    potentials for free and interacting particles, respectively. The latter
@@ -305,6 +308,39 @@
    %
    $Z_i(n)$ is not biased by the cutoff if $D_i^\infty(n)$ is used in place of
    $D_i^N(n)$ in the kernel $K_{i j}(n, m)$.
+
+   For a given scalar $\alpha^2 F(\omega)$, an effective phonon frequency can be
+   calculated in different ways. We follow \textsc{Allen} and \textsc{Dynes},%
+   %
+   \footnote{%
+      P. B. \textsc{Allen} and R. C. \textsc{Dynes}, Phys. Rev. B \textbf{12},
+      905 (1975)
+      }
+   %
+   who define the logarithmic average frequency
+   %
+   \begin{equation*}
+       \omega \sub{log} = \exp
+       \Bigg[
+          \frac 2 \lambda \int_0^\infty
+          \frac{\D \omega} \omega
+          \alpha^2 F(\omega) \ln(\omega)
+       \Bigg]
+   \end{equation*}
+   %
+   and the second-moment average frequency
+   %
+   \begin{equation*}
+       \overline \omega_2 = \sqrt
+       {
+          \frac 2 \lambda \int_0^\infty
+          \D \omega \,
+          \alpha^2 F(\omega) \, \omega
+       }.
+   \end{equation*}
+   %
+   and choose $\overline \omega_2$ for $\omega \sub E$ in Eqs.~\ref{cDOS
+   rescaling} and \ref{rescaling} for rescaling $\mu^*$.
 
    \headline{Acknowledgment}
 
@@ -446,8 +482,10 @@
          \hline
          \multicolumn3l{\textbf{effective parameters} \hfill \texttt{a2F given}} \\
          \hline
-         \tt lambda & electron-phonon coupling    & $\lambda_{i j}$ \\
-         \tt omegaE & \textsc{Einstein} frequency & $\omega \sub E$ \\
+         \tt lambda   & electron-phonon coupling        & $\lambda_{i j}$      \\
+         \tt omegaE   & \textsc{Einstein} frequency     & $\omega \sub E$      \\
+         \tt omegaLog & logarithmic average frequency   & $\omega \sub{log}$   \\
+         \tt omega2nd & second-moment average frequency & $\overline \omega_2$ \\
          \hline
          \multicolumn3l{\textbf{real-axis results} \hfill \texttt{resolution} > 0} \\
          \hline

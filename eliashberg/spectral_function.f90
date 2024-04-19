@@ -19,20 +19,37 @@ contains
    subroutine integrate_a2F(x)
       type(parameters), intent(inout) :: x
 
+      real(dp) :: omegaMax
+
       call lambda_from_a2F(x, x%lambda, 0)
 
       ! matrix-element average best way to obtain scalar frequency?
 
-      x%omegaE = 0.0_dp
+      x%omegaLog = 0.0_dp
+      x%omega2nd = 0.0_dp
 
       do i = 1, x%bands
          do j = 1, x%bands
-            x%omegaE = x%omegaE + exp(2 / x%lambda(j, i) &
+            x%omegaLog = x%omegaLog + exp(2 / x%lambda(j, i) &
                * sum(weight(:, j, i) * log(x%omega) / x%omega))
+            x%omega2nd = x%omega2nd + sqrt(2 / x%lambda(j, i) &
+               * sum(weight(:, j, i) * x%omega))
          end do
       end do
 
-      x%omegaE = x%omegaE / x%bands ** 2
+      x%omegaLog = x%omegaLog / x%bands ** 2
+      x%omega2nd = x%omega2nd / x%bands ** 2
+
+      do i = size(x%omega), 1, -1
+         if (any(x%a2F(i, :, :) .gt. 0.0_dp)) then
+            omegaMax = x%omega(i)
+            exit
+         end if
+      end do
+
+      !x%omegaE = x%omegaLog
+      x%omegaE = x%omega2nd ! choice by Allen and Dynes
+      !x%omegaE = x%omegaMax
    end subroutine integrate_a2F
 
    subroutine lambda_from_a2F(x, lambda, n)

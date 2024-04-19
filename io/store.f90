@@ -56,6 +56,8 @@ contains
 
          write (unit) 'DIM:', 0_i4
          write (unit) 'omegaE:', x%omegaE
+         write (unit) 'omegaLog:', x%omegaLog
+         write (unit) 'omega2nd:', x%omega2nd
       end if
 
       write (unit) 'DIM:'

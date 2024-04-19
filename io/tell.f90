@@ -68,6 +68,12 @@ contains
 
          print "(/, 'effective phonon frequency (eV):', /)"
          print form, x%omegaE
+
+         print "(/, 'logarithmic average phonon frequency (eV):', /)"
+         print form, x%omegaLog
+
+         print "(/, 'second-moment average phonon frequency (eV):', /)"
+         print form, x%omega2nd
       end if
 
       print "(/, 'constant Coulomb contribution (eV):', /)"
