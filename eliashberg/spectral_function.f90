@@ -23,22 +23,11 @@ contains
 
       call lambda_from_a2F(x, x%lambda, 0)
 
-      ! matrix-element average best way to obtain scalar frequency?
+      x%omegaLog = exp(2 / sum(x%lambda) &
+         * sum(sum(sum(weight, 2), 2) * log(x%omega) / x%omega))
 
-      x%omegaLog = 0.0_dp
-      x%omega2nd = 0.0_dp
-
-      do i = 1, x%bands
-         do j = 1, x%bands
-            x%omegaLog = x%omegaLog + exp(2 / x%lambda(j, i) &
-               * sum(weight(:, j, i) * log(x%omega) / x%omega))
-            x%omega2nd = x%omega2nd + sqrt(2 / x%lambda(j, i) &
-               * sum(weight(:, j, i) * x%omega))
-         end do
-      end do
-
-      x%omegaLog = x%omegaLog / x%bands ** 2
-      x%omega2nd = x%omega2nd / x%bands ** 2
+      x%omega2nd = sqrt(2 / sum(x%lambda) &
+         * sum(sum(sum(weight, 2), 2) * x%omega))
 
       do i = size(x%omega), 1, -1
          if (any(x%a2F(i, :, :) .gt. 0.0_dp)) then
