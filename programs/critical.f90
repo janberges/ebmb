@@ -72,7 +72,7 @@ program critical
 
       call solver(status, x)
 
-      if (status .eq. status0) then
+      if (status .ap. status0) then
          print "('Error: Stationary point')"
          stop 1
       end if
