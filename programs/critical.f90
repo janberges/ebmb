@@ -23,6 +23,7 @@ program critical
    logical :: try ! still trying out direction?
 
    integer :: i, j ! band indices
+   integer :: error ! I/O status
 
    call load(x)
 
@@ -71,7 +72,10 @@ program critical
 
       call solver(status, x)
 
-      if (status .eq. status0) stop 'stationary point'
+      if (status .eq. status0) then
+         print "('Error: Stationary point')"
+         stop 1
+      end if
 
       if (sc1 .neqv. status .ge. 1) exit
 
@@ -83,7 +87,8 @@ program critical
             cycle
          end if
 
-         stop 'local extremum'
+         print "('Error: Local extremum')"
+         stop 1
       end if
 
       status0 = status
@@ -108,8 +113,14 @@ program critical
    if (x%tell) print '(' // trim(x%form) // ')', variable
 
    if (x%file .ne. 'none') then
-      open (unit, &
-         file=x%file, action='write', status='replace', access='stream')
+      open (unit, file=x%file, action='write', status='replace', &
+         access='stream', iostat=error)
+
+      if (error .ne. 0) then
+         print "('Error: Cannot open output file ""', A, '""')", trim(x%file)
+         stop 1
+      end if
+
       write (unit) variable
       close (unit)
    end if

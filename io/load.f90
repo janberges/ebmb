@@ -30,6 +30,8 @@ contains
       integer :: i ! band index
       integer :: n ! argument number
 
+      integer :: error ! I/O status
+
       real(dp) :: elements ! number of elements in lambda and muStar
 
       real(dp) :: clip = 15.0_dp ! maximum real-axis frequency (omegaE)
@@ -42,20 +44,27 @@ contains
 
          equals = index(setting, '=')
 
+         if (equals .lt. 2 .or. equals .eq. len(setting)) then
+            print "('Error: Invalid argument ""', A, '""')", setting
+            stop 1
+         end if
+
          lhs = setting(:equals - 1)
          rhs = setting(equals + 1:)
 
+         error = 0
+
          select case (lhs)
-            case ('file'); read (rhs, '(A)') x%file
-            case ('form'); read (rhs, '(A)') x%form
+            case ('file'); x%file = rhs
+            case ('form'); x%form = rhs
 
-            case ('tell'); read (rhs, *) x%tell
+            case ('tell'); read (rhs, *, iostat=error) x%tell
 
-            case ('T'); read (rhs, *) x%T
+            case ('T'); read (rhs, *, iostat=error) x%T
 
-            case ('omegaE');  read (rhs, *) x%omegaE
-            case ('cutoff');  read (rhs, *) x%cutoff
-            case ('cutoffC'); read (rhs, *) x%cutoffC
+            case ('omegaE');  read (rhs, *, iostat=error) x%omegaE
+            case ('cutoff');  read (rhs, *, iostat=error) x%cutoff
+            case ('cutoffC'); read (rhs, *, iostat=error) x%cutoffC
 
             case ('lambda', 'lamda')
                lambda = rhs
@@ -69,53 +78,64 @@ contains
                muC = rhs
                elements = matches(rhs, ',') + 1
 
-            case ('bands'); read (rhs, *) x%bands
+            case ('bands'); read (rhs, *, iostat=error) x%bands
 
             case ('dos', 'DOS'); dos_file = rhs
             case ('a2f', 'a2F'); a2F_file = rhs
 
-            case ('n');  read (rhs, *) x%n
-            case ('mu'); read (rhs, *) x%mu
+            case ('n');  read (rhs, *, iostat=error) x%n
+            case ('mu'); read (rhs, *, iostat=error) x%mu
 
-            case ('conserve'); read (rhs, *) x%conserve
-            case ('chi');      read (rhs, *) x%chi
+            case ('conserve'); read (rhs, *, iostat=error) x%conserve
+            case ('chi');      read (rhs, *, iostat=error) x%chi
 
-            case ('limit'); read (rhs, *) x%limit
+            case ('limit'); read (rhs, *, iostat=error) x%limit
 
-            case ('epsilon'); read (rhs, *) eps
-            case ('error');   read (rhs, *) x%error
-            case ('zero');    read (rhs, *) x%zero
-            case ('rate');    read (rhs, *) x%rate
+            case ('epsilon'); read (rhs, *, iostat=error) eps
+            case ('error');   read (rhs, *, iostat=error) x%error
+            case ('zero');    read (rhs, *, iostat=error) x%zero
+            case ('rate');    read (rhs, *, iostat=error) x%rate
 
-            case ('lower'); read (rhs, *) x%lower
-            case ('upper'); read (rhs, *) x%upper
-            case ('clip');  read (rhs, *) clip
+            case ('lower'); read (rhs, *, iostat=error) x%lower
+            case ('upper'); read (rhs, *, iostat=error) x%upper
+            case ('clip');  read (rhs, *, iostat=error) clip
 
-            case ('eta', '0+'); read (rhs, *) x%eta
+            case ('eta', '0+'); read (rhs, *, iostat=error) x%eta
 
-            case ('resolution'); read (rhs, *) x%resolution
-            case ('measurable'); read (rhs, *) x%measurable
+            case ('resolution'); read (rhs, *, iostat=error) x%resolution
+            case ('measurable'); read (rhs, *, iostat=error) x%measurable
 
-            case ('unscale'); read (rhs, *) x%unscale
-            case ('rescale'); read (rhs, *) x%rescale
-            case ('imitate'); read (rhs, *) x%imitate
+            case ('unscale'); read (rhs, *, iostat=error) x%unscale
+            case ('rescale'); read (rhs, *, iostat=error) x%rescale
+            case ('imitate'); read (rhs, *, iostat=error) x%imitate
 
-            case ('normal'); read (rhs, *) x%normal
+            case ('normal'); read (rhs, *, iostat=error) x%normal
 
-            case ('power'); read (rhs, *) x%power
+            case ('power'); read (rhs, *, iostat=error) x%power
 
             case default
-               print "('Ignored unknown parameter ''', A, '''')", lhs
+               print "('Error: Unknown parameter ""', A, '""')", lhs
+               stop 1
          end select
+
+         if (error .ne. 0) then
+            print "('Error: Invalid value for parameter ""', A, '""')", lhs
+            stop 1
+         end if
       end do
 
-      if (x%bands .eq. -1) x%bands = nint(sqrt(elements))
+      if (x%bands .eq. -1) x%bands = int(sqrt(elements))
 
       allocate(x%lambda(x%bands, x%bands))
       allocate(x%muStar(x%bands, x%bands))
 
       if (allocated(lambda)) then
-         read (lambda, *) x%lambda
+         read (lambda, *, iostat=error) x%lambda
+
+         if (error .ne. 0) then
+            print "('Error: ""lambda"" needs ', I0, ' numbers')", size(x%lambda)
+            stop 1
+         end if
       else
          x%lambda(:, :) = 0
 
@@ -125,10 +145,21 @@ contains
       end if
 
       if (allocated(muC)) then
-         read (muC, *) x%muStar
+         read (muC, *, iostat=error) x%muStar
+
+         if (error .ne. 0) then
+            print "('""muC"" needs ', I0, ' numbers')", size(x%muStar)
+            stop 1
+         end if
+
          x%unscale = .false.
       else if (allocated(muStar)) then
-         read (muStar, *) x%muStar
+         read (muStar, *, iostat=error) x%muStar
+
+         if (error .ne. 0) then
+            print "('""muStar"" needs ', I0, ' numbers')", size(x%muStar)
+            stop 1
+         end if
       else
          x%muStar(:, :) = 0
       end if
@@ -158,7 +189,12 @@ contains
       real(dp) :: test
       integer :: error
 
-      open (unit, file=file, action='read', status='old')
+      open (unit, file=file, action='read', status='old', iostat=error)
+
+      if (error .ne. 0) then
+         print "('Error: Cannot open DOS file ""', A, '""')", file
+         stop 1
+      end if
 
       n = 0 ! number of sample points
 
@@ -174,7 +210,13 @@ contains
       allocate(x%dos(n, x%bands)) ! density of states (a.u.)
 
       do m = 1, n
-         read (unit, *) x%energy(m), x%dos(m, :)
+         read (unit, *, iostat=error) x%energy(m), x%dos(m, :)
+
+         if (error .ne. 0) then
+            print "('Error: DOS file needs ', I0, ' numbers per line')", &
+               x%bands + 1
+            stop 1
+         end if
       end do
 
       close (unit)
@@ -189,7 +231,12 @@ contains
       real(dp) :: test
       integer :: error
 
-      open (unit, file=file, action='read', status='old')
+      open (unit, file=file, action='read', status='old', iostat=error)
+
+      if (error .ne. 0) then
+         print "('Error: Cannot open a2F file ""', A, '""')", file
+         stop 1
+      end if
 
       n = 0 ! number of sample points
 
@@ -208,7 +255,13 @@ contains
 
       do m = 1, n
          do while (x%omega(m) .ap. 0.0_dp)
-            read (unit, *) x%omega(m), x%a2F(m, :, :)
+            read (unit, *, iostat=error) x%omega(m), x%a2F(m, :, :)
+
+            if (error .ne. 0) then
+               print "('Error: a2F file needs ', I0, ' numbers per line')", &
+                  x%bands ** 2 + 1
+               stop 1
+            end if
          end do
       end do
 

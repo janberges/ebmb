@@ -16,8 +16,15 @@ contains
       type(continued), intent(in) :: re
       type(occupancy), intent(in) :: oc
 
-      open (unit, &
-         file=x%file, action='write', status='replace', access='stream')
+      integer :: error
+
+      open (unit, file=x%file, action='write', status='replace', &
+         access='stream', iostat=error)
+
+      if (error .ne. 0) then
+         print "('Error: Cannot open output file ""', A, '""')", trim(x%file)
+         stop 1
+      end if
 
       write (unit) 'INT:DIM:', 0_i4
       write (unit) 'status:', im%status
