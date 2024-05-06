@@ -1,7 +1,7 @@
 FC = gfortran
 
-flags_gfortran = -std=f2003 -Wall -Wno-maybe-uninitialized -pedantic
-flags_ifort = -O0 -warn all
+flags_gfortran = -std=f2003 -pedantic -Wall -Wno-maybe-uninitialized
+flags_ifort = -O0 -stand f03 -warn all
 
 FFLAGS = ${flags_$(FC)}
 
