@@ -126,7 +126,7 @@ contains
             matsum = 1 / (domega * (nC + 0.5_dp))
          elsewhere
             matsum = x%energy - oc%mu
-            matsum = atan(matsum / (domega * (nC + 0.5_dp))) / matsum
+            matsum = atan2(matsum, domega * (nC + 0.5_dp)) / matsum
          end where
 
          residue = 0
@@ -287,8 +287,7 @@ contains
       end subroutine integrate
 
       subroutine calculate_residue
-         matsum(:) = atan((x%energy - oc%mu) / (domega * (no + 0.5_dp))) &
-            / domega
+         matsum(:) = atan2(x%energy - oc%mu, domega * (no + 0.5_dp)) / domega
 
          residue = 0
 
