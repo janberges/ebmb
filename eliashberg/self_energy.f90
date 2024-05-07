@@ -129,15 +129,11 @@ contains
             matsum = atan2(matsum, domega * (nC + 0.5_dp)) / matsum
          end where
 
-         residue = 0
-
          do i = 1, x%bands
-            residue = residue + sum(weight(:, i) / x%dos(f, i) * matsum)
+            residue = states / pi * sum(weight(:, i) / x%dos(f, i) * matsum)
+
+            muStar(i, :) = muStar(i, :) / (1 + muStar(i, :) * residue)
          end do
-
-         residue = residue * states / pi
-
-         muStar(:, :) = muStar / (1 + muStar * residue)
       end if
 
       allocate(U(0:no - 1, x%bands, x%bands))
