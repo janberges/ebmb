@@ -227,22 +227,23 @@
       \\
       U^*_{i j}(m) &=
       \begin{cases}
-         2 \mu^*_{i j}(N \sub C) & \text{for $m < N \sub C$,} \\
-         0                       & \text{otherwise,}
+         2 \mu^*_{i j}(\omega_{N \sub C}) & \text{for $m < N \sub C$,} \\
+         0                                & \text{otherwise,}
       \end{cases}
       &
-      \frac 1 {\mu^*_{i j}(N \sub C)} &=
+      \frac 1 {\mu^*_{i j}(\omega_{N \sub C})} &=
       \frac 1 {\mu^*_{i j}} + \ln \frac{\omega \sub E}{\omega_{N \sub C}}
       \label{cDOS rescaling}
    \end{align}
    %
-   with the \textsc{Eliashberg} spectral function $\alpha^2 F_{i j}(\omega)$.
-   Alternatively, if the band density $n_i(\epsilon)$ of \textsc{Bloch} states
-   with energy $\epsilon$ per spin, band and unit cell is given,
+   with the \textsc{Eliashberg} spectral function $\alpha^2 F_{i j}(\omega)$
+   and $\mu^*_{i j} = \mu^*_{i j}(\omega \sub E)$ per definition. Alternatively,
+   if the band density $n_i(\epsilon)$ of \textsc{Bloch} states with energy
+   $\epsilon$ per spin, band and unit cell is given,
    %
    \begin{equation}
-       \frac 1 {\mu^*_{i j}(N \sub C)} =
-       \frac 1 {\mu^*_{i j}} + \ln \frac {2 \omega \sub E} D +
+       \frac 1 {\mu^*_{i j}(\omega_{N \sub C})} =
+       \frac 1 {\mu_{i j}} +
        \frac 1 \pi \int \from{-\infty} \till \infty \D \epsilon
        \frac{n_j(\epsilon)}{n_j(\mu_0)}
        \begin{cases}
