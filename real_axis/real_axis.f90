@@ -3,7 +3,7 @@
 
 module real_axis
    use global
-   use real_axis_pade
+   use pade
    use tools, only: interval
    implicit none
 

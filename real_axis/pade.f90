@@ -1,7 +1,7 @@
 ! Copyright (C) 2016-2024 Jan Berges
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
-module real_axis_pade
+module pade
    use global
    implicit none
 
@@ -56,4 +56,4 @@ contains
 
       continuation = cmplx(frac, kind=dp)
    end function continuation
-end module real_axis_pade
+end module pade
