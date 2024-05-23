@@ -1,9 +1,6 @@
 .*
 !.gitignore
 
-*.mod
-*.o
-
 *.egg-info
 *.pyc
 dist
