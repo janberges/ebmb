@@ -16,7 +16,7 @@ modules_ifort = -module modules
 
 override FFLAGS += ${modules_$(FC)}
 
-needless += eliashberg/eigenvalue.o eliashberg/eigenvalue_cdos.o eliashberg/self_energy.o eliashberg/self_energy_cdos.o eliashberg/spectral_function.o io/load.o io/store.o io/tell.o programs/critical.o programs/ebmb.o programs/tc.o real_axis/dos.o real_axis/pade.o real_axis/real_axis.o universal/eigenvalues.o universal/formatting.o universal/global.o universal/tools.o modules/*.mod
+needless += src/critical.o src/dos.o src/ebmb.o src/eigenvalues.o src/eliashberg/eigenvalue.o src/eliashberg/eigenvalue_cdos.o src/eliashberg/self_energy.o src/eliashberg/self_energy_cdos.o src/eliashberg/spectral_function.o src/formatting.o src/global.o src/io/load.o src/io/store.o src/io/tell.o src/pade.o src/real_axis.o src/tc.o src/tools.o modules/*.mod
 
 programs = critical ebmb tc
 
@@ -36,24 +36,24 @@ $(programs):
 %.o: %.f90
 	$(FC) $(FFLAGS) -c $< -o $@
 
-critical: eliashberg/eigenvalue.o eliashberg/eigenvalue_cdos.o eliashberg/self_energy.o eliashberg/spectral_function.o io/load.o programs/critical.o universal/eigenvalues.o universal/global.o universal/tools.o
-ebmb: eliashberg/self_energy.o eliashberg/self_energy_cdos.o eliashberg/spectral_function.o io/load.o io/store.o io/tell.o programs/ebmb.o real_axis/dos.o real_axis/pade.o real_axis/real_axis.o universal/formatting.o universal/global.o universal/tools.o
-tc: eliashberg/self_energy.o eliashberg/self_energy_cdos.o eliashberg/spectral_function.o io/load.o programs/tc.o universal/formatting.o universal/global.o universal/tools.o
+critical: src/critical.o src/eigenvalues.o src/eliashberg/eigenvalue.o src/eliashberg/eigenvalue_cdos.o src/eliashberg/self_energy.o src/eliashberg/spectral_function.o src/global.o src/io/load.o src/tools.o
+ebmb: src/dos.o src/ebmb.o src/eliashberg/self_energy.o src/eliashberg/self_energy_cdos.o src/eliashberg/spectral_function.o src/formatting.o src/global.o src/io/load.o src/io/store.o src/io/tell.o src/pade.o src/real_axis.o src/tools.o
+tc: src/eliashberg/self_energy.o src/eliashberg/self_energy_cdos.o src/eliashberg/spectral_function.o src/formatting.o src/global.o src/io/load.o src/tc.o src/tools.o
 
-eliashberg/eigenvalue.o: eliashberg/self_energy.o universal/eigenvalues.o universal/global.o
-eliashberg/eigenvalue_cdos.o: eliashberg/spectral_function.o universal/eigenvalues.o universal/global.o
-eliashberg/self_energy.o: eliashberg/spectral_function.o universal/global.o universal/tools.o
-eliashberg/self_energy_cdos.o: eliashberg/spectral_function.o universal/global.o
-eliashberg/spectral_function.o: universal/global.o universal/tools.o
-io/load.o: eliashberg/spectral_function.o universal/global.o universal/tools.o
-io/store.o: universal/global.o
-io/tell.o: universal/formatting.o universal/global.o
-programs/critical.o: eliashberg/eigenvalue.o eliashberg/eigenvalue_cdos.o io/load.o universal/global.o
-programs/ebmb.o: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o io/store.o io/tell.o real_axis/dos.o real_axis/real_axis.o universal/global.o
-programs/tc.o: eliashberg/self_energy.o eliashberg/self_energy_cdos.o io/load.o universal/formatting.o universal/global.o
-real_axis/dos.o: eliashberg/self_energy.o universal/global.o
-real_axis/pade.o: universal/global.o
-real_axis/real_axis.o: real_axis/pade.o universal/global.o universal/tools.o
-universal/eigenvalues.o: universal/global.o universal/tools.o
-universal/formatting.o: universal/global.o
-universal/tools.o: universal/global.o
+src/critical.o: src/eliashberg/eigenvalue.o src/eliashberg/eigenvalue_cdos.o src/global.o src/io/load.o
+src/dos.o: src/eliashberg/self_energy.o src/global.o
+src/ebmb.o: src/dos.o src/eliashberg/self_energy.o src/eliashberg/self_energy_cdos.o src/global.o src/io/load.o src/io/store.o src/io/tell.o src/real_axis.o
+src/eigenvalues.o: src/global.o src/tools.o
+src/eliashberg/eigenvalue.o: src/eigenvalues.o src/eliashberg/self_energy.o src/global.o
+src/eliashberg/eigenvalue_cdos.o: src/eigenvalues.o src/eliashberg/spectral_function.o src/global.o
+src/eliashberg/self_energy.o: src/eliashberg/spectral_function.o src/global.o src/tools.o
+src/eliashberg/self_energy_cdos.o: src/eliashberg/spectral_function.o src/global.o
+src/eliashberg/spectral_function.o: src/global.o src/tools.o
+src/formatting.o: src/global.o
+src/io/load.o: src/eliashberg/spectral_function.o src/global.o src/tools.o
+src/io/store.o: src/global.o
+src/io/tell.o: src/formatting.o src/global.o
+src/pade.o: src/global.o
+src/real_axis.o: src/global.o src/pade.o src/tools.o
+src/tc.o: src/eliashberg/self_energy.o src/eliashberg/self_energy_cdos.o src/formatting.o src/global.o src/io/load.o
+src/tools.o: src/global.o
