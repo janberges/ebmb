@@ -2,6 +2,7 @@ FC = gfortran
 
 flags_gfortran = -std=f2003 -pedantic -Wall -Wno-maybe-uninitialized
 flags_ifort = -O0 -stand f03 -warn all
+flags_ifx = ${flags_ifort}
 
 FFLAGS = ${flags_$(FC)}
 
@@ -13,6 +14,7 @@ needless = .DS_Store ebmb.pyc manual/ebmb.aux manual/.ebmb.lb manual/ebmb.log ma
 
 modules_gfortran = -Jbuild
 modules_ifort = -module build
+modules_ifx = ${modules_ifort}
 
 override FFLAGS += ${modules_$(FC)}
 
