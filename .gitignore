@@ -1,6 +1,3 @@
-.*
-!.gitignore
-
 *.egg-info
 *.pyc
 dist
