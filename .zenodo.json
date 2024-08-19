@@ -7,5 +7,12 @@
         }
     ],
 
-    "title": "ebmb: Solve multiband Eliashberg equations"
+    "title": "ebmb: Solve multiband Eliashberg equations",
+
+    "related_identifiers": [
+        {
+            "relation": "isDocumentedBy",
+            "identifier": "https://janberges.de/theses/Master_Jan_Berges.pdf"
+        }
+    ]
 }
