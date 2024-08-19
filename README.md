@@ -15,6 +15,10 @@ The makefile is designed for the GNU or Intel Fortran compiler:
 
 Parts of the program are inspired by the EPW code and work of Malte Roesner.
 
+## Reference
+
+ebmb is stored on Zenodo: <https://doi.org/10.5281/zenodo.13341224>.
+
 ## Licence
 
 This program is free software: you can redistribute it and/or modify it under
