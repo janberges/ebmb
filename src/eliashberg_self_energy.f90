@@ -64,7 +64,7 @@ contains
                B0 = B0 + sum(trapezia * x%energy)
             end do
 
-            mu = (oc%n - 1 + B0) / A0
+            mu = ((oc%n - 1) * states + B0) / A0
 
             if (oc%mu .ap. mu) done = .true.
 
@@ -78,7 +78,7 @@ contains
          matsum(:) = tanh((x%energy - x%mu) / (2 * kB * x%T))
 
          do i = 1, x%bands
-            oc%n = oc%n - sum(weight(:, i) * matsum)
+            oc%n = oc%n - sum(weight(:, i) * matsum) / states
          end do
       end if
 
@@ -110,7 +110,7 @@ contains
          end if
 
          do i = 1, x%bands
-            g(n, :, i) = g(n, :, i) * states / x%dos(f, :)
+            g(n, :, i) = g(n, :, i) / x%dos(f, :)
          end do
       end do
 
@@ -138,7 +138,7 @@ contains
          end if
 
          do i = 1, x%bands
-            residue = states / pi * sum(weight(:, i) / x%dos(f, i) * matsum)
+            residue = sum(weight(:, i) / x%dos(f, i) * matsum) / pi
 
             muStar(i, :) = muStar(i, :) / (1 + muStar(i, :) * residue)
          end do
@@ -150,7 +150,7 @@ contains
          U(n, :, :) = -2 * muStar
 
          do i = 1, x%bands
-            U(n, :, i) = U(n, :, i) * states / x%dos(f, :)
+            U(n, :, i) = U(n, :, i) / x%dos(f, :)
          end do
       end do
 
@@ -229,8 +229,8 @@ contains
          if (x%conserve) then
             call calculate_residue
 
-            mu = ((oc%n - 1) / (4 * kB * x%T) + sum(A * im%chi + B) + residue) &
-               / sum(A)
+            mu = ((oc%n - 1) * states / (4 * kB * x%T) &
+               + sum(A * im%chi + B) + residue) / sum(A)
 
             done = done .and. (oc%mu .ap. mu)
 
@@ -255,7 +255,7 @@ contains
 
       call calculate_residue
 
-      oc%n = 1 - 4 * kB * x%T * (sum(integral_chi) + residue)
+      oc%n = 1 - 4 * kB * x%T * (sum(integral_chi) + residue) / states
 
       if (present(kernel)) then
          allocate(kernel(x%bands * no, x%bands * no))
@@ -327,7 +327,5 @@ contains
       weight(:, :) = weight * x%dos
 
       states = sum(weight)
-
-      weight(:, :) = weight / states
    end subroutine initialize
 end module eliashberg_self_energy
