@@ -34,7 +34,7 @@ module global
       real(dp), allocatable :: muStar(:, :) ! Coulomb pseudo-potential
 
       real(dp), allocatable :: energy(:) ! free-electron energy (eV)
-      real(dp), allocatable :: dos(:, :) ! density of Bloch states (a.u.)
+      real(dp), allocatable :: dos(:, :) ! density of Bloch states (1/eV)
 
       real(dp), allocatable :: omega(:) ! phonon energy (frequency argument)
       real(dp), allocatable :: a2F(:, :, :) ! Eliashberg spectral function
@@ -88,7 +88,7 @@ module global
       complex(dp), allocatable :: chi   (:, :) ! energy shift (eV)
       complex(dp), allocatable :: Delta (:, :) ! gap (eV)
       real   (dp), allocatable :: Delta0(:)    ! measurable gap (eV)
-      real   (dp), allocatable :: dos   (:, :) ! quasiparticle density (a.u.)
+      real   (dp), allocatable :: dos   (:, :) ! quasiparticle density (1/eV)
 
       integer(i4), allocatable :: status(:) ! convergence status
    end type continued

@@ -238,8 +238,8 @@
    %
    with the \textsc{Eliashberg} spectral function $\alpha^2 F_{i j}(\omega)$
    and $\mu^*_{i j} = \mu^*_{i j}(\omega \sub E)$ per definition. Alternatively,
-   if the band density $n_i(\epsilon)$ of \textsc{Bloch} states with energy
-   $\epsilon$ per spin, band and unit cell is given,
+   if the density of states $n_i(\epsilon)$ per spin as a function of energy
+   $\epsilon$ is given,
    %
    \begin{equation}
        \frac 1 {\mu^*_{i j}(\omega_{N \sub C})} =
@@ -257,19 +257,19 @@
    \end{equation}
    %
    where $D$ is the electronic bandwidth. $\mu_0$ and $\mu$ are the chemical
-   potentials for free and interacting particles. The corresponding occupancy
-   number $n_0, n \in (0, 2)$ is usually conserved:
+   potentials for free and interacting particles, whose number $n_0, n$
+   (including a factor of 2 for the spin) is usually conserved:
    %
    \begin{equation*}
-      2 \sum_i \int \from{-\infty} \till \infty \D \epsilon
-      \frac{n_i(\epsilon)}{\E^{(\epsilon - \mu_0) / T} + 1}
+      \sum_i \int \from{-\infty} \till \infty \D \epsilon
+      \frac{2 n_i(\epsilon)}{\E^{(\epsilon - \mu_0) / T} + 1}
       = n_0 \overset ! = n
-      \approx 1 - 4 T \sum_i \int \from{-\infty} \till \infty \D \epsilon \,
+      \approx \sum_i \int \from{-\infty} \till \infty \D \epsilon \,
       n_i(\epsilon)
       \Biggl[
-         \sum_{n = 0}^{N - 1}
+          1 - 4 T \sum_{n = 0}^{N - 1}
          \frac{\epsilon - \mu + \chi_i(n)}{\Theta_i(\epsilon, n)}
-         + \frac{\arctan \frac{\epsilon - \mu}{\omega_N}}{2 \pi T}
+         - \frac 2 \pi \arctan \frac{\epsilon - \mu}{\omega_N}
       \Biggr].
    \end{equation*}
    %
@@ -426,9 +426,9 @@
                element at once.
 
             \item
-               \texttt{dos} has lines $\epsilon$/eV $n_1$/a.u.\@ $n_2$/a.u.\@
-               $\dots$ with $\epsilon$ ascending but not necessarily
-               equidistant.
+               \texttt{dos} has lines $\epsilon$/eV $n_1 / \mathrm{eV}^{-1}$
+               $n_2 / \mathrm{eV}^{-1}$ $\dots$ with $\epsilon$ ascending but
+               not necessarily equidistant.
 
             \item
                \texttt{a2F} has lines $\omega$/eV $\alpha^2 F_{1, 1}$ $\alpha^2

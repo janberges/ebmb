@@ -38,11 +38,11 @@ contains
 
       if (initial) call initialize(x)
 
-      if (0 .lt. x%n .and. x%n .lt. 2) then
+      if (0 .lt. x%n .and. x%n .lt. 2 * states) then
          oc%n = x%n
 
-         oc%mu &
-            = (x%energy(1) * (2 - oc%n) + x%energy(size(x%energy)) * oc%n) / 2
+         oc%mu = (x%energy(1) * (2 * states - oc%n) &
+            + x%energy(size(x%energy)) * oc%n) / (2 * states)
 
          done = .false.
 
@@ -64,7 +64,7 @@ contains
                B0 = B0 + sum(trapezia * x%energy)
             end do
 
-            mu = ((oc%n - 1) * states + B0) / A0
+            mu = (oc%n - states + B0) / A0
 
             if (oc%mu .ap. mu) done = .true.
 
@@ -73,12 +73,12 @@ contains
       else
          oc%mu = x%mu
 
-         oc%n = 1
+         oc%n = states
 
          matsum(:) = tanh((x%energy - x%mu) / (2 * kB * x%T))
 
          do i = 1, x%bands
-            oc%n = oc%n - sum(weight(:, i) * matsum) / states
+            oc%n = oc%n - sum(weight(:, i) * matsum)
          end do
       end if
 
@@ -229,7 +229,7 @@ contains
          if (x%conserve) then
             call calculate_residue
 
-            mu = ((oc%n - 1) * states / (4 * kB * x%T) &
+            mu = ((oc%n - states) / (4 * kB * x%T) &
                + sum(A * im%chi + B) + residue) / sum(A)
 
             done = done .and. (oc%mu .ap. mu)
@@ -255,7 +255,7 @@ contains
 
       call calculate_residue
 
-      oc%n = 1 - 4 * kB * x%T * (sum(integral_chi) + residue) / states
+      oc%n = states - 4 * kB * x%T * (sum(integral_chi) + residue)
 
       if (present(kernel)) then
          allocate(kernel(x%bands * no, x%bands * no))
