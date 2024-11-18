@@ -38,7 +38,7 @@ contains
 
       if (initial) call initialize(x)
 
-      if (0 .lt. x%n .and. x%n .lt. 2 * states) then
+      if (x%n .ge. 0) then
          oc%n = x%n
 
          oc%mu = (x%energy(1) * (2 * states - oc%n) &

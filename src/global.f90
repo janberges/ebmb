@@ -42,8 +42,8 @@ module global
       logical :: ldos = .false. ! density of states given?
       logical :: la2F = .false. ! Eliashberg spectral function given?
 
-      real(dp) ::  n = 0.0_dp ! initial occupancy number
-      real(dp) :: mu = 0.0_dp ! initial chemical potential (eV)
+      real(dp) ::  n = -1.0_dp ! initial occupancy number
+      real(dp) :: mu =  0.0_dp ! initial chemical potential (eV)
 
       logical :: conserve = .true. ! conserve particle number?
       logical :: chi      = .true. ! consider energy shift?
