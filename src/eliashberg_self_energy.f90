@@ -229,8 +229,8 @@ contains
          if (x%conserve) then
             call calculate_residue
 
-            mu = ((oc%n - states) / (4 * kB * x%T) &
-               + sum(A * im%chi + B) + residue) / sum(A)
+            mu = ((oc%n - states + residue) / (4 * kB * x%T) &
+               + sum(A * im%chi + B)) / sum(A)
 
             done = done .and. (oc%mu .ap. mu)
 
@@ -255,7 +255,7 @@ contains
 
       call calculate_residue
 
-      oc%n = states - 4 * kB * x%T * (sum(integral_chi) + residue)
+      oc%n = states - 4 * kB * x%T * sum(integral_chi) - residue
 
       if (present(kernel)) then
          allocate(kernel(x%bands * no, x%bands * no))
@@ -291,7 +291,7 @@ contains
       end subroutine integrate
 
       subroutine calculate_residue
-         matsum(:) = atan2(x%energy - oc%mu, domega * (no + 0.5_dp)) / domega
+         matsum(:) = 2 / pi * atan2(x%energy - oc%mu, domega * (no + 0.5_dp))
 
          residue = 0
 
