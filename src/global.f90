@@ -123,5 +123,4 @@ contains
 
       na = abs(lhs - rhs) .gt. eps
    end function na
-
 end module global
