@@ -53,6 +53,9 @@ contains
       form = edit('(x)')
 
       if (x%ldos) then
+         print "(/, 'integral of density of states:', /)"
+         print form, oc%states
+
          print "(/, 'initial and final occupancy number:', /)"
          print form, oc%n0, oc%n
 

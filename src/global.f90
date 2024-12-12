@@ -94,6 +94,7 @@ module global
    end type continued
 
    type occupancy
+      real(dp) :: states  ! integral of density of states
       real(dp) :: n0, n   ! initial and final occupancy number
       real(dp) :: mu0, mu ! initial and final chemical potential (eV)
    end type occupancy

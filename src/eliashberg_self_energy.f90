@@ -12,7 +12,6 @@ module eliashberg_self_energy
 
    logical :: initial = .true.
 
-   real(dp) :: states
    real(dp), allocatable :: weight(:, :), trapezia(:), matsum(:)
 
 contains
@@ -36,13 +35,13 @@ contains
       integer :: step, i, j, n, m, p, q, no, nC, f
       logical :: done
 
-      if (initial) call initialize(x)
+      if (initial) call initialize(x, oc)
 
       if (x%n .ge. 0) then
          oc%n = x%n
 
-         oc%mu = (x%energy(1) * (2 * states - oc%n) &
-            + x%energy(size(x%energy)) * oc%n) / (2 * states)
+         oc%mu = (x%energy(1) * (2 * oc%states - oc%n) &
+            + x%energy(size(x%energy)) * oc%n) / (2 * oc%states)
 
          done = .false.
 
@@ -64,7 +63,7 @@ contains
                B0 = B0 + sum(trapezia * x%energy)
             end do
 
-            mu = (oc%n - states + B0) / A0
+            mu = (oc%n - oc%states + B0) / A0
 
             if (oc%mu .ap. mu) done = .true.
 
@@ -73,7 +72,7 @@ contains
       else
          oc%mu = x%mu
 
-         oc%n = states
+         oc%n = oc%states
 
          matsum(:) = tanh((x%energy - x%mu) / (2 * kB * x%T))
 
@@ -229,7 +228,7 @@ contains
          if (x%conserve) then
             call calculate_residue
 
-            mu = ((oc%n - states + residue) / (4 * kB * x%T) &
+            mu = ((oc%n - oc%states + residue) / (4 * kB * x%T) &
                + sum(A * im%chi + B)) / sum(A)
 
             done = done .and. (oc%mu .ap. mu)
@@ -255,7 +254,7 @@ contains
 
       call calculate_residue
 
-      oc%n = states - 4 * kB * x%T * sum(integral_chi) - residue
+      oc%n = oc%states - 4 * kB * x%T * sum(integral_chi) - residue
 
       if (present(kernel)) then
          allocate(kernel(x%bands * no, x%bands * no))
@@ -302,8 +301,9 @@ contains
 
    end subroutine self_energy
 
-   subroutine initialize(x)
+   subroutine initialize(x, oc)
       type(parameters), intent(in) :: x
+      type(occupancy), intent(out) :: oc
 
       integer :: i
 
@@ -326,6 +326,6 @@ contains
 
       weight(:, :) = weight * x%dos
 
-      states = sum(weight)
+      oc%states = sum(weight)
    end subroutine initialize
 end module eliashberg_self_energy

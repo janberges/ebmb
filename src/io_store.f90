@@ -43,6 +43,8 @@ contains
 
          write (unit) 'DIM:', 0_i4
 
+         write (unit) 'states:', oc%states
+
          write (unit) 'n0:', oc%n0
          write (unit) "n:", oc%n
 

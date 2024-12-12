@@ -16,6 +16,8 @@ results = ebmb.get(
    resolution=10001,
    )
 
+print('Integral of DOS: %g' % results['states'])
+
 plt.plot(e, dos)
 plt.plot(results['omega'] + results['mu'], results['DOS'])
 
