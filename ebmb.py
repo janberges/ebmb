@@ -213,6 +213,52 @@ def dos(file, epsilon, domain, filters=[], resolution=101, replace=True):
 
     return e, dos if pockets > 1 else dos[:, 0]
 
+def chain_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, replace=True):
+    """Calculate density of states of 1D lattice and save it to file.
+
+    Parameters
+    ----------
+    file : str
+        Path to output file.
+    de : float
+        Energy resolution.
+    t : float
+        Hopping parameter.
+    bandwidth : float
+        Alternatively, bandwith.
+    replace : bool
+        Overwrite existing output file?
+
+    Returns
+    -------
+    ndarray
+        Energy.
+    ndarray
+        Density of states.
+    """
+    if not replace and path.exists(file):
+        return
+
+    if bandwidth is not None:
+        t = bandwidth / 4
+
+    points = int(round(4 * t / de)) + 1
+    points += 1 - points % 2
+
+    e, de = np.linspace(-2 * t, 2 * t, points, retstep=True)
+
+    dos = np.empty(points)
+
+    dos[1:-1] = 1 / np.sqrt(1 - (e[1:-1] / (2 * t)) ** 2) / (2 * np.pi * t)
+
+    dos[0] = dos[-1] = 1 / de - sum(dos[1:-1])
+
+    with open(file, 'w') as out:
+        for i in range(points):
+            out.write('% .10f %.10f\n' % (e[i], dos[i]))
+
+    return e, dos
+
 def square_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, replace=True):
     """Calculate density of states of square lattice and save it to file.
 
