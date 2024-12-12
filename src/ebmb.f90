@@ -28,7 +28,11 @@ program ebmb
    call realize(x, im, re)
 
    if (x%ldos) then
-      call density_of_states(x, re, oc)
+      if (x%stable) then
+         call density_of_states_stable(x, im, re, oc)
+      else
+         call density_of_states(x, re, oc)
+      end if
    end if
 
    if (x%file .ne. 'none') call store(x, im, re, oc)

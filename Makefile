@@ -43,7 +43,7 @@ bin/ebmb: build/dos.o build/ebmb.o build/eliashberg_self_energy.o build/eliashbe
 bin/tc: build/eliashberg_self_energy.o build/eliashberg_self_energy_cdos.o build/eliashberg_spectral_function.o build/formatting.o build/global.o build/io_load.o build/tc.o build/tools.o
 
 build/critical.o: build/eliashberg_eigenvalue.o build/eliashberg_eigenvalue_cdos.o build/global.o build/io_load.o
-build/dos.o: build/eliashberg_self_energy.o build/global.o
+build/dos.o: build/eliashberg_self_energy.o build/global.o build/pade.o
 build/ebmb.o: build/dos.o build/eliashberg_self_energy.o build/eliashberg_self_energy_cdos.o build/global.o build/io_load.o build/io_store.o build/io_tell.o build/real_axis.o
 build/eigenvalues.o: build/global.o build/tools.o
 build/eliashberg_eigenvalue.o: build/eigenvalues.o build/eliashberg_self_energy.o build/global.o

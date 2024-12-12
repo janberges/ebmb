@@ -4,10 +4,11 @@
 module dos
    use global
    use eliashberg_self_energy, only: weight
+   use pade
    implicit none
 
    private
-   public :: density_of_states
+   public :: density_of_states, density_of_states_stable
 
 contains
 
@@ -37,4 +38,33 @@ contains
 
       re%dos(:, :) = abs(re%dos)
    end subroutine density_of_states
+
+   subroutine density_of_states_stable(x, im, re, oc)
+      type(parameters), intent(in) :: x
+      type(matsubara), intent(in) :: im
+      type(continued), intent(inout) :: re
+      type(occupancy), intent(in) :: oc
+
+      integer :: i, n
+
+      real(dp) :: omg, eps(size(x%energy))
+      complex(dp) :: green(size(im%omega))
+
+      allocate(re%dos(x%resolution, x%bands))
+
+      do i = 1, x%bands
+         do n = 1, size(im%omega)
+            omg = im%Z(n, i) * im%omega(n)
+
+            eps(:) = x%energy - oc%mu + im%chi(n, i)
+
+            green(n) = -sum(weight(:, i) * cmplx(eps, omg, dp) &
+               / (omg ** 2 + eps ** 2 + im%phi(n, i) ** 2))
+         end do
+
+         call coefficients(im%omega, green)
+
+         re%dos(:, i) = -aimag(continuation(cmplx(re%omega, x%eta, dp))) / pi
+      end do
+   end subroutine density_of_states_stable
 end module dos

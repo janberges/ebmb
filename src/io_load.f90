@@ -109,6 +109,7 @@ contains
             case ('rescale'); read (rhs, *, iostat=error) x%rescale
             case ('imitate'); read (rhs, *, iostat=error) x%imitate
 
+            case ('stable'); read (rhs, *, iostat=error) x%stable
             case ('normal'); read (rhs, *, iostat=error) x%normal
 
             case ('power'); read (rhs, *, iostat=error) x%power

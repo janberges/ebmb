@@ -66,6 +66,7 @@ module global
       logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
       logical :: imitate = .false. ! cut off renormalization function?
 
+      logical :: stable = .false. ! calculate quasiparticle DOS differently?
       logical :: normal = .false. ! enforce normal state?
 
       logical :: power = .true. ! use power method for single band?

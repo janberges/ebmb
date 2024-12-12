@@ -36,7 +36,7 @@ contains
 
       if (x%measurable .or. x%resolution .gt. 0) then
          do i = 1, x%bands
-            call coefficients(im%omega, im%Delta(:, i))
+            call coefficients(im%omega, cmplx(im%Delta(:, i), kind=dp))
 
             if (x%measurable) then
                re%Delta0(i) = 1
@@ -63,11 +63,11 @@ contains
 
                re%Delta(:, i) = continuation(omega)
 
-               call coefficients(im%omega, im%Z(:, i))
+               call coefficients(im%omega, cmplx(im%Z(:, i), kind=dp))
                re%Z(:, i) = continuation(omega)
 
                if (x%ldos) then
-                  call coefficients(im%omega, im%chi(:, i))
+                  call coefficients(im%omega, cmplx(im%chi(:, i), kind=dp))
                   re%chi(:, i) = continuation(omega)
                end if
             end if

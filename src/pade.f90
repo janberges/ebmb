@@ -14,7 +14,8 @@ module pade
 contains
 
    subroutine coefficients(z, u)
-      real(dp), intent(in) :: z(:), u(:)
+      real(dp), intent(in) :: z(:)
+      complex(dp), intent(in) :: u(:)
 
       complex(dp), parameter :: i = (0, 1)
       integer :: p
@@ -24,7 +25,7 @@ contains
       if (allocated(c)) deallocate(c)
       allocate(c(n, n))
 
-      if (all(u .ap. 0.0_dp)) then
+      if (all(abs(u) .ap. 0.0_dp)) then
          c(:, :) = 0
          return
       end if
