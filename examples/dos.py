@@ -8,12 +8,14 @@ e, dos = ebmb.square_dos('dos.in')
 results = ebmb.get(
    tell=False,
    normal=False,
+   lamda=2.0,
    dos='dos.in',
-   mu=0.5 * e[-1],
-   lower=1.6 * e[0],
-   upper=0.6 * e[-1],
+   mu=0.5,
+   lower=-0.25,
+   upper=+0.25,
    eta=1e-4,
    resolution=10001,
+   stable=True,
    )
 
 print('Integral of DOS: %g' % results['states'])
