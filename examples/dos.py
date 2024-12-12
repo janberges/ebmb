@@ -18,7 +18,7 @@ results = ebmb.get(
 
 print('Integral of DOS: %g' % results['states'])
 
-plt.plot(e, dos)
+plt.fill_between(e, dos, color='lightgray')
 plt.plot(results['omega'] + results['mu'], results['DOS'])
 
 plt.show()
