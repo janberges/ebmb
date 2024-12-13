@@ -27,7 +27,7 @@ program ebmb
 
    call realize(x, im, re)
 
-   if (x%ldos) then
+   if (x%ldos .and. x%resolution .gt. 0) then
       if (x%stable) then
          call density_of_states_stable(x, im, re, oc)
       else
