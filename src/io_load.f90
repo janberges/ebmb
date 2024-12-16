@@ -83,6 +83,8 @@ contains
             case ('dos', 'DOS'); dos_file = rhs
             case ('a2f', 'a2F'); a2F_file = rhs
 
+            case ('dimensionless'); read (rhs, *, iostat=error) x%dimensionless
+
             case ('n');  read (rhs, *, iostat=error) x%n
             case ('mu'); read (rhs, *, iostat=error) x%mu
 

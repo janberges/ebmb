@@ -12,7 +12,7 @@ module eliashberg_self_energy
 
    logical :: initial = .true.
 
-   real(dp), allocatable :: weight(:, :), trapezia(:), matsum(:)
+   real(dp), allocatable :: weight(:, :), trapezia(:), matsum(:), dosef(:)
 
 contains
 
@@ -32,7 +32,7 @@ contains
       real(dp), allocatable :: integral_phi(:, :)
       real(dp), allocatable :: integral_chi(:, :)
 
-      integer :: step, i, j, n, m, p, q, no, nC, f
+      integer :: step, i, j, n, m, p, q, no, nC
       logical :: done
 
       if (initial) call initialize(x, oc)
@@ -84,7 +84,11 @@ contains
       oc%n0  = oc%n
       oc%mu0 = oc%mu
 
-      f = minloc(abs(x%energy - oc%mu), 1)
+      if (x%dimensionless) then
+         dosef(:) = x%dos(minloc(abs(x%energy - oc%mu), 1), :)
+      else
+         dosef(:) = 1.0_dp
+      end if
 
       domega = 2 * pi * kB * x%T
 
@@ -109,7 +113,7 @@ contains
          end if
 
          do i = 1, x%bands
-            g(n, :, i) = g(n, :, i) / x%dos(f, :)
+            g(n, :, i) = g(n, :, i) / dosef
          end do
       end do
 
@@ -137,7 +141,7 @@ contains
          end if
 
          do i = 1, x%bands
-            residue = sum(weight(:, i) / x%dos(f, i) * matsum) / pi
+            residue = sum(weight(:, i) / dosef(i) * matsum) / pi
 
             muStar(i, :) = muStar(i, :) / (1 + muStar(i, :) * residue)
          end do
@@ -149,7 +153,7 @@ contains
          U(n, :, :) = -2 * muStar
 
          do i = 1, x%bands
-            U(n, :, i) = U(n, :, i) / x%dos(f, :)
+            U(n, :, i) = U(n, :, i) / dosef
          end do
       end do
 
@@ -317,6 +321,9 @@ contains
 
       if (allocated(matsum)) deallocate(matsum)
       allocate(matsum(size(x%energy)))
+
+      if (allocated(dosef)) deallocate(dosef)
+      allocate(dosef(size(x%energy)))
 
       call differential(x%energy, weight(:, 1))
 
