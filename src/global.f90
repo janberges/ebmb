@@ -9,7 +9,10 @@ module global
    integer, parameter :: i4 = selected_int_kind(9)   ! signed integer (4 B)
 
    real(dp), parameter :: pi = 4 * atan(1.0_dp) ! 3.14159...
-   real(dp), parameter :: kB = 8.61733e-5_dp    ! Boltzmann constant (eV/K)
+
+   real(dp), parameter :: eVSI = 1.602176634e-19_dp ! electronvolt (J)
+   real(dp), parameter :: kBSI = 1.380649e-23_dp    ! Boltzmann constant (J/K)
+   real(dp), parameter :: kB = kBSI / eVSI          ! Boltzmann constant (eV/K)
 
    integer, parameter :: unit = 11 ! file unit number
 
