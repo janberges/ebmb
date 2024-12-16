@@ -28,10 +28,15 @@ contains
 
       if (x%resolution .gt. 0) then
          allocate(re%omega(x%resolution))
+         allocate(omega(x%resolution))
          allocate(re%Delta(x%resolution, x%bands))
          allocate(re%Z(x%resolution, x%bands))
 
          if (x%ldos) allocate(re%chi(x%resolution, x%bands))
+
+         call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true.)
+
+         omega(:) = cmplx(re%omega, x%eta, dp)
       end if
 
       if (x%measurable .or. x%resolution .gt. 0) then
@@ -54,13 +59,6 @@ contains
             end if
 
             if (x%resolution .gt. 0) then
-               call interval(re%omega, x%lower, x%upper, &
-                  lower=.true., upper=.true.)
-
-               allocate(omega(x%resolution))
-
-               omega(:) = cmplx(re%omega, x%eta, dp)
-
                re%Delta(:, i) = continuation(omega)
 
                call coefficients(im%omega, cmplx(im%Z(:, i), kind=dp))
