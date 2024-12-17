@@ -84,7 +84,7 @@ contains
       oc%n0  = oc%n
       oc%mu0 = oc%mu
 
-      if (x%dimensionless) then
+      if (x%divdos) then
          dosef(:) = x%dos(minloc(abs(x%energy - oc%mu), 1), :)
       else
          dosef(:) = 1.0_dp

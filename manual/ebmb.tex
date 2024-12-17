@@ -383,7 +383,6 @@
          \tt bands         & 1           & 1                & --                  & number of bands                            & $+$ & $+$ & $+$ & $-$ \\[\gap]
          \tt dos, DOS      & \tt none    & --               & --                  & file with density of states                & $+$ & $+$ & $+$ & $-$ \\
          \tt a2f, a2F      & \tt none    & --               & --                  & file with \textsc{Eliashberg} function     & $+$ & $+$ & $+$ & $-$ \\[\gap]
-         \tt dimensionless & \tt true    & --               & --                  & include $n_i(\mu_0)$ in couplings?         & $+$ & $+$ & $+$ & $-$ \\[\gap]
          \tt n             & --          & 1                & $n_0$               & initial occupancy number                   & $+$ & $+$ & $+$ & $-$ \\
          \tt mu            & 0           & eV               & $\mu_0$             & initial chemical potential                 & $+$ & $+$ & $+$ & $-$ \\
          \tt conserve      & \tt true    & --               & --                  & conserve particle number?                  & $+$ & $+$ & $+$ & $-$ \\
@@ -402,6 +401,7 @@
          \tt unscale       & \tt true    & --               & --                  & estimate missing {\tt muC} from {\tt mu*}? & $+$ & $+$ & $+$ & $-$ \\
          \tt rescale       & \tt true    & --               & --                  & use $\mu^*_{i j}$ rescaled for cutoff?     & $+$ & $+$ & $+$ & $-$ \\
          \tt imitate       & \tt false   & --               & --                  & use $Z_i(n)$ biased by cutoff?             & $-$ & $-$ & $+$ & $-$ \\[\gap]
+         \tt divdos        & \tt true  & -- & -- & divide by $n_j(\mu_0)$ in Eqs.~\ref{Eliashberg equations}, \ref{rescaling}? & $+$ & $+$ & $+$ & $-$ \\
          \tt stable        & \tt false   & --               & --                  & calculate $n_i(\omega)$ differently?       & $+$ & $-$ & $-$ & $-$ \\
          \tt normal        & \tt false   & --               & --                  & enforce normal state?                      & $+$ & $-$ & $-$ & $-$ \\[\gap]
          \tt power         & \tt true    & --               & --                  & power method for single band?              & $-$ & $-$ & $+$ & $-$

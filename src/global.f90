@@ -45,8 +45,6 @@ module global
       logical :: ldos = .false. ! density of states given?
       logical :: la2F = .false. ! Eliashberg spectral function given?
 
-      logical :: dimensionless = .true. ! include Fermi-level DOS in couplings?
-
       real(dp) ::  n = -1.0_dp ! initial occupancy number
       real(dp) :: mu =  0.0_dp ! initial chemical potential (eV)
 
@@ -71,6 +69,7 @@ module global
       logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
       logical :: imitate = .false. ! cut off renormalization function?
 
+      logical :: divdos = .true.  ! divide by DOS at Fermi level?
       logical :: stable = .false. ! calculate quasiparticle DOS differently?
       logical :: normal = .false. ! enforce normal state?
 
