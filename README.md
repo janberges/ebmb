@@ -19,6 +19,8 @@ Parts of the program are inspired by the EPW code and work of Malte Roesner.
 
 ebmb is stored on Zenodo: <https://doi.org/10.5281/zenodo.13341224>.
 
+The theory is described here: <https://scipost.org/theses/132/>.
+
 ## Licence
 
 This program is free software: you can redistribute it and/or modify it under
