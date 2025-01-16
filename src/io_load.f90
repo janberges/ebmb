@@ -112,6 +112,7 @@ contains
             case ('divdos'); read (rhs, *, iostat=error) x%divdos
             case ('stable'); read (rhs, *, iostat=error) x%stable
             case ('normal'); read (rhs, *, iostat=error) x%normal
+            case ('realgw'); read (rhs, *, iostat=error) x%realgw
 
             case ('power'); read (rhs, *, iostat=error) x%power
 

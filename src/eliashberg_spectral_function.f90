@@ -7,7 +7,7 @@ module eliashberg_spectral_function
    implicit none
 
    private
-   public :: integrate_a2F, lambda_from_a2F
+   public :: integrate_a2F, lambda_from_a2F, initialize, weight
 
    logical :: initial = .true.
    integer :: i, j

@@ -5,6 +5,7 @@ program ebmb
    use dos
    use eliashberg_self_energy
    use eliashberg_self_energy_cdos
+   use eliashberg_self_energy_real_axis
    use global
    use io_load
    use io_store
@@ -19,15 +20,17 @@ program ebmb
 
    call load(x)
 
-   if (x%ldos) then
+   if (x%realgw) then
+      call self_energy_real_axis(x, im, re, oc)
+   else if (x%ldos) then
       call self_energy(x, im, oc)
    else
       call self_energy_cdos(x, im)
    end if
 
-   call realize(x, im, re)
+   if (.not. x%realgw) call realize(x, im, re)
 
-   if (x%ldos .and. x%resolution .gt. 0) then
+   if (.not. x%realgw .and. x%ldos .and. x%resolution .gt. 0) then
       if (x%stable) then
          call density_of_states_stable(x, im, re, oc)
       else

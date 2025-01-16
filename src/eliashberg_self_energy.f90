@@ -2,7 +2,7 @@
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
 module eliashberg_self_energy
-   use eliashberg_spectral_function
+   use eliashberg_spectral_function, only: lambda_from_a2F
    use global
    use tools, only: differential
    implicit none

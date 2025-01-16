@@ -72,6 +72,7 @@ module global
       logical :: divdos = .true.  ! divide by DOS at Fermi level?
       logical :: stable = .false. ! calculate quasiparticle DOS differently?
       logical :: normal = .false. ! enforce normal state?
+      logical :: realgw = .false. ! do real-axis GW0 calculation?
 
       logical :: power = .true. ! use power method for single band?
    end type parameters
