@@ -38,8 +38,6 @@ contains
          absent = 'density of states'
       else if (.not. x%la2F) then
          absent = 'Eliashberg spectral function'
-      else if (x%n .ge. 0.0_dp) then
-         absent = 'constant Fermi level (for now)'
       else
          absent = 'none'
       end if
@@ -70,7 +68,6 @@ contains
       allocate(re%dos(x%resolution, x%bands))
 
       allocate(omega(x%resolution))
-      allocate(G0(x%resolution))
       allocate(G(x%resolution))
       allocate(Sigma(x%resolution))
 
@@ -94,14 +91,19 @@ contains
 
       omega = cmplx(re%omega, x%eta, dp)
 
-      oc%mu0 = x%mu
-      oc%mu = x%mu
+      if (x%n .ge. 0) then
+         oc%mu = (x%energy(1) * (2 * oc%states - oc%n) &
+            + x%energy(size(x%energy)) * oc%n) / (2 * oc%states)
+      else
+         oc%mu = x%mu
+      end if
 
-      do n = 1, x%resolution
-         G0(n) = sum(weight(:, 1) / (omega(n) - x%energy + oc%mu0))
-      end do
+      Sigma(:) = (0.0_dp, 0.0_dp)
 
-      oc%n0 = 2 * prefactor * sum(aimag(G0) * fermi_fun(re%omega))
+      call dos(x%n, x%n .ge. 0)
+
+      oc%n0 = oc%n
+      oc%mu0 = oc%mu
 
       do step = 1, x%limit
          if (x%tell) print "('GW iteration ', I0)", step
@@ -117,20 +119,16 @@ contains
             end do
          end do
 
-         Sigma(:) = Sigma + 0.5_dp * oc%n0 * x%muStar(1, 1)
+         Sigma(:) = Sigma + 0.5_dp * oc%n * x%muStar(1, 1)
 
          Sigma(:) = prefactor / dosef * Sigma
 
-         do n = 1, x%resolution
-            G(n) = sum(weight(:, 1) / (omega(n) - x%energy + oc%mu - Sigma(n)))
-         end do
+         G0 = G
+
+         call dos(oc%n0, x%conserve)
 
          if (all(abs(G0 - G) .ap. 0.0_dp)) exit
-
-         G0(:) = G
       end do
-
-      oc%n = 2 * prefactor * sum(aimag(G) * fermi_fun(re%omega))
 
       im%Z(:, 1) = 0.0_dp
       im%phi(:, 1) = 0.0_dp
@@ -178,13 +176,43 @@ contains
 
    contains
 
+      subroutine dos(ntarget, optimize)
+         real(dp), intent(in) :: ntarget
+         logical, intent(in) :: optimize
+
+         real(dp) :: bell(x%resolution), w(x%resolution)
+
+         where (re%omega .ap. 0.0_dp)
+            bell = 0.5_dp * beta
+         elsewhere
+            bell = tanh(0.5_dp * re%omega * beta) / re%omega
+         end where
+
+         do
+            do n = 1, x%resolution
+               G(n) = sum(weight(:, 1) &
+                  / (omega(n) - x%energy + oc%mu - Sigma(n)))
+            end do
+
+            oc%n = 2 * prefactor * sum(aimag(G) * fermi_fun(re%omega))
+            oc%states = prefactor * sum(aimag(G))
+
+            if ((oc%n .ap. ntarget) .or. .not. optimize) exit
+
+            w = aimag(G) * bell
+
+            oc%mu = oc%mu + (ntarget - oc%states &
+               + prefactor * sum(w * re%omega)) / (prefactor * sum(w))
+         end do
+      end subroutine dos
+
       subroutine prepare(m)
          integer, intent(in) :: m
          real(dp) :: spec(size(x%omega))
 
          fermi = fermi_fun(re%omega(m))
 
-         spec = weight_a2F(:, 1, 1) * aimag(G0(m))
+         spec = weight_a2F(:, 1, 1) * aimag(G(m))
 
          w1 = -re%omega(m) - x%omega
          w2 = -re%omega(m) + x%omega
