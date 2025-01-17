@@ -22,9 +22,8 @@ contains
 
       integer :: step, n, m
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
-      real(dp) :: prefactor, beta, fermi
-      real(dp), allocatable :: bose(:), spec(:), w1(:), w2(:)
-      complex(dp) :: domega
+      real(dp) :: prefactor, beta, fermi, dosef
+      real(dp), allocatable :: bose(:), spec(:), w1(:), w2(:), n1(:), n2(:)
       complex(dp), allocatable :: omega(:), G0(:), G(:), Sigma(:), c1(:), c2(:)
 
       character(:), allocatable :: absent
@@ -75,6 +74,12 @@ contains
 
       beta = 1.0_dp / (kB * x%T)
 
+      if (x%divdos) then
+         dosef = x%dos(minloc(abs(x%energy), 1), 1)
+      else
+         dosef = 1.0_dp
+      end if
+
       bose = bose_fun(x%omega)
 
       call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true.)
@@ -93,23 +98,18 @@ contains
       do step = 1, x%limit
          if (x%tell) print "('GW iteration ', I0)", step
 
-         do n = 1, x%resolution
-            Sigma(n) = (0.0_dp, 0.0_dp)
+         Sigma(:) = (0.0_dp, 0.0_dp)
 
-            do m = 1, x%resolution
-               fermi = fermi_fun(re%omega(m))
+         do m = 1, x%resolution
+            call prepare(m)
 
-               domega = omega(n) - re%omega(m)
-
-               Sigma(n) = Sigma(n) + sum(weight_a2F(:, 1, 1) * aimag(G0(m)) &
-                  * ((1.0_dp - fermi + bose) / (domega - x%omega) &
-                  + (fermi + bose) / (domega + x%omega)))
+            do n = 1, x%resolution
+               Sigma(n) = Sigma(n) &
+                  + sum(n1 / (omega(n) + w1) + n2 / (omega(n) + w2))
             end do
          end do
 
-         Sigma(:) = prefactor * Sigma
-
-         if (x%divdos) Sigma(:) = Sigma / x%dos(minloc(abs(x%energy), 1), 1)
+         Sigma(:) = prefactor / dosef * Sigma
 
          do n = 1, x%resolution
             G(n) = sum(weight(:, 1) / (omega(n) - x%energy - Sigma(n)))
@@ -125,41 +125,44 @@ contains
 
       im%phiC(:) = 0.0_dp
 
+      re%Z(:, 1) = (0.0_dp, 0.0_dp)
+      re%chi(:, 1) = (0.0_dp, 0.0_dp)
       re%Delta(:, 1) = (0.0_dp, 0.0_dp)
 
-      do n = 1, x%resolution
-         re%Z(n, 1) = (0.0_dp, 0.0_dp)
-         re%chi(n, 1) = (0.0_dp, 0.0_dp)
+      do m = 1, x%resolution
+         call prepare(m)
 
-         do m = 1, x%resolution
-            fermi = fermi_fun(re%omega(m))
+         do n = 1, x%resolution
+            c1 = n1 / (w1 ** 2 - omega(n) ** 2)
+            c2 = n2 / (w2 ** 2 - omega(n) ** 2)
 
-            spec = weight_a2F(:, 1, 1) * aimag(G0(m))
-
-            w1 = -re%omega(m) - x%omega
-            w2 = -re%omega(m) + x%omega
-
-            c1 = (1.0_dp - fermi + bose) / (w1 ** 2 - omega(n) ** 2)
-            c2 = (fermi + bose) / (w2 ** 2 - omega(n) ** 2)
-
-            re%Z(n, 1) = re%Z(n, 1) - sum(spec * omega(n) * (c1 + c2))
-            re%chi(n, 1) = re%chi(n, 1) + sum(spec * (w1 * c1 + w2 * c2))
+            re%Z(n, 1) = re%Z(n, 1) - sum(omega(n) * (c1 + c2))
+            re%chi(n, 1) = re%chi(n, 1) + sum(w1 * c1 + w2 * c2)
          end do
       end do
 
-      re%Z(:, 1) = prefactor * re%Z(:, 1)
-      re%chi(:, 1) = prefactor * re%chi(:, 1)
-
-      if (x%divdos) then
-         re%Z(:, 1) = re%Z(:, 1) / x%dos(minloc(abs(x%energy), 1), 1)
-         re%chi(:, 1) = re%chi(:, 1) / x%dos(minloc(abs(x%energy), 1), 1)
-      end if
+      re%Z(:, 1) = prefactor / dosef * re%Z(:, 1)
+      re%chi(:, 1) = prefactor / dosef * re%chi(:, 1)
 
       re%Z(:, 1) = 1.0_dp - re%Z(:, 1) / omega
 
       re%dos(:, 1) = -aimag(G) / pi
 
    contains
+
+      subroutine prepare(m)
+         integer, intent(in) :: m
+
+         fermi = fermi_fun(re%omega(m))
+
+         spec = weight_a2F(:, 1, 1) * aimag(G0(m))
+
+         w1 = -re%omega(m) - x%omega
+         w2 = -re%omega(m) + x%omega
+
+         n1 = spec * (1.0_dp - fermi + bose)
+         n2 = spec * (fermi + bose)
+      end subroutine prepare
 
       elemental function fermi_fun(omega)
          real(dp) :: fermi_fun
