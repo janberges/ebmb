@@ -40,8 +40,6 @@ contains
          absent = 'Eliashberg spectral function'
       else if (x%n .ge. 0.0_dp .or. (x%mu .na. 0.0_dp)) then
          absent = 'constant Fermi level at zero (for now)'
-      else if (any(x%muStar .na. 0.0_dp)) then
-         absent = 'Coulomb pseudo-potential of zero (for now)'
       else
          absent = 'none'
       end if
@@ -117,6 +115,8 @@ contains
             end do
          end do
 
+         Sigma(:) = Sigma + 0.5_dp * oc%n0 * x%muStar(1, 1)
+
          Sigma(:) = prefactor / dosef * Sigma
 
          do n = 1, x%resolution
@@ -160,6 +160,9 @@ contains
             re%chi(n, 1) = re%chi(n, 1) + sum(w1 * c1 + w2 * c2)
          end do
       end do
+
+      im%chi(:, 1) = im%chi(:, 1) + 0.5_dp * oc%n * x%muStar(1, 1)
+      re%chi(:, 1) = re%chi(:, 1) + 0.5_dp * oc%n * x%muStar(1, 1)
 
       im%Z(:, 1) = prefactor / dosef * im%Z(:, 1)
       re%Z(:, 1) = prefactor / dosef * re%Z(:, 1)
