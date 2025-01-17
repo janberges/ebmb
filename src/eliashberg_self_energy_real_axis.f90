@@ -20,9 +20,10 @@ contains
       type(continued), intent(out) :: re
       type(occupancy), intent(out) :: oc
 
-      integer :: step, n, m, w
+      integer :: step, n, m
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
-      real(dp) :: prefactor, beta, fermi, bose
+      real(dp) :: prefactor, beta, fermi
+      real(dp), allocatable :: bose(:)
       complex(dp) :: domega
       complex(dp), allocatable :: omega(:), G0(:), G(:), Sigma(:)
 
@@ -74,6 +75,8 @@ contains
 
       beta = 1.0_dp / (kB * x%T)
 
+      bose = bose_fun(x%omega)
+
       call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true.)
 
       prefactor = -(re%omega(2) - re%omega(1)) / pi
@@ -98,13 +101,9 @@ contains
 
                domega = omega(n) - re%omega(m)
 
-               do w = 1, size(x%omega)
-                  bose = bose_fun(x%omega(w))
-
-                  Sigma(n) = Sigma(n) + weight_a2F(w, 1, 1) * aimag(G0(m)) &
-                     * ((1.0_dp - fermi + bose) / (domega - x%omega(w)) &
-                     + (fermi + bose) / (domega + x%omega(w)))
-               end do
+               Sigma(n) = Sigma(n) + sum(weight_a2F(:, 1, 1) * aimag(G0(m)) &
+                  * ((1.0_dp - fermi + bose) / (domega - x%omega) &
+                  + (fermi + bose) / (domega + x%omega)))
             end do
          end do
 
