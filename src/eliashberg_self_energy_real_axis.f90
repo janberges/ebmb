@@ -38,8 +38,8 @@ contains
          absent = 'density of states'
       else if (.not. x%la2F) then
          absent = 'Eliashberg spectral function'
-      else if (x%n .ge. 0.0_dp .or. (x%mu .na. 0.0_dp)) then
-         absent = 'constant Fermi level at zero (for now)'
+      else if (x%n .ge. 0.0_dp) then
+         absent = 'constant Fermi level (for now)'
       else
          absent = 'none'
       end if
@@ -77,7 +77,7 @@ contains
       beta = 1.0_dp / (kB * x%T)
 
       if (x%divdos) then
-         dosef = x%dos(minloc(abs(x%energy), 1), 1)
+         dosef = x%dos(minloc(abs(x%energy - oc%mu), 1), 1)
       else
          dosef = 1.0_dp
       end if
@@ -94,11 +94,13 @@ contains
 
       omega = cmplx(re%omega, x%eta, dp)
 
+      oc%mu0 = x%mu
+      oc%mu = x%mu
+
       do n = 1, x%resolution
-         G0(n) = sum(weight(:, 1) / (omega(n) - x%energy))
+         G0(n) = sum(weight(:, 1) / (omega(n) - x%energy + oc%mu0))
       end do
 
-      oc%mu0 = x%mu
       oc%n0 = 2 * prefactor * sum(aimag(G0) * fermi_fun(re%omega))
 
       do step = 1, x%limit
@@ -120,7 +122,7 @@ contains
          Sigma(:) = prefactor / dosef * Sigma
 
          do n = 1, x%resolution
-            G(n) = sum(weight(:, 1) / (omega(n) - x%energy - Sigma(n)))
+            G(n) = sum(weight(:, 1) / (omega(n) - x%energy + oc%mu - Sigma(n)))
          end do
 
          if (all(abs(G0 - G) .ap. 0.0_dp)) exit
@@ -128,7 +130,6 @@ contains
          G0(:) = G
       end do
 
-      oc%mu = x%mu
       oc%n = 2 * prefactor * sum(aimag(G) * fermi_fun(re%omega))
 
       im%Z(:, 1) = 0.0_dp
