@@ -23,9 +23,9 @@ contains
       integer :: step, n, m
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
       real(dp) :: prefactor, beta, fermi
-      real(dp), allocatable :: bose(:)
+      real(dp), allocatable :: bose(:), spec(:), w1(:), w2(:)
       complex(dp) :: domega
-      complex(dp), allocatable :: omega(:), G0(:), G(:), Sigma(:)
+      complex(dp), allocatable :: omega(:), G0(:), G(:), Sigma(:), c1(:), c2(:)
 
       character(:), allocatable :: absent
 
@@ -126,12 +126,38 @@ contains
       im%phiC(:) = 0.0_dp
 
       re%Delta(:, 1) = (0.0_dp, 0.0_dp)
-      re%Z    (:, 1) = (1.0_dp, 0.0_dp)
-      re%chi  (:, 1) = Sigma
-      re%dos  (:, 1) = -aimag(G) / pi
 
-      ! Z = 1 and chi = Sigma is a temporary workaround.
-      ! Z and chi should be real on the imaginary axis.
+      do n = 1, x%resolution
+         re%Z(n, 1) = (0.0_dp, 0.0_dp)
+         re%chi(n, 1) = (0.0_dp, 0.0_dp)
+
+         do m = 1, x%resolution
+            fermi = fermi_fun(re%omega(m))
+
+            spec = weight_a2F(:, 1, 1) * aimag(G0(m))
+
+            w1 = -re%omega(m) - x%omega
+            w2 = -re%omega(m) + x%omega
+
+            c1 = (1.0_dp - fermi + bose) / (w1 ** 2 - omega(n) ** 2)
+            c2 = (fermi + bose) / (w2 ** 2 - omega(n) ** 2)
+
+            re%Z(n, 1) = re%Z(n, 1) - sum(spec * omega(n) * (c1 + c2))
+            re%chi(n, 1) = re%chi(n, 1) + sum(spec * (w1 * c1 + w2 * c2))
+         end do
+      end do
+
+      re%Z(:, 1) = prefactor * re%Z(:, 1)
+      re%chi(:, 1) = prefactor * re%chi(:, 1)
+
+      if (x%divdos) then
+         re%Z(:, 1) = re%Z(:, 1) / x%dos(minloc(abs(x%energy), 1), 1)
+         re%chi(:, 1) = re%chi(:, 1) / x%dos(minloc(abs(x%energy), 1), 1)
+      end if
+
+      re%Z(:, 1) = 1.0_dp - re%Z(:, 1) / omega
+
+      re%dos(:, 1) = -aimag(G) / pi
 
    contains
 
