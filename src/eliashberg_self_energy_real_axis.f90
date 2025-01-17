@@ -20,10 +20,10 @@ contains
       type(continued), intent(out) :: re
       type(occupancy), intent(out) :: oc
 
-      integer :: step, n, m
+      integer :: step, n, m, no
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
-      real(dp) :: prefactor, beta, fermi, dosef
-      real(dp), allocatable :: bose(:), spec(:), w1(:), w2(:), n1(:), n2(:)
+      real(dp) :: prefactor, beta, fermi, dosef, domega
+      real(dp), allocatable :: bose(:), spec(:), w1(:), w2(:), n1(:), n2(:), r1(:), r2(:)
       complex(dp), allocatable :: omega(:), G0(:), G(:), Sigma(:), c1(:), c2(:)
 
       character(:), allocatable :: absent
@@ -54,11 +54,15 @@ contains
       call initialize(x, oc)
       call initialize_a2F(x)
 
-      allocate(im%omega(0))
-      allocate(im%Z(0, x%bands))
-      allocate(im%phi(0, x%bands))
-      allocate(im%chi(0, x%bands))
-      allocate(im%Delta(0, x%bands))
+      domega = 2 * pi * kB * x%T
+
+      no = ceiling(x%cutoff * x%omegaE / domega - 0.5_dp)
+
+      allocate(im%omega(0:no - 1))
+      allocate(im%Z(0:no - 1, x%bands))
+      allocate(im%phi(0:no - 1, x%bands))
+      allocate(im%chi(0:no - 1, x%bands))
+      allocate(im%Delta(0:no - 1, x%bands))
       allocate(im%phiC(x%bands))
 
       allocate(re%omega(x%resolution))
@@ -81,6 +85,10 @@ contains
       end if
 
       bose = bose_fun(x%omega)
+
+      do n = 0, no - 1
+         im%omega(n) = domega * (n + 0.5_dp)
+      end do
 
       call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true.)
 
@@ -123,6 +131,10 @@ contains
       oc%mu = x%mu
       oc%n = 2 * prefactor * sum(aimag(G) * fermi_fun(re%omega))
 
+      im%Z(:, 1) = 0.0_dp
+      im%phi(:, 1) = 0.0_dp
+      im%chi(:, 1) = 0.0_dp
+      im%Delta(:, 1) = 0.0_dp
       im%phiC(:) = 0.0_dp
 
       re%Z(:, 1) = (0.0_dp, 0.0_dp)
@@ -131,6 +143,14 @@ contains
 
       do m = 1, x%resolution
          call prepare(m)
+
+         do n = 0, no - 1
+            r1 = n1 / (w1 ** 2 + im%omega(n) ** 2)
+            r2 = n2 / (w2 ** 2 + im%omega(n) ** 2)
+
+            im%Z(n, 1) = im%Z(n, 1) - sum(im%omega(n) * (r1 + r2))
+            im%chi(n, 1) = im%chi(n, 1) + sum(w1 * r1 + w2 * r2)
+         end do
 
          do n = 1, x%resolution
             c1 = n1 / (w1 ** 2 - omega(n) ** 2)
@@ -141,9 +161,13 @@ contains
          end do
       end do
 
+      im%Z(:, 1) = prefactor / dosef * im%Z(:, 1)
       re%Z(:, 1) = prefactor / dosef * re%Z(:, 1)
+
+      im%chi(:, 1) = prefactor / dosef * im%chi(:, 1)
       re%chi(:, 1) = prefactor / dosef * re%chi(:, 1)
 
+      im%Z(:, 1) = 1.0_dp - im%Z(:, 1) / im%omega
       re%Z(:, 1) = 1.0_dp - re%Z(:, 1) / omega
 
       re%dos(:, 1) = -aimag(G) / pi
