@@ -23,7 +23,7 @@ contains
       integer :: step, n, m, no
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
       real(dp) :: prefactor, beta, fermi, dosef, domega
-      real(dp), allocatable :: bose(:), spec(:), w1(:), w2(:), n1(:), n2(:), r1(:), r2(:)
+      real(dp), allocatable :: bose(:), w1(:), w2(:), n1(:), n2(:), r1(:), r2(:)
       complex(dp), allocatable :: omega(:), G0(:), G(:), Sigma(:), c1(:), c2(:)
 
       character(:), allocatable :: absent
@@ -176,6 +176,7 @@ contains
 
       subroutine prepare(m)
          integer, intent(in) :: m
+         real(dp) :: spec(size(x%omega))
 
          fermi = fermi_fun(re%omega(m))
 
