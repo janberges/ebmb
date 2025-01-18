@@ -45,6 +45,8 @@ contains
 
          write (unit) 'states:', oc%states
 
+         if (x%realgw) write (unit) 'inspect:', oc%inspect
+
          write (unit) 'n0:', oc%n0
          write (unit) "n:", oc%n
 

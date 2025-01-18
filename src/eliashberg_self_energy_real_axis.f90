@@ -215,15 +215,24 @@ contains
             w = sum(aimag(G), 2)
 
             oc%n = 2 * prefactor * sum(w * fermi_fun(re%omega))
-            oc%states = prefactor * sum(w)
+            oc%inspect = prefactor * sum(w)
+
+            if (oc%inspect .ap. 0.0_dp) then
+               print "('Error: Too small energy window has drifted away')"
+               stop 1
+            end if
 
             if ((oc%n .ap. ntarget) .or. .not. optimize) exit
 
             w = w * bell
 
-            oc%mu = oc%mu + (ntarget - oc%states &
+            oc%mu = oc%mu + (ntarget - oc%inspect &
                + prefactor * sum(w * re%omega)) / (prefactor * sum(w))
          end do
+
+         if (abs(oc%inspect - oc%states) .gt. 0.1_dp) then
+            print "('Warning: Spectral function breaks sum rule')"
+         end if
       end subroutine dos
 
       subroutine prepare(m, j)
