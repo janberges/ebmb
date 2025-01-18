@@ -183,7 +183,7 @@ contains
       im%chi(:, :) = prefactor * im%chi
       re%chi(:, :) = prefactor * re%chi
 
-      do n = 1, x%bands
+      do i = 1, x%bands
          im%Z(:, i) = 1.0_dp - im%Z(:, i) / im%omega
          re%Z(:, i) = 1.0_dp - re%Z(:, i) / omega
       end do
