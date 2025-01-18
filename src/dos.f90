@@ -48,12 +48,12 @@ contains
       integer :: i, n
 
       real(dp) :: omg, eps(size(x%energy))
-      complex(dp) :: green(size(im%omega))
+      complex(dp) :: green(0:size(im%omega) - 1)
 
       allocate(re%dos(x%resolution, x%bands))
 
       do i = 1, x%bands
-         do n = 1, size(im%omega)
+         do n = 0, size(im%omega) - 1
             omg = im%Z(n, i) * im%omega(n)
 
             eps(:) = x%energy - oc%mu + im%chi(n, i)
