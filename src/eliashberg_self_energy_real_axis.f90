@@ -20,18 +20,18 @@ contains
       type(continued), intent(out) :: re
       type(occupancy), intent(out) :: oc
 
-      integer :: step, n, m, no
+      integer :: step, i, j, n, m, no
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
-      real(dp) :: prefactor, beta, fermi, dosef, domega
-      real(dp), allocatable :: bose(:), w1(:), w2(:), n1(:), n2(:), r1(:), r2(:)
-      complex(dp), allocatable :: omega(:), G0(:), G(:), Sigma(:), c1(:), c2(:)
+      real(dp) :: prefactor, beta, fermi, domega, const
+      real(dp), allocatable :: bose(:), dosef(:)
+      real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
+      complex(dp), allocatable :: omega(:), G0(:, :), G(:, :), Sigma(:, :)
+      complex(dp), allocatable :: c1(:), c2(:)
 
       character(:), allocatable :: absent
 
       if (.not. x%normal) then
          absent = 'normal state'
-      else if (x%bands .ne. 1) then
-         absent = 'single band (for now)'
       else if (x%resolution .le. 0) then
          absent = 'finite resolution'
       else if (.not. x%ldos) then
@@ -68,15 +68,18 @@ contains
       allocate(re%dos(x%resolution, x%bands))
 
       allocate(omega(x%resolution))
-      allocate(G(x%resolution))
-      allocate(Sigma(x%resolution))
+      allocate(G(x%resolution, x%bands))
+      allocate(Sigma(x%resolution, x%bands))
+      allocate(n1(size(x%omega), x%bands))
+      allocate(n2(size(x%omega), x%bands))
+      allocate(dosef(x%bands))
 
       beta = 1.0_dp / (kB * x%T)
 
       if (x%divdos) then
-         dosef = x%dos(minloc(abs(x%energy - oc%mu), 1), 1)
+         dosef(:) = x%dos(minloc(abs(x%energy - oc%mu), 1), :)
       else
-         dosef = 1.0_dp
+         dosef(:) = 1.0_dp
       end if
 
       bose = bose_fun(x%omega)
@@ -98,7 +101,7 @@ contains
          oc%mu = x%mu
       end if
 
-      Sigma(:) = (0.0_dp, 0.0_dp)
+      Sigma(:, :) = (0.0_dp, 0.0_dp)
 
       call dos(x%n, x%n .ge. 0)
 
@@ -108,20 +111,25 @@ contains
       do step = 1, x%limit
          if (x%tell) print "('GW iteration ', I0)", step
 
-         Sigma(:) = (0.0_dp, 0.0_dp)
+         Sigma(:, :) = (0.0_dp, 0.0_dp)
 
-         do m = 1, x%resolution
-            call prepare(m)
+         do j = 1, x%bands
+            do m = 1, x%resolution
+               call prepare(m, j)
 
-            do n = 1, x%resolution
-               Sigma(n) = Sigma(n) &
-                  + sum(n1 / (omega(n) + w1) + n2 / (omega(n) + w2))
+               do i = 1, x%bands
+                  do n = 1, x%resolution
+                     Sigma(n, i) = Sigma(n, i) + sum( &
+                        n1(:, i) / (omega(n) + w1) + n2(:, i) / (omega(n) + w2))
+                  end do
+
+                  Sigma(:, i) = Sigma(:, i) + aimag(G(m, j)) * fermi &
+                     * x%muStar(j, i) / dosef(j)
+               end do
             end do
          end do
 
-         Sigma(:) = Sigma + 0.5_dp * oc%n * x%muStar(1, 1)
-
-         Sigma(:) = prefactor / dosef * Sigma
+         Sigma(:, :) = prefactor * Sigma
 
          G0 = G
 
@@ -130,49 +138,57 @@ contains
          if (all(abs(G0 - G) .ap. 0.0_dp)) exit
       end do
 
-      im%Z(:, 1) = 0.0_dp
-      im%phi(:, 1) = 0.0_dp
-      im%chi(:, 1) = 0.0_dp
-      im%Delta(:, 1) = 0.0_dp
+      im%Z(:, :) = 0.0_dp
+      im%phi(:, :) = 0.0_dp
+      im%chi(:, :) = 0.0_dp
+      im%Delta(:, :) = 0.0_dp
       im%phiC(:) = 0.0_dp
 
-      re%Z(:, 1) = (0.0_dp, 0.0_dp)
-      re%chi(:, 1) = (0.0_dp, 0.0_dp)
-      re%Delta(:, 1) = (0.0_dp, 0.0_dp)
+      re%Z(:, :) = (0.0_dp, 0.0_dp)
+      re%chi(:, :) = (0.0_dp, 0.0_dp)
+      re%Delta(:, :) = (0.0_dp, 0.0_dp)
 
-      do m = 1, x%resolution
-         call prepare(m)
+      do j = 1, x%bands
+         do m = 1, x%resolution
+            call prepare(m, j)
 
-         do n = 0, no - 1
-            r1 = n1 / (w1 ** 2 + im%omega(n) ** 2)
-            r2 = n2 / (w2 ** 2 + im%omega(n) ** 2)
+            do i = 1, x%bands
+               do n = 0, no - 1
+                  r1 = n1(:, i) / (w1 ** 2 + im%omega(n) ** 2)
+                  r2 = n2(:, i) / (w2 ** 2 + im%omega(n) ** 2)
 
-            im%Z(n, 1) = im%Z(n, 1) - sum(im%omega(n) * (r1 + r2))
-            im%chi(n, 1) = im%chi(n, 1) + sum(w1 * r1 + w2 * r2)
-         end do
+                  im%Z(n, i) = im%Z(n, i) - sum(im%omega(n) * (r1 + r2))
+                  im%chi(n, i) = im%chi(n, i) + sum(w1 * r1 + w2 * r2)
+               end do
 
-         do n = 1, x%resolution
-            c1 = n1 / (w1 ** 2 - omega(n) ** 2)
-            c2 = n2 / (w2 ** 2 - omega(n) ** 2)
+               do n = 1, x%resolution
+                  c1 = n1(:, i) / (w1 ** 2 - omega(n) ** 2)
+                  c2 = n2(:, i) / (w2 ** 2 - omega(n) ** 2)
 
-            re%Z(n, 1) = re%Z(n, 1) - sum(omega(n) * (c1 + c2))
-            re%chi(n, 1) = re%chi(n, 1) + sum(w1 * c1 + w2 * c2)
+                  re%Z(n, i) = re%Z(n, i) - sum(omega(n) * (c1 + c2))
+                  re%chi(n, i) = re%chi(n, i) + sum(w1 * c1 + w2 * c2)
+               end do
+
+               const = aimag(G(m, j)) * fermi * x%muStar(j, i) / dosef(j)
+
+               im%chi(:, i) = im%chi(:, i) + const
+               re%chi(:, i) = re%chi(:, i) + const
+            end do
          end do
       end do
 
-      im%chi(:, 1) = im%chi(:, 1) + 0.5_dp * oc%n * x%muStar(1, 1)
-      re%chi(:, 1) = re%chi(:, 1) + 0.5_dp * oc%n * x%muStar(1, 1)
+      im%Z(:, :) = prefactor * im%Z
+      re%Z(:, :) = prefactor * re%Z
 
-      im%Z(:, 1) = prefactor / dosef * im%Z(:, 1)
-      re%Z(:, 1) = prefactor / dosef * re%Z(:, 1)
+      im%chi(:, :) = prefactor * im%chi
+      re%chi(:, :) = prefactor * re%chi
 
-      im%chi(:, 1) = prefactor / dosef * im%chi(:, 1)
-      re%chi(:, 1) = prefactor / dosef * re%chi(:, 1)
+      do n = 1, x%bands
+         im%Z(:, i) = 1.0_dp - im%Z(:, i) / im%omega
+         re%Z(:, i) = 1.0_dp - re%Z(:, i) / omega
+      end do
 
-      im%Z(:, 1) = 1.0_dp - im%Z(:, 1) / im%omega
-      re%Z(:, 1) = 1.0_dp - re%Z(:, 1) / omega
-
-      re%dos(:, 1) = -aimag(G) / pi
+      re%dos(:, :) = -aimag(G) / pi
 
    contains
 
@@ -189,36 +205,42 @@ contains
          end where
 
          do
-            do n = 1, x%resolution
-               G(n) = sum(weight(:, 1) &
-                  / (omega(n) - x%energy + oc%mu - Sigma(n)))
+            do i = 1, x%bands
+               do n = 1, x%resolution
+                  G(n, i) = sum(weight(:, i) &
+                     / (omega(n) - x%energy + oc%mu - Sigma(n, i)))
+               end do
             end do
 
-            oc%n = 2 * prefactor * sum(aimag(G) * fermi_fun(re%omega))
-            oc%states = prefactor * sum(aimag(G))
+            w = sum(aimag(G), 2)
+
+            oc%n = 2 * prefactor * sum(w * fermi_fun(re%omega))
+            oc%states = prefactor * sum(w)
 
             if ((oc%n .ap. ntarget) .or. .not. optimize) exit
 
-            w = aimag(G) * bell
+            w = w * bell
 
             oc%mu = oc%mu + (ntarget - oc%states &
                + prefactor * sum(w * re%omega)) / (prefactor * sum(w))
          end do
       end subroutine dos
 
-      subroutine prepare(m)
-         integer, intent(in) :: m
-         real(dp) :: spec(size(x%omega))
+      subroutine prepare(m, j)
+         integer, intent(in) :: m, j
+         real(dp) :: spec(size(x%omega), x%bands)
 
          fermi = fermi_fun(re%omega(m))
 
-         spec = weight_a2F(:, 1, 1) * aimag(G(m))
+         spec = weight_a2F(:, j, :) * aimag(G(m, j)) / dosef(j)
 
          w1 = -re%omega(m) - x%omega
          w2 = -re%omega(m) + x%omega
 
-         n1 = spec * (1.0_dp - fermi + bose)
-         n2 = spec * (fermi + bose)
+         do i = 1, x%bands
+            n1(:, i) = spec(:, i) * (1.0_dp - fermi + bose)
+            n2(:, i) = spec(:, i) * (fermi + bose)
+         end do
       end subroutine prepare
 
       elemental function fermi_fun(omega)
