@@ -84,7 +84,12 @@ contains
          print form, x%omega2nd
       end if
 
-      print "(/, 'constant Coulomb contribution (eV):', /)"
+      if (x%ldos .and. x%chiC) then
+         print "(/, 'Coulomb part of energy shift (eV):', /)"
+         print form, im%chiC
+      end if
+
+      print "(/, 'Coulomb part of order parameter (eV):', /)"
       print form, im%phiC
 
       if (x%measurable) then

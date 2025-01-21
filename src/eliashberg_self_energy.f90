@@ -160,12 +160,7 @@ contains
 
       do n = 0, nC - 1
          U(n, :, :) = -2 * muStar
-
-         if (x%chiC) then
-            V(n, :, :) = -2 * muC
-         else
-            V(n, :, :) = 0
-         end if
+         V(n, :, :) = -2 * muC
 
          do i = 1, x%bands
             U(n, :, i) = U(n, :, i) / dosef
@@ -189,6 +184,12 @@ contains
       allocate(im%chi(0:no - 1, x%bands))
 
       im%chi(:, :) = 0
+
+      if (x%chiC) then
+         allocate(im%chiC(x%bands))
+
+         im%chiC(:) = 0
+      end if
 
       allocate(A(0:no - 1, x%bands))
       allocate(B(0:no - 1, x%bands))
@@ -224,7 +225,7 @@ contains
 
                      if (x%chi) then
                         chi = chi - integral_chi(m, j) &
-                           * (g(n - m, j, i) + g(n + m + 1, j, i) + V(m, j, i))
+                           * (g(n - m, j, i) + g(n + m + 1, j, i))
                      end if
                   end do
                end do
@@ -232,6 +233,8 @@ contains
                Z = 1 + Z * kB * x%T / im%omega(n)
                phi = phi * kB * x%T
                chi = chi * kB * x%T
+
+               if (x%chiC) chi = chi + im%chiC(i)
 
                done = done &
                   .and. (im%Z  (n, i) .ap. Z) &
@@ -255,6 +258,12 @@ contains
             done = done .and. (oc%mu .ap. mu)
 
             oc%mu = mu
+         end if
+
+         if (x%chiC) then
+            do i = 1, x%bands
+               im%chiC(i) = -kB * x%T * sum(integral_chi * V(:, :, i))
+            end do
          end if
 
          if (done) then

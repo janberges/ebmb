@@ -87,7 +87,8 @@ module global
       real(dp), allocatable :: chi  (:, :) ! energy shift (eV)
       real(dp), allocatable :: Delta(:, :) ! gap (eV)
       real(dp), allocatable :: phi  (:, :) ! order parameter (eV)
-      real(dp), allocatable :: phiC (:)    ! constant Coulomb contribution (eV)
+      real(dp), allocatable :: chiC (:)    ! Coulomb part of energy shift (eV)
+      real(dp), allocatable :: phiC (:)    ! Coulomb part of order parameter (eV)
 
       integer(i4) :: status ! convergence status
    end type matsubara

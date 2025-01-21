@@ -79,6 +79,8 @@ contains
          write (unit) 0_i4
       end if
 
+      if (x%ldos .and. x%chiC) write (unit) 'chiC:', im%chiC
+
       write (unit) 'phiC:', im%phiC
 
       if (x%measurable) then
