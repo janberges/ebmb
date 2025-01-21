@@ -26,7 +26,7 @@ contains
       real(dp) :: nE, Z, phi, chi, mu, domega, A0, B0, residue
 
       real(dp), allocatable :: g(:, :, :), U(:, :, :)
-      real(dp), allocatable :: muStar(:, :), A(:, :), B(:, :)
+      real(dp), allocatable :: muC(:, :), muStar(:, :), A(:, :), B(:, :)
 
       real(dp), allocatable :: integral_Z  (:, :)
       real(dp), allocatable :: integral_phi(:, :)
@@ -117,35 +117,43 @@ contains
          end do
       end do
 
-      allocate(muStar(x%bands, x%bands))
+      allocate(muC(x%bands, x%bands))
 
-      muStar(:, :) = x%muStar
-
-      do step = 1, 2
-         if (step .eq. 1 .and. x%unscale) then
-            where (x%energy .ap. oc%mu)
-               matsum = -1 / x%omegaE
-            elsewhere
-               matsum = x%energy - oc%mu
-               matsum = -atan2(matsum, x%omegaE) / matsum
-            end where
-         else if (step .eq. 2 .and. x%rescale) then
-            where (x%energy .ap. oc%mu)
-               matsum = 1 / (domega * (nC + 0.5_dp))
-            elsewhere
-               matsum = x%energy - oc%mu
-               matsum = atan2(matsum, domega * (nC + 0.5_dp)) / matsum
-            end where
-         else
-            cycle
-         end if
+      if (x%unscale) then
+         where (x%energy .ap. oc%mu)
+            matsum = 1 / x%omegaE
+         elsewhere
+            matsum = x%energy - oc%mu
+            matsum = atan2(matsum, x%omegaE) / matsum
+         end where
 
          do i = 1, x%bands
             residue = sum(weight(:, i) / dosef(i) * matsum) / pi
 
-            muStar(i, :) = muStar(i, :) / (1 + muStar(i, :) * residue)
+            muC(i, :) = x%muStar(i, :) / (1 - x%muStar(i, :) * residue)
          end do
-      end do
+      else
+         muC(:, :) = x%muStar
+      end if
+
+      allocate(muStar(x%bands, x%bands))
+
+      if (x%rescale) then
+         where (x%energy .ap. oc%mu)
+            matsum = 1 / (domega * (nC + 0.5_dp))
+         elsewhere
+            matsum = x%energy - oc%mu
+            matsum = atan2(matsum, domega * (nC + 0.5_dp)) / matsum
+         end where
+
+         do i = 1, x%bands
+            residue = sum(weight(:, i) / dosef(i) * matsum) / pi
+
+            muStar(i, :) = muC(i, :) / (1 + muC(i, :) * residue)
+         end do
+      else
+         muStar(:, :) = muC
+      end if
 
       allocate(U(0:no - 1, x%bands, x%bands))
 
