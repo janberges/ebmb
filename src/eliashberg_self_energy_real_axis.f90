@@ -62,6 +62,7 @@ contains
       allocate(im%phi(0:no - 1, x%bands))
       allocate(im%chi(0:no - 1, x%bands))
       allocate(im%Delta(0:no - 1, x%bands))
+      allocate(im%chiC(x%bands))
       allocate(im%phiC(x%bands))
 
       allocate(re%omega(x%points))
@@ -147,6 +148,7 @@ contains
       im%phi(:, :) = 0.0_dp
       im%chi(:, :) = 0.0_dp
       im%Delta(:, :) = 0.0_dp
+      im%chiC(:) = 0.0_dp
       im%phiC(:) = 0.0_dp
 
       re%Z(:, :) = (0.0_dp, 0.0_dp)
@@ -179,6 +181,8 @@ contains
 
                im%chi(:, i) = im%chi(:, i) + const
                re%chi(:, i) = re%chi(:, i) + const
+
+               im%chiC(i) = im%chiC(i) + const
             end do
          end do
       end do

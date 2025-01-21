@@ -84,7 +84,7 @@ contains
          print form, x%omega2nd
       end if
 
-      if (x%ldos .and. x%chiC .and. .not. x%realgw) then
+      if (x%ldos .and. x%chiC .or. x%realgw) then
          print "(/, 'Coulomb part of energy shift (eV):', /)"
          print form, im%chiC
       end if
