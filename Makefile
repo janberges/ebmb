@@ -4,9 +4,13 @@ flags_gfortran = -std=f2003 -pedantic -Wall -Wno-maybe-uninitialized
 flags_ifort = -O0 -stand f03 -warn all
 flags_ifx = ${flags_ifort}
 
+libs_gfortran = -llapack -lblas
+libs_ifort = -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
+libs_ifx = ${libs_ifort}
+
 FFLAGS = ${flags_$(FC)}
 
-bin/critical: LDLIBS = -llapack -lblas
+bin/critical: LDLIBS = ${libs_$(FC)}
 
 needless = .DS_Store ebmb.pyc manual/ebmb.aux manual/.ebmb.lb manual/ebmb.log manual/ebmb.out manual/ebmb.synctex.gz ~temporary.dat
 
