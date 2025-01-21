@@ -80,12 +80,6 @@ contains
 
       beta = 1.0_dp / (kB * x%T)
 
-      if (x%divdos) then
-         dosef(:) = x%dos(minloc(abs(x%energy - oc%mu), 1), :)
-      else
-         dosef(:) = 1.0_dp
-      end if
-
       bose = bose_fun(x%omega)
 
       do n = 0, no - 1
@@ -102,8 +96,8 @@ contains
       omega = cmplx(re%omega, x%eta, dp)
 
       if (x%n .ge. 0) then
-         oc%mu = (x%energy(1) * (2 * oc%states - oc%n) &
-            + x%energy(size(x%energy)) * oc%n) / (2 * oc%states)
+         oc%mu = (x%energy(1) * (2 * oc%states - x%n) &
+            + x%energy(size(x%energy)) * x%n) / (2 * oc%states)
       else
          oc%mu = x%mu
       end if
@@ -114,6 +108,12 @@ contains
 
       oc%n0 = oc%n
       oc%mu0 = oc%mu
+
+      if (x%divdos) then
+         dosef(:) = x%dos(minloc(abs(x%energy - oc%mu), 1), :)
+      else
+         dosef(:) = 1.0_dp
+      end if
 
       do step = 1, x%limit
          if (x%tell) print "('GW iteration ', I0)", step
