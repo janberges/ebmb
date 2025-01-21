@@ -185,11 +185,9 @@ contains
 
       im%chi(:, :) = 0
 
-      if (x%chiC) then
-         allocate(im%chiC(x%bands))
+      allocate(im%chiC(x%bands))
 
-         im%chiC(:) = 0
-      end if
+      im%chiC(:) = 0
 
       allocate(A(0:no - 1, x%bands))
       allocate(B(0:no - 1, x%bands))
@@ -320,11 +318,12 @@ contains
       end subroutine integrate
 
       subroutine calculate_residue
-         matsum(:) = 2 / pi * atan2(x%energy - oc%mu, domega * (no + 0.5_dp))
-
          residue = 0
 
          do i = 1, x%bands
+            matsum(:) = 2 / pi * atan2(x%energy - oc%mu + im%chiC(i), &
+               domega * (no + 0.5_dp))
+
             residue = residue + sum(weight(:, i) * matsum)
          end do
       end subroutine calculate_residue
