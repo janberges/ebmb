@@ -79,7 +79,9 @@ contains
          write (unit) 0_i4
       end if
 
-      if (x%ldos .and. x%chiC) write (unit) 'chiC:', im%chiC
+      if (x%ldos .and. x%chiC .and. .not. x%realgw) then
+         write (unit) 'chiC:', im%chiC
+      end if
 
       write (unit) 'phiC:', im%phiC
 
