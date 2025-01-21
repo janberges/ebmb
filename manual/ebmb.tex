@@ -37,7 +37,7 @@
 \newlength\gap
 \setlength\gap{6pt}
 
-\def\slant#1{\rlap{\rotatebox{45}{#1}}\vphantom{\rotatebox{45}{#1}}}
+\def\slant#1{\smash{\rlap{\rotatebox{45}{#1}}\vphantom{\rotatebox{45}{#1}}}}
 
 \def\stack#1#2#3{\begin{tabular}{@{}#1@{}}#2\\#3\end{tabular}}
 
