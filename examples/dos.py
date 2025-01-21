@@ -14,7 +14,7 @@ results = ebmb.get(
    lower=-0.25,
    upper=+0.25,
    eta=1e-4,
-   resolution=10001,
+   points=10001,
    stable=True,
    )
 

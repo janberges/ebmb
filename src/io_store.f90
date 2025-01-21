@@ -86,12 +86,12 @@ contains
          write (unit) 'REAL:Delta0:', re%Delta0
       end if
 
-      if (x%resolution .gt. 0) then
-         write (unit) 'DIM:', 1_i4, x%resolution
+      if (x%points .gt. 0) then
+         write (unit) 'DIM:', 1_i4, x%points
 
          write (unit) 'omega:', re%omega
 
-         if (x%bands .gt. 1) write (unit) 'DIM:', 2_i4, x%bands, x%resolution
+         if (x%bands .gt. 1) write (unit) 'DIM:', 2_i4, x%bands, x%points
 
          write (unit) 'Re[Z]:', real(re%Z)
          write (unit) 'Im[Z]:', aimag(re%Z)

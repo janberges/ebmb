@@ -60,12 +60,13 @@ module global
       real(dp) :: lower =  0.0_dp ! minimum real-axis frequency (eV)
       real(dp) :: upper = -1.0_dp ! maximum real-axis frequency (eV)
 
+      integer(i4) :: points = 0 ! number of real-axis frequencies
+
       real(dp) :: logscale = 0.0_dp ! scaling of logarithmic sampling
 
       real(dp) :: eta = 0.0_dp ! infinitesimal energy (eV)
 
-      integer(i4) :: resolution = 0       ! real-axis resolution
-      logical     :: measurable = .false. ! find measurable gap?
+      logical :: measurable = .false. ! find measurable gap?
 
       logical :: unscale = .true.  ! unscale Coulomb pseudo-potential?
       logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?

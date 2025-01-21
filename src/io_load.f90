@@ -97,11 +97,12 @@ contains
             case ('lower'); read (rhs, *, iostat=error) x%lower
             case ('upper'); read (rhs, *, iostat=error) x%upper
 
+            case ('points', 'resolution'); read (rhs, *, iostat=error) x%points
+
             case ('logscale'); read (rhs, *, iostat=error) x%logscale
 
             case ('eta', '0+'); read (rhs, *, iostat=error) x%eta
 
-            case ('resolution'); read (rhs, *, iostat=error) x%resolution
             case ('measurable'); read (rhs, *, iostat=error) x%measurable
 
             case ('unscale'); read (rhs, *, iostat=error) x%unscale

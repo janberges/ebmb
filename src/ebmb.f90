@@ -30,7 +30,7 @@ program ebmb
 
    if (.not. x%realgw) call realize(x, im, re)
 
-   if (.not. x%realgw .and. x%ldos .and. x%resolution .gt. 0) then
+   if (.not. x%realgw .and. x%ldos .and. x%points .gt. 0) then
       if (x%stable) then
          call density_of_states_stable(x, im, re, oc)
       else

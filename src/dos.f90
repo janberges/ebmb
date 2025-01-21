@@ -22,10 +22,10 @@ contains
       complex(dp) :: omg, phi
       complex(dp) :: eps(size(x%energy))
 
-      allocate(re%dos(x%resolution, x%bands))
+      allocate(re%dos(x%points, x%bands))
 
       do i = 1, x%bands
-         do n = 1, x%resolution
+         do n = 1, x%points
             omg = re%Z(n, i) * cmplx(re%omega(n), x%eta, dp)
             phi = re%Z(n, i) * re%Delta(n, i)
 
@@ -50,7 +50,7 @@ contains
       real(dp) :: omg, eps(size(x%energy))
       complex(dp) :: green(0:size(im%omega) - 1)
 
-      allocate(re%dos(x%resolution, x%bands))
+      allocate(re%dos(x%points, x%bands))
 
       do i = 1, x%bands
          do n = 0, size(im%omega) - 1

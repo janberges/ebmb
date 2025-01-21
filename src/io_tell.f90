@@ -97,7 +97,7 @@ contains
          end do
       end if
 
-      if (x%resolution .gt. 0) then
+      if (x%points .gt. 0) then
          print "(/, 'real-axis solution:', /)"
 
          if (x%ldos) then
@@ -108,7 +108,7 @@ contains
             do i = 1, x%bands
                print rule(8)
 
-               do n = 1, x%resolution
+               do n = 1, x%points
                   print body, re%omega(n), re%Z(n, i), re%Delta(n, i), &
                      re%chi(n, i), re%dos(n, i)
                end do
@@ -120,7 +120,7 @@ contains
             do i = 1, x%bands
                print rule(5)
 
-               do n = 1, x%resolution
+               do n = 1, x%points
                   print body, re%omega(n), re%Z(n, i), re%Delta(n, i)
                end do
             end do

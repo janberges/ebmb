@@ -33,8 +33,8 @@ contains
 
       if (.not. x%normal) then
          absent = 'normal state'
-      else if (x%resolution .le. 0) then
-         absent = 'finite resolution'
+      else if (x%points .le. 0) then
+         absent = 'frequency points'
       else if (.not. x%ldos) then
          absent = 'density of states'
       else if (.not. x%la2F) then
@@ -64,16 +64,16 @@ contains
       allocate(im%Delta(0:no - 1, x%bands))
       allocate(im%phiC(x%bands))
 
-      allocate(re%omega(x%resolution))
-      allocate(re%Z(x%resolution, x%bands))
-      allocate(re%chi(x%resolution, x%bands))
-      allocate(re%Delta(x%resolution, x%bands))
-      allocate(re%dos(x%resolution, x%bands))
+      allocate(re%omega(x%points))
+      allocate(re%Z(x%points, x%bands))
+      allocate(re%chi(x%points, x%bands))
+      allocate(re%Delta(x%points, x%bands))
+      allocate(re%dos(x%points, x%bands))
 
-      allocate(weight(x%resolution))
-      allocate(omega(x%resolution))
-      allocate(G(x%resolution, x%bands))
-      allocate(Sigma(x%resolution, x%bands))
+      allocate(weight(x%points))
+      allocate(omega(x%points))
+      allocate(G(x%points, x%bands))
+      allocate(Sigma(x%points, x%bands))
       allocate(n1(size(x%omega), x%bands))
       allocate(n2(size(x%omega), x%bands))
       allocate(dosef(x%bands))
@@ -121,11 +121,11 @@ contains
          Sigma(:, :) = (0.0_dp, 0.0_dp)
 
          do j = 1, x%bands
-            do m = 1, x%resolution
+            do m = 1, x%points
                call prepare(m, j)
 
                do i = 1, x%bands
-                  do n = 1, x%resolution
+                  do n = 1, x%points
                      Sigma(n, i) = Sigma(n, i) + sum( &
                         n1(:, i) / (omega(n) + w1) + n2(:, i) / (omega(n) + w2))
                   end do
@@ -154,7 +154,7 @@ contains
       re%Delta(:, :) = (0.0_dp, 0.0_dp)
 
       do j = 1, x%bands
-         do m = 1, x%resolution
+         do m = 1, x%points
             call prepare(m, j)
 
             do i = 1, x%bands
@@ -166,7 +166,7 @@ contains
                   im%chi(n, i) = im%chi(n, i) + sum(w1 * r1 + w2 * r2)
                end do
 
-               do n = 1, x%resolution
+               do n = 1, x%points
                   c1 = n1(:, i) / (w1 ** 2 - omega(n) ** 2)
                   c2 = n2(:, i) / (w2 ** 2 - omega(n) ** 2)
 
@@ -196,7 +196,7 @@ contains
          real(dp), intent(in) :: ntarget
          logical, intent(in) :: optimize
 
-         real(dp) :: bell(x%resolution), w(x%resolution)
+         real(dp) :: bell(x%points), w(x%points)
 
          where (re%omega .ap. 0.0_dp)
             bell = 0.5_dp * beta
@@ -206,7 +206,7 @@ contains
 
          do
             do i = 1, x%bands
-               do n = 1, x%resolution
+               do n = 1, x%points
                   G(n, i) = sum(weight_dos(:, i) &
                      / (omega(n) - x%energy + oc%mu - Sigma(n, i)))
                end do

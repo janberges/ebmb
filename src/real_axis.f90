@@ -26,13 +26,13 @@ contains
          allocate(re%status(x%bands))
       end if
 
-      if (x%resolution .gt. 0) then
-         allocate(re%omega(x%resolution))
-         allocate(omega(x%resolution))
-         allocate(re%Delta(x%resolution, x%bands))
-         allocate(re%Z(x%resolution, x%bands))
+      if (x%points .gt. 0) then
+         allocate(re%omega(x%points))
+         allocate(omega(x%points))
+         allocate(re%Delta(x%points, x%bands))
+         allocate(re%Z(x%points, x%bands))
 
-         if (x%ldos) allocate(re%chi(x%resolution, x%bands))
+         if (x%ldos) allocate(re%chi(x%points, x%bands))
 
          call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true., &
             logscale=x%logscale)
@@ -40,7 +40,7 @@ contains
          omega(:) = cmplx(re%omega, x%eta, dp)
       end if
 
-      if (x%measurable .or. x%resolution .gt. 0) then
+      if (x%measurable .or. x%points .gt. 0) then
          do i = 1, x%bands
             call coefficients(im%omega, cmplx(im%Delta(:, i), kind=dp))
 
@@ -59,7 +59,7 @@ contains
                end do
             end if
 
-            if (x%resolution .gt. 0) then
+            if (x%points .gt. 0) then
                re%Delta(:, i) = continuation(omega)
 
                call coefficients(im%omega, cmplx(im%Z(:, i), kind=dp))
