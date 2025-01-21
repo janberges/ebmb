@@ -48,8 +48,9 @@ module global
       real(dp) ::  n = -1.0_dp ! initial occupancy number
       real(dp) :: mu =  0.0_dp ! initial chemical potential (eV)
 
-      logical :: conserve = .true. ! conserve particle number?
-      logical :: chi      = .true. ! consider energy shift?
+      logical :: conserve = .true.  ! conserve particle number?
+      logical :: chi      = .true.  ! consider energy shift?
+      logical :: chiC     = .false. ! consider Coulomb part of energy shift?
 
       integer(i4) :: limit = 250000 ! maximum number of iterations
 

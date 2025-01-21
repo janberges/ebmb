@@ -86,6 +86,7 @@ contains
 
             case ('conserve'); read (rhs, *, iostat=error) x%conserve
             case ('chi');      read (rhs, *, iostat=error) x%chi
+            case ('chiC');     read (rhs, *, iostat=error) x%chiC
 
             case ('limit'); read (rhs, *, iostat=error) x%limit
 

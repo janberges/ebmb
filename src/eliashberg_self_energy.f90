@@ -25,7 +25,7 @@ contains
 
       real(dp) :: nE, Z, phi, chi, mu, domega, A0, B0, residue
 
-      real(dp), allocatable :: g(:, :, :), U(:, :, :)
+      real(dp), allocatable :: g(:, :, :), U(:, :, :), V(:, :, :)
       real(dp), allocatable :: muC(:, :), muStar(:, :), A(:, :), B(:, :)
 
       real(dp), allocatable :: integral_Z  (:, :)
@@ -156,16 +156,25 @@ contains
       end if
 
       allocate(U(0:no - 1, x%bands, x%bands))
+      allocate(V(0:no - 1, x%bands, x%bands))
 
       do n = 0, nC - 1
          U(n, :, :) = -2 * muStar
 
+         if (x%chiC) then
+            V(n, :, :) = -2 * muC
+         else
+            V(n, :, :) = 0
+         end if
+
          do i = 1, x%bands
             U(n, :, i) = U(n, :, i) / dosef
+            V(n, :, i) = V(n, :, i) / dosef
          end do
       end do
 
       U(nC:, :, :) = 0
+      V(nC:, :, :) = 0
 
       allocate(im%Z(0:no - 1, x%bands))
 
@@ -215,7 +224,7 @@ contains
 
                      if (x%chi) then
                         chi = chi - integral_chi(m, j) &
-                           * (g(n - m, j, i) + g(n + m + 1, j, i))
+                           * (g(n - m, j, i) + g(n + m + 1, j, i) + V(m, j, i))
                      end if
                   end do
                end do
