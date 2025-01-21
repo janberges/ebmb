@@ -100,6 +100,8 @@ contains
             case ('upper'); read (rhs, *, iostat=error) x%upper
             case ('clip');  read (rhs, *, iostat=error) clip
 
+            case ('logscale'); read (rhs, *, iostat=error) x%logscale
+
             case ('eta', '0+'); read (rhs, *, iostat=error) x%eta
 
             case ('resolution'); read (rhs, *, iostat=error) x%resolution

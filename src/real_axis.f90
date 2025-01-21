@@ -34,7 +34,8 @@ contains
 
          if (x%ldos) allocate(re%chi(x%resolution, x%bands))
 
-         call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true.)
+         call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true., &
+            logscale=x%logscale)
 
          omega(:) = cmplx(re%omega, x%eta, dp)
       end if

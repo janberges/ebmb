@@ -2,11 +2,12 @@
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
 module eliashberg_self_energy_real_axis
-   use eliashberg_self_energy, only: initialize, weight
+   use eliashberg_self_energy, &
+      only: initialize_dos => initialize, weight_dos => weight
    use eliashberg_spectral_function, &
       only: initialize_a2F => initialize, weight_a2F => weight
    use global
-   use tools, only: interval
+   use tools, only: differential, interval
    implicit none
 
    private
@@ -22,8 +23,8 @@ contains
 
       integer :: step, i, j, n, m, no
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
-      real(dp) :: prefactor, beta, fermi, domega, const
-      real(dp), allocatable :: bose(:), dosef(:)
+      real(dp) :: beta, fermi, domega, const
+      real(dp), allocatable :: weight(:), bose(:), dosef(:)
       real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
       complex(dp), allocatable :: omega(:), G0(:, :), G(:, :), Sigma(:, :)
       complex(dp), allocatable :: c1(:), c2(:)
@@ -47,7 +48,7 @@ contains
          stop 1
       end if
 
-      call initialize(x, oc)
+      call initialize_dos(x, oc)
       call initialize_a2F(x)
 
       domega = 2 * pi * kB * x%T
@@ -67,6 +68,7 @@ contains
       allocate(re%Delta(x%resolution, x%bands))
       allocate(re%dos(x%resolution, x%bands))
 
+      allocate(weight(x%resolution))
       allocate(omega(x%resolution))
       allocate(G(x%resolution, x%bands))
       allocate(Sigma(x%resolution, x%bands))
@@ -88,9 +90,12 @@ contains
          im%omega(n) = domega * (n + 0.5_dp)
       end do
 
-      call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true.)
+      call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true., &
+         logscale=x%logscale)
 
-      prefactor = -(re%omega(2) - re%omega(1)) / pi
+      call differential(re%omega, weight)
+
+      weight = -weight / pi
 
       omega = cmplx(re%omega, x%eta, dp)
 
@@ -123,13 +128,11 @@ contains
                         n1(:, i) / (omega(n) + w1) + n2(:, i) / (omega(n) + w2))
                   end do
 
-                  Sigma(:, i) = Sigma(:, i) + aimag(G(m, j)) * fermi &
-                     * x%muStar(j, i) / dosef(j)
+                  Sigma(:, i) = Sigma(:, i) + weight(m) &
+                     * aimag(G(m, j)) * fermi * x%muStar(j, i) / dosef(j)
                end do
             end do
          end do
-
-         Sigma(:, :) = prefactor * Sigma
 
          G0 = G
 
@@ -169,19 +172,14 @@ contains
                   re%chi(n, i) = re%chi(n, i) + sum(w1 * c1 + w2 * c2)
                end do
 
-               const = aimag(G(m, j)) * fermi * x%muStar(j, i) / dosef(j)
+               const = weight(m) &
+                  * aimag(G(m, j)) * fermi * x%muStar(j, i) / dosef(j)
 
                im%chi(:, i) = im%chi(:, i) + const
                re%chi(:, i) = re%chi(:, i) + const
             end do
          end do
       end do
-
-      im%Z(:, :) = prefactor * im%Z
-      re%Z(:, :) = prefactor * re%Z
-
-      im%chi(:, :) = prefactor * im%chi
-      re%chi(:, :) = prefactor * re%chi
 
       do i = 1, x%bands
          im%Z(:, i) = 1.0_dp - im%Z(:, i) / im%omega
@@ -207,15 +205,15 @@ contains
          do
             do i = 1, x%bands
                do n = 1, x%resolution
-                  G(n, i) = sum(weight(:, i) &
+                  G(n, i) = sum(weight_dos(:, i) &
                      / (omega(n) - x%energy + oc%mu - Sigma(n, i)))
                end do
             end do
 
-            w = sum(aimag(G), 2)
+            w(:) = weight * sum(aimag(G), 2)
 
-            oc%n = 2 * prefactor * sum(w * fermi_fun(re%omega))
-            oc%inspect = prefactor * sum(w)
+            oc%n = 2 * sum(w * fermi_fun(re%omega))
+            oc%inspect = sum(w)
 
             if (oc%inspect .ap. 0.0_dp) then
                print "('Error: Too small energy window has drifted away')"
@@ -224,10 +222,9 @@ contains
 
             if ((oc%n .ap. ntarget) .or. .not. optimize) exit
 
-            w = w * bell
+            w(:) = w * bell
 
-            oc%mu = oc%mu + (ntarget - oc%inspect &
-               + prefactor * sum(w * re%omega)) / (prefactor * sum(w))
+            oc%mu = oc%mu + (ntarget - oc%inspect + sum(w * re%omega)) / sum(w)
          end do
 
          if (abs(oc%inspect - oc%states) .gt. 0.1_dp) then
@@ -241,7 +238,7 @@ contains
 
          fermi = fermi_fun(re%omega(m))
 
-         spec = weight_a2F(:, j, :) * aimag(G(m, j)) / dosef(j)
+         spec = weight(m) * weight_a2F(:, j, :) * aimag(G(m, j)) / dosef(j)
 
          w1 = -re%omega(m) - x%omega
          w2 = -re%omega(m) + x%omega

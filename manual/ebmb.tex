@@ -395,6 +395,7 @@
          \tt lower         & 0           & eV               & --                  & minimum real-axis frequency                & $+$ & $-$ & $-$ & $-$ \\
          \tt upper         & --          & eV               & --                  & maximum real-axis frequency                & $+$ & $-$ & $-$ & $-$ \\
          \tt clip          & 15          & $\omega \sub E$  & --                  & maximum real-axis frequency                & $+$ & $-$ & $-$ & $-$ \\
+         \tt logscale      & 0           & 1/eV             & --                  & scaling of logarithmic sampling            & $+$ & $-$ & $-$ & $-$ \\
          \tt eta, 0+       & 0           & eV               & --                  & infinitesimal energy $0^+$                 & $+$ & $-$ & $-$ & $-$ \\
          \tt resolution    & 0           & 1                & --                  & resolution of real-axis solution           & $+$ & $-$ & $-$ & $-$ \\
          \tt measurable    & \tt false   & --               & --                  & find measurable gap?                       & $+$ & $-$ & $-$ & $-$ \\[\gap]
@@ -437,6 +438,12 @@
                \texttt{a2F} has lines $\omega$/eV $\alpha^2 F_{1, 1}$ $\alpha^2
                F_{2, 1}$ $\dots$ with $\omega$ ascending but not necessarily
                equidistant.
+
+            \item
+               The relative change in the sample spacing of the real-axis
+               frequencies between $\omega = 0$ and $\omega = x$ is
+               $\texttt{logscale} \cdot |x|$. Thus, $\texttt{logscale} = 0$
+               corresponds to equidistant sampling.
          \end{itemize}
          }
       \label{parameters}

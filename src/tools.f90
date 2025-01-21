@@ -59,12 +59,24 @@ contains
       dx(:) = dx / 2
    end subroutine differential
 
-   subroutine interval(x, a, b, lower, upper)
+   subroutine interval(x, a, b, lower, upper, logscale)
       real(dp), intent(out) :: x(:)
       real(dp), intent(in) :: a, b
       logical, intent(in), optional :: lower, upper
+      real(dp), intent(in), optional :: logscale
 
       integer :: i, j, k
+      real(dp) :: l, m
+
+      l = a
+      m = b
+
+      if (present(logscale)) then
+         if (logscale .gt. 0.0_dp) then
+            l = loga(l)
+            m = loga(m)
+         end if
+      end if
 
       i = size(x)
       j = 1
@@ -78,12 +90,32 @@ contains
       end if
 
       do k = 1, size(x)
-         x(k) = i * a + j * b
+         x(k) = i * l + j * m
          i = i - 1
          j = j + 1
       end do
 
       x = x / (i + j)
+
+      if (present(logscale)) then
+         if (logscale .gt. 0.0_dp) x = expo(x)
+      end if
+
+   contains
+
+      elemental function expo(x)
+         real(dp) :: expo
+         real(dp), intent(in) :: x
+
+         expo = sign((exp(abs(x)) - 1.0_dp) / logscale, x)
+      end function expo
+
+      elemental function loga(x)
+         real(dp) :: loga
+         real(dp), intent(in) :: x
+
+         loga = sign(log(abs(x * logscale) + 1.0_dp), x)
+      end function loga
    end subroutine interval
 
    integer function matches(str, char)
