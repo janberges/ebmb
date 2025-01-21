@@ -25,7 +25,7 @@ contains
 
       real(dp) :: nE, Z, phi, chi, mu, domega, A0, B0, residue
 
-      real(dp), allocatable :: g(:, :, :), U(:, :, :), V(:, :, :)
+      real(dp), allocatable :: g(:, :, :), U(:, :, :), V(:, :, :), residues(:)
       real(dp), allocatable :: muC(:, :), muStar(:, :), A(:, :), B(:, :)
 
       real(dp), allocatable :: integral_Z  (:, :)
@@ -196,6 +196,8 @@ contains
       allocate(integral_phi(0:no - 1, x%bands))
       allocate(integral_chi(0:no - 1, x%bands))
 
+      allocate(residues(x%bands))
+
       do i = 1, x%bands
          do n = 0, no - 1
             call integrate(n, i)
@@ -248,7 +250,7 @@ contains
          end do
 
          if (x%conserve) then
-            call calculate_residue
+            call calculate_residue(no)
 
             mu = ((oc%n - oc%states + residue) / (4 * kB * x%T) &
                + sum(A * im%chi + B)) / sum(A)
@@ -259,8 +261,11 @@ contains
          end if
 
          if (x%chiC) then
+            if (.not. x%conserve .or. no .ne. nC) call calculate_residue(nC)
+
             do i = 1, x%bands
-               im%chiC(i) = -kB * x%T * sum(integral_chi * V(:, :, i))
+               im%chiC(i) = -kB * x%T * sum(integral_chi * V(:, :, i)) &
+                  - 0.25_dp * sum(residues * V(0, :, i))
             end do
          end if
 
@@ -280,7 +285,7 @@ contains
          im%phiC(i) = kB * x%T * sum(integral_phi * U(:, :, i))
       end do
 
-      call calculate_residue
+      call calculate_residue(no)
 
       oc%n = oc%states - 4 * kB * x%T * sum(integral_chi) - residue
 
@@ -317,15 +322,17 @@ contains
          integral_chi(n, i) = A(n, i) * (im%chi(n, i) - oc%mu) + B(n, i)
       end subroutine integrate
 
-      subroutine calculate_residue
-         residue = 0
+      subroutine calculate_residue(nM)
+         integer, intent(in) :: nM
 
          do i = 1, x%bands
             matsum(:) = 2 / pi * atan2(x%energy - oc%mu + im%chiC(i), &
-               domega * (no + 0.5_dp))
+               domega * (nM + 0.5_dp))
 
-            residue = residue + sum(weight(:, i) * matsum)
+            residues(i) = sum(weight(:, i) * matsum)
          end do
+
+         residue = sum(residues)
       end subroutine calculate_residue
 
    end subroutine self_energy
