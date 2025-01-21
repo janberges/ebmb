@@ -39,6 +39,8 @@ contains
          absent = 'density of states'
       else if (.not. x%la2F) then
          absent = 'Eliashberg spectral function'
+      else if (.not. x%chi) then
+         absent = 'considering energy shift'
       else
          absent = 'none'
       end if
