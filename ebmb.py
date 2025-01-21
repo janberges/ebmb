@@ -143,7 +143,7 @@ def load_floats(file):
 
     return data if data.size > 1 else data[0]
 
-def dos(file, epsilon, domain, filters=[], resolution=101, replace=True):
+def dos(file, epsilon, domain, filters=[], points=101, replace=True):
     """Calculate subdomain-resolved density of states and save it to file.
 
     Parameters
@@ -156,8 +156,8 @@ def dos(file, epsilon, domain, filters=[], resolution=101, replace=True):
         Discretized domains of arguments of `epsilon`.
     filters : list of function
         N filters defining N + 1 subdomains.
-    resolution : int
-        Resolution of density of states.
+    points : int
+        Number of energy points.
     replace : bool
         Overwrite existing output file?
 
@@ -187,23 +187,23 @@ def dos(file, epsilon, domain, filters=[], resolution=101, replace=True):
     emin = energy.min()
     emax = energy.max()
 
-    binned = ((resolution - 1)
+    binned = ((points - 1)
         * (energy - emin) / (emax - emin)).round().astype(int)
 
     pockets = len(filters) + 1
 
-    count = np.zeros((resolution, pockets), dtype=int)
+    count = np.zeros((points, pockets), dtype=int)
 
     for i in range(points):
         count[binned[i], pocket[i]] += 1
 
-    e, de = np.linspace(emin, emax, resolution, retstep=True)
+    e, de = np.linspace(emin, emax, points, retstep=True)
 
     dos = count / (de * count.sum())
     dos[(0, -1), :] *= 2
 
     with open(file, 'w') as out:
-        for i in range(resolution):
+        for i in range(points):
             out.write('% .10f' % e[i])
 
             for j in range(pockets):
