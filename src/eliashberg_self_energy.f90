@@ -25,7 +25,7 @@ contains
 
       real(dp) :: nE, Z, phi, chi, mu, domega, A0, B0, residue
 
-      real(dp), allocatable :: g(:, :, :), U(:, :, :), V(:, :, :), residues(:)
+      real(dp), allocatable :: g(:, :, :), U(:, :, :), residues(:)
       real(dp), allocatable :: muC(:, :), muStar(:, :), A(:, :), B(:, :)
 
       real(dp), allocatable :: integral_Z  (:, :)
@@ -156,20 +156,16 @@ contains
       end if
 
       allocate(U(0:no - 1, x%bands, x%bands))
-      allocate(V(0:no - 1, x%bands, x%bands))
 
       do n = 0, nC - 1
          U(n, :, :) = -2 * muStar
-         V(n, :, :) = -2 * muC
 
          do i = 1, x%bands
             U(n, :, i) = U(n, :, i) / dosef
-            V(n, :, i) = V(n, :, i) / dosef
          end do
       end do
 
       U(nC:, :, :) = 0
-      V(nC:, :, :) = 0
 
       allocate(im%Z(0:no - 1, x%bands))
 
@@ -264,8 +260,9 @@ contains
             if (.not. x%conserve .or. no .ne. nC) call calculate_residue(nC)
 
             do i = 1, x%bands
-               im%chiC(i) = -kB * x%T * sum(integral_chi * V(:, :, i)) &
-                  - 0.25_dp * sum(residues * V(0, :, i))
+               im%chiC(i) = 2 * kB * x%T &
+                  * sum(sum(integral_chi(:nC - 1, :), 1) * muC(:, i)) &
+                  + sum(residues * muC(:, i)) / 2
             end do
          end if
 
