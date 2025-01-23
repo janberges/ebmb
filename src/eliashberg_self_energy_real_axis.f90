@@ -131,8 +131,8 @@ contains
                         n1(:, i) / (omega(n) + w1) + n2(:, i) / (omega(n) + w2))
                   end do
 
-                  Sigma(:, i) = Sigma(:, i) + weight(m) &
-                     * aimag(G(m, j)) * fermi * x%muStar(j, i) / dosef(j)
+                  Sigma(:, i) = Sigma(:, i) + weight(m) * aimag(G(m, j)) &
+                     * (0.5_dp - fermi) * x%muStar(j, i) / dosef(j)
                end do
             end do
          end do
@@ -176,8 +176,8 @@ contains
                   re%chi(n, i) = re%chi(n, i) + sum(w1 * c1 + w2 * c2)
                end do
 
-               const = weight(m) &
-                  * aimag(G(m, j)) * fermi * x%muStar(j, i) / dosef(j)
+               const = weight(m) * aimag(G(m, j)) &
+                  * (0.5_dp - fermi) * x%muStar(j, i) / dosef(j)
 
                im%chi(:, i) = im%chi(:, i) + const
                re%chi(:, i) = re%chi(:, i) + const
