@@ -167,6 +167,14 @@ def dos(file, epsilon, domain, filters=[], points=101, replace=True):
         Energy.
     ndarray
         Subdomain-resolved density of states.
+
+    Examples
+    --------
+    .. code-block:: python
+
+        e, dos = ebmb.dos('dos.in', epsilon=lambda *k: -np.cos(k).sum() / 2,
+            domain=[np.linspace(-np.pi, np.pi, 1000, endpoint=False)] * 2,
+            filters=[lambda *k: np.pi ** 2 / 2 <= np.dot(k, k) <= np.pi ** 2])
     """
     if not replace and path.exists(file):
         return
