@@ -17,6 +17,9 @@
 
 \def\bottomfraction{0.9}
 
+\let\Im\relax
+\DeclareMathOperator\Im{Im}
+
 \def\D{\mathrm d}
 \def\E{\mathrm e}
 \def\I{\mathrm i}
@@ -65,7 +68,8 @@
          \texttt{ebmb} itself solves the multiband \textsc{Eliashberg} equations
          (Eqs.~\ref{Eliashberg equations} or \ref{cDOS Eliashberg equations}) on
          a cut-off imaginary axis and optionally continues the results to the
-         real axis via \textsc{Padé} approximants.
+         real axis via \textsc{Padé} approximants. The normal-state equations
+         (Eq.~\ref{real-axis equations}) can also be solved on the real axis.
 
          A material is defined by nothing but an \textsc{Eliashberg} spectral
          function or, as fallback, an \textsc{Einstein} phonon frequency and
@@ -362,6 +366,53 @@
    $Z_i(n)$ is not biased by the cutoff if $D_i^\infty(n)$ is used in place of
    $D_i^N(n)$ in the kernel $K_{i j}(n, m)$.
 
+   The \textsc{Eliashberg} equations can also be solved on the real axis,%
+   %
+   \footnote{%
+      D. J. \textsc{Scalapino}, J. R. \textsc{Schrieffer} and J. W.
+      \textsc{Wilkins}, Phys.\@  Rev.\@ \textbf{148}, 263 (1966)
+      }
+   %
+   which allows for exact analytic continuation without Padé approximants. They
+   are implemented for the normal state:
+   %
+   \begin{equation}
+      \varSigma_{1 1 i}(\omega) = \underbrace{
+      \sum_j
+      \int \from{-\infty} \till \infty \D \epsilon \,
+      \frac{A_j(\epsilon)}{n_j(\mu_0)}
+      \Biggl[
+         \mu_{i j}
+         \biggl( \frac12 - f(\epsilon) \biggr)
+            }_{\displaystyle {\chi \sub C}_i}
+         + \int \from 0 \till \infty \D \omega'
+         \alpha^2 F_{i j}(\omega')
+         \sum_\pm \pm \frac{f(\epsilon) + n(\pm \omega')}
+            {\omega - \epsilon \pm \omega'}
+      \Biggr]
+      \label{real-axis equations}
+   \end{equation}
+   %
+   with the Fermi function $f(\epsilon) = 1 / (\E^{\epsilon / T} + 1)$ and the
+   Bose function $n(\omega) = 1 / (\E^{\omega / T} - 1)$. The quasiparticle
+   density of states $A_i(\omega) = -\frac 1 \pi \Im G_i(\omega + \I \eta)$
+   follows from the Green function
+   %
+   \begin{equation*}
+      G_i(\omega) =
+      -\int \from{-\infty} \till \infty \D \epsilon \,
+      n_i(\epsilon)
+      \frac{\omega Z_i(\omega)
+         + \epsilon - \mu + \chi_i(\omega)}
+         {\Theta_i(\epsilon, \omega)}
+      \overset{\phi = 0} =
+      \int \from{-\infty} \till \infty \D \epsilon
+      \frac{n_i(\epsilon)}
+         {\omega - \epsilon + \mu - \Sigma_{1 1 i}(\omega)}.
+   \end{equation*}
+
+   \newpage
+
    \headline{Acknowledgment}
 
    Parts of the program are inspired by the EPW code%
@@ -422,7 +473,7 @@
          \tt rescale       & \tt true    & --               & --                  & use $\mu^*_{i j}$ rescaled for cutoff?     & $+$ & $+$ & $+$ & $-$ \\
          \tt imitate       & \tt false   & --               & --                  & use $Z_i(n)$ biased by cutoff?             & $-$ & $-$ & $+$ & $-$ \\[\gap]
          \tt divdos        & \tt true  & -- & -- & divide by $n_j(\mu_0)$ in Eqs.~\ref{Eliashberg equations}, \ref{rescaling}? & $+$ & $+$ & $+$ & $-$ \\
-         \tt stable        & \tt false   & --               & --                  & calculate $n_i(\omega)$ differently?       & $+$ & $-$ & $-$ & $-$ \\
+         \tt stable        & \tt false   & --               & --                  & calculate $A_i(\omega)$ differently?       & $+$ & $-$ & $-$ & $-$ \\
          \tt normal        & \tt false   & --               & --                  & enforce normal state?                      & $+$ & $-$ & $-$ & $-$ \\
          \tt realgw        & \tt false   & --               & --                  & do real-axis GW$_0$ calculation?           & $+$ & $-$ & $-$ & $-$ \\[\gap]
          \tt power         & \tt true    & --               & --                  & power method for single band?              & $-$ & $-$ & $+$ & $-$
@@ -526,7 +577,7 @@
          \tt \stack{l}{Re[Delta]}{Im[Delta]} & \stack{r}{real}{imaginary} $\Big\}$ gap             & $\Delta_i(\omega)$ \\
          \tt \stack{l}{Re[Z]}    {Im[Z]}     & \stack{r}{real}{imaginary} $\Big\}$ renormalization & $Z_i(\omega)$      \\
          \tt \stack{l}{Re[chi]}  {Im[chi]}   & \stack{r}{real}{imaginary} $\Big\}$ energy shift    & $\chi_i(\omega)$   \\
-         \tt DOS                             & quasiparticle density of states                     & $n_i(\omega)$      \\
+         \tt DOS                             & quasiparticle density of states                     & $A_i(\omega)$      \\
          \hline
          \multicolumn3l{\textbf{measurable results} \hfill \texttt{measurable=true}} \\
          \hline
