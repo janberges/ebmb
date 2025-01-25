@@ -76,8 +76,9 @@
       \item
          \texttt{critical} finds the critical point via the bisection method
          varying a parameter of choice. Superconductivity is defined by the
-         kernel of the linearized gap equation (Eq.~\ref{linearized gap
-         equation}) having an eigenvalue greater than or equal to unity.
+         kernel of the linearized gap equation (Eq.~\ref{linearized equation}
+         or \ref{linearized gap equation}) having an eigenvalue greater than or
+         equal to unity.
 
       \item
          \texttt{tc} finds the critical temperature for each band separately via
@@ -289,8 +290,24 @@
       \label{cDOS Eliashberg equations}
    \end{equation}
    %
-   At the critical temperature, $\Delta_i(m)$ is infinitesimal and negligible
+   At the critical temperature, $\phi_j(m)$ is infinitesimal and negligible
    relative to $\omega_m$. This yields
+   %
+   \begin{equation}
+      \begin{split}
+         \phi_i(n) &= \sum_j \sum_{m = 0}^{N - 1}
+         K_{i j}(n, m) \, \phi_j(m),
+         \\
+         K_{i j}(n, m) &= T
+         \int \from{-\infty} \till \infty \D \epsilon
+         \frac{n_j(\epsilon)}{n_j(\mu_0)}
+         \frac{\Lambda_{i j}^+(n, m) - U^*_{i j}(m)}{\Theta_j(\epsilon, m)},
+      \end{split}
+      \label{linearized equation}
+   \end{equation}
+   %
+   where $\Theta_j(\epsilon, m)$ is obtained from Eqs.~\ref{Eliashberg
+   equations} for $\phi_j(m) = 0$. Similarly, in the constant-DOS case,
    %
    \begin{equation}
       \begin{split}
