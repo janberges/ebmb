@@ -171,10 +171,10 @@ def dos(file, epsilon, domain, filters=[], points=101, replace=True):
     if not replace and path.exists(file):
         return
 
-    points = np.prod(map(len, domain))
+    states = np.prod(list(map(len, domain)))
 
-    energy = np.empty(points)
-    pocket = np.empty(points, dtype=int)
+    energy = np.empty(states)
+    pocket = np.empty(states, dtype=int)
 
     for i, x in enumerate(itertools.product(*domain)):
         energy[i] = epsilon(*x)
@@ -194,7 +194,7 @@ def dos(file, epsilon, domain, filters=[], points=101, replace=True):
 
     count = np.zeros((points, pockets), dtype=int)
 
-    for i in range(points):
+    for i in range(states):
         count[binned[i], pocket[i]] += 1
 
     e, de = np.linspace(emin, emax, points, retstep=True)
