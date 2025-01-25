@@ -292,6 +292,34 @@
       \mu_{i j}.
    \end{equation*}
    %
+   For a given scalar $\alpha^2 F(\omega)$, an effective phonon frequency can be
+   calculated in different ways. We follow \textsc{Allen} and \textsc{Dynes},%
+   %
+   \footnote{%
+      P. B. \textsc{Allen} and R. C. \textsc{Dynes}, Phys.\@ Rev.\@ B
+      \textbf{12}, 905 (1975)
+      }
+   %
+   who define the logarithmic and the second-moment average frequency and use
+   the latter as $\omega \sub E$ in Eqs.~\ref{cDOS rescaling} and
+   \ref{rescaling} for rescaling $\mu^*$:
+   %
+   \begin{align*}
+       \omega \sub{log} &= \exp
+       \Biggl[
+          \frac 2 \lambda \int_0^\infty
+          \frac{\D \omega} \omega
+          \alpha^2 F(\omega) \ln(\omega)
+       \Biggr],
+       &
+       \overline \omega_2 &= \sqrt
+       {
+          \frac 2 \lambda \int_0^\infty
+          \D \omega \,
+          \alpha^2 F(\omega) \, \omega
+       }.
+   \end{align*}
+   %
    Approximating $n_i(\epsilon) \approx n_i(\mu_0)$ yields $\chi_i(n) = 0$ and
    the constant-DOS \textsc{Eliashberg} equations
    %
@@ -344,34 +372,6 @@
    %
    $Z_i(n)$ is not biased by the cutoff if $D_i^\infty(n)$ is used in place of
    $D_i^N(n)$ in the kernel $K_{i j}(n, m)$.
-
-   For a given scalar $\alpha^2 F(\omega)$, an effective phonon frequency can be
-   calculated in different ways. We follow \textsc{Allen} and \textsc{Dynes},%
-   %
-   \footnote{%
-      P. B. \textsc{Allen} and R. C. \textsc{Dynes}, Phys.\@ Rev.\@ B
-      \textbf{12}, 905 (1975)
-      }
-   %
-   who define the logarithmic and the second-moment average frequency and use
-   the latter as $\omega \sub E$ in Eqs.~\ref{cDOS rescaling} and
-   \ref{rescaling} for rescaling $\mu^*$:
-   %
-   \begin{align*}
-       \omega \sub{log} &= \exp
-       \Biggl[
-          \frac 2 \lambda \int_0^\infty
-          \frac{\D \omega} \omega
-          \alpha^2 F(\omega) \ln(\omega)
-       \Biggr],
-       &
-       \overline \omega_2 &= \sqrt
-       {
-          \frac 2 \lambda \int_0^\infty
-          \D \omega \,
-          \alpha^2 F(\omega) \, \omega
-       }.
-   \end{align*}
 
    \headline{Acknowledgment}
 
