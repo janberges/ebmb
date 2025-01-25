@@ -192,7 +192,7 @@
          \frac{\phi_j(m)}{\Theta_j(\epsilon, m)}
          [\Lambda_{i j}^+(n, m) - U^*_{i j}(m)],
          \\
-         \chi_i(n) &= -T \sum_j \sum_{m = 0}^{N - 1}
+         \chi_i(n) &= {\chi \sub C}_i - T \sum_j \sum_{m = 0}^{N - 1}
          \int \from{-\infty} \till \infty \D \epsilon
          \frac{n_j(\epsilon)}{n_j(\mu_0)}
          \frac{\epsilon - \mu + \chi_j(m)}{\Theta_j(\epsilon, m)}
@@ -261,6 +261,8 @@
    potentials for free and interacting particles, whose number $n_0, n$
    (including a factor of 2 for the spin) is usually conserved:
    %
+   \begingroup
+   \medmuskip=0mu
    \begin{equation*}
       \sum_i \int \from{-\infty} \till \infty \D \epsilon
       \frac{2 n_i(\epsilon)}{\E^{(\epsilon - \mu_0) / T} + 1}
@@ -270,8 +272,24 @@
       \Biggl[
           1 - 4 T \sum_{n = 0}^{N - 1}
          \frac{\epsilon - \mu + \chi_i(n)}{\Theta_i(\epsilon, n)}
-         - \frac 2 \pi \arctan \frac{\epsilon - \mu}{\omega_N}
+         - \frac 2 \pi \arctan \frac{\epsilon - \mu + {\chi \sub C}_i}{\omega_N}
       \Biggr].
+   \end{equation*}
+   \endgroup
+   %
+   It is unusual but possible to also consider the \textsc{Coulomb} contribution
+   to the energy shift:
+   %
+   \begin{equation*}
+      {\chi \sub C}_i = \sum_j
+      \int \from{-\infty} \till \infty \D \epsilon
+      \frac{n_j(\epsilon)}{n_j(\mu_0)}
+      \Biggl[
+         2 T \sum_{m = 0}^{N - 1}
+         \frac{\epsilon - \mu + \chi_j(m)}{\Theta_j(\epsilon, m)}
+         + \frac 1 \pi \arctan \frac{\epsilon - \mu + {\chi \sub C}_j}{\omega_N}
+      \Biggr]
+      \mu_{i j}.
    \end{equation*}
    %
    Approximating $n_i(\epsilon) \approx n_i(\mu_0)$ yields $\chi_i(n) = 0$ and
