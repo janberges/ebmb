@@ -63,9 +63,9 @@ module global
 
       integer(i4) :: points = 0 ! number of real-axis frequencies
 
-      real(dp) :: logscale = 0.0_dp ! scaling of logarithmic sampling
+      real(dp) :: logscale = 1.0_dp ! scaling of logarithmic sampling
 
-      real(dp) :: eta = 0.0_dp ! infinitesimal energy (eV)
+      real(dp) :: eta = 1e-3_dp ! infinitesimal energy (eV)
 
       logical :: measurable = .false. ! find measurable gap?
 
