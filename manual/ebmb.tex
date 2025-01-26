@@ -29,6 +29,8 @@
 \def\from#1{\sb{\mathrlap{#1}}}
 \def\till#1{\sp{\mathrlap{#1}}}
 
+\def\s{($\ast$)}
+
 \let\vec\boldsymbol
 
 \let\Delta\varDelta
@@ -555,12 +557,12 @@
          \tt iomega & \textsc{Matsubara} frequency (without $\I$) & $\omega_n$        \\
          \tt Delta  & gap                                         & $\Delta_i(n)$     \\
          \tt Z      & renormalization                             & $Z_i(n)$          \\
-         \tt chi    & energy shift                                & $\chi_i(n)$       \\
-         \tt chiC   & \textsc{Coulomb} part of energy shift       & ${\chi \sub C}_i$ \\
+         \tt chi    & energy shift \s                             & $\chi_i(n)$       \\
+         \tt chiC   & \textsc{Coulomb} part of energy shift \s    & ${\chi \sub C}_i$ \\
          \tt phiC   & \textsc{Coulomb} part of order parameter    & ${\phi \sub C}_i$ \\
          \tt status & status (steps till convergence or $-1$)     & --                \\
          \hline
-         \multicolumn3l{\textbf{occupancy results}} \\
+         \multicolumn3l{\textbf{occupancy results}} \hfill \s~\texttt{DOS given} \\
          \hline
          \tt states             & integral of density of states        & $\sum_i \int \D \epsilon \, n_i(\epsilon)$ \\
          \tt inspect            & integral of spectral function            & $\sum_i \int \D \omega \, A_i(\omega)$ \\
@@ -579,8 +581,8 @@
          \tt omega                           & frequency                                           & $\omega$           \\
          \tt \stack{l}{Re[Delta]}{Im[Delta]} & \stack{r}{real}{imaginary} $\Big\}$ gap             & $\Delta_i(\omega)$ \\
          \tt \stack{l}{Re[Z]}    {Im[Z]}     & \stack{r}{real}{imaginary} $\Big\}$ renormalization & $Z_i(\omega)$      \\
-         \tt \stack{l}{Re[chi]}  {Im[chi]}   & \stack{r}{real}{imaginary} $\Big\}$ energy shift    & $\chi_i(\omega)$   \\
-         \tt DOS                             & quasiparticle density of states                     & $A_i(\omega)$      \\
+         \tt \stack{l}{Re[chi]}  {Im[chi]}   & \stack{r}{real}{imaginary} $\Big\}$ energy shift \s & $\chi_i(\omega)$   \\
+         \tt DOS                             & quasiparticle density of states \s                  & $A_i(\omega)$      \\
          \hline
          \multicolumn3l{\textbf{measurable results} \hfill \texttt{measurable=true}} \\
          \hline
