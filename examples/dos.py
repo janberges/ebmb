@@ -20,7 +20,8 @@ results = ebmb.get(
    stable=True,
    )
 
-print('Integral of DOS: %g' % results['states'])
+print('Integral of noninteracting DOS: %g' % results['states'])
+print('Integral of quasi-particle DOS: %g' % results['inspect'])
 
 plt.fill_between(e - mu, dos, color='lightgray')
 plt.plot(results['omega'], results['DOS'])

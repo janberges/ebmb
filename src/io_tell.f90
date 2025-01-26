@@ -56,10 +56,8 @@ contains
          print "(/, 'integral of density of states:', /)"
          print form, oc%states
 
-         if (x%realgw) then
-            print "(/, 'integral of spectral function:', /)"
-            print form, oc%inspect
-         end if
+         print "(/, 'integral of spectral function:', /)"
+         print form, oc%inspect
 
          print "(/, 'initial and final occupancy number:', /)"
          print form, oc%n0, oc%n

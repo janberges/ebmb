@@ -3,8 +3,9 @@
 
 module dos
    use global
-   use eliashberg_self_energy, only: weight
+   use eliashberg_self_energy, only: weight_dos => weight
    use pade
+   use tools, only: differential
    implicit none
 
    private
@@ -15,10 +16,11 @@ contains
    subroutine density_of_states(x, re, oc)
       type(parameters), intent(in) :: x
       type(continued), intent(inout) :: re
-      type(occupancy), intent(in) :: oc
+      type(occupancy), intent(inout) :: oc
 
       integer :: i, n
 
+      real(dp) :: weight(x%points)
       complex(dp) :: omg, phi
       complex(dp) :: eps(size(x%energy))
 
@@ -31,23 +33,27 @@ contains
 
             eps(:) = x%energy - oc%mu + re%chi(n, i)
 
-            re%dos(n, i) = -sum(weight(:, i) / pi &
+            re%dos(n, i) = -sum(weight_dos(:, i) / pi &
                * aimag((omg + eps) / (omg ** 2 - eps ** 2 - phi ** 2)))
          end do
       end do
 
       re%dos(:, :) = abs(re%dos)
+
+      call differential(re%omega, weight)
+
+      oc%inspect = sum(weight * sum(re%dos, 2))
    end subroutine density_of_states
 
    subroutine density_of_states_stable(x, im, re, oc)
       type(parameters), intent(in) :: x
       type(matsubara), intent(in) :: im
       type(continued), intent(inout) :: re
-      type(occupancy), intent(in) :: oc
+      type(occupancy), intent(inout) :: oc
 
       integer :: i, n
 
-      real(dp) :: omg, eps(size(x%energy))
+      real(dp) :: omg, eps(size(x%energy)), weight(x%points)
       complex(dp) :: green(0:size(im%omega) - 1)
 
       allocate(re%dos(x%points, x%bands))
@@ -58,7 +64,7 @@ contains
 
             eps(:) = x%energy - oc%mu + im%chi(n, i)
 
-            green(n) = -sum(weight(:, i) * cmplx(eps, omg, dp) &
+            green(n) = -sum(weight_dos(:, i) * cmplx(eps, omg, dp) &
                / (omg ** 2 + eps ** 2 + im%phi(n, i) ** 2))
          end do
 
@@ -66,5 +72,9 @@ contains
 
          re%dos(:, i) = -aimag(continuation(cmplx(re%omega, x%eta, dp))) / pi
       end do
+
+      call differential(re%omega, weight)
+
+      oc%inspect = sum(weight * sum(re%dos, 2))
    end subroutine density_of_states_stable
 end module dos
