@@ -41,13 +41,13 @@ program tc
 
    call bounds
 
-   BANDS: do i = 1, x%bands
+   bands: do i = 1, x%bands
       x%T = upper(i)
 
       do while (lower(i) .lt. 0)
          if (x%T .le. x%error) then
             T(i) = 0
-            cycle BANDS
+            cycle bands
          end if
 
          x%T = x%T * (1 - x%rate)
@@ -66,12 +66,12 @@ program tc
 
          if (upper(i) - lower(i) .le. 2 * x%error) then
             T(i) = x%T
-            cycle BANDS
+            cycle bands
          end if
 
          call bounds
       end do
-   end do BANDS
+   end do bands
 
    if (x%tell) then
       print *
@@ -95,7 +95,7 @@ contains
       if (x%ldos) then
          call self_energy(x, im, oc)
       else
-         call self_energy_cDOS(x, im)
+         call self_energy_cdos(x, im)
       end if
 
       do j = 1, x%bands
