@@ -105,6 +105,7 @@ contains
 
       allocate(g(1 - no:2 * no - 1, x%bands, x%bands))
 
+      !$omp parallel do
       do n = 1 - no, 2 * no - 1
          if (x%la2F) then
             call lambda_from_a2F(x, g(n, :, :), n)
@@ -116,6 +117,7 @@ contains
             g(n, :, i) = g(n, :, i) / dosef
          end do
       end do
+      !$omp end parallel do
 
       allocate(muC(x%bands, x%bands))
 
@@ -212,6 +214,7 @@ contains
                chi = 0 !!!
 
                do j = 1, x%bands
+                  !$omp parallel do reduction(+: Z, phi, chi)
                   do m = 0, no - 1
                      Z = Z + integral_Z(m, j) &
                         * (g(n - m, j, i) - g(n + m + 1, j, i))
@@ -224,6 +227,7 @@ contains
                            * (g(n - m, j, i) + g(n + m + 1, j, i))
                      end if
                   end do
+                  !$omp end parallel do
                end do
 
                Z = 1 + Z * kB * x%T / im%omega(n)
@@ -293,12 +297,14 @@ contains
             p = i * no
             do j = 1, x%bands
                q = j * no
+               !$omp parallel do
                do n = 0, no - 1
                   do m = 0, no - 1
                      kernel(q - m, p - n) = kB * x%T * A(m, j) &
                         * (g(n - m, j, i) + g(n + m + 1, j, i) + U(m, j, i))
                   end do
                end do
+               !$omp end parallel do
             end do
          end do
       end if

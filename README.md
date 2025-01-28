@@ -9,7 +9,7 @@ For further information typeset `manual/ebmb.tex` or read it
 
 The makefile is designed for the GNU or Intel Fortran compiler:
 
-    make FC=gfortran FFLAGS=-O3
+    make FC=gfortran FFLAGS='-O3 -fopenmp'
 
 ## Acknowledgment
 

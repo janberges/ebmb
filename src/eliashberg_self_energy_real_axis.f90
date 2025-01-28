@@ -126,10 +126,12 @@ contains
                call prepare(m, j)
 
                do i = 1, x%bands
+                  !$omp parallel do
                   do n = 1, x%points
                      Sigma(n, i) = Sigma(n, i) + sum( &
                         n1(:, i) / (omega(n) + w1) + n2(:, i) / (omega(n) + w2))
                   end do
+                  !$omp end parallel do
 
                   if (x%chiC) then
                      Sigma(:, i) = Sigma(:, i) + weight(m) * aimag(G(m, j)) &
@@ -162,6 +164,7 @@ contains
             call prepare(m, j)
 
             do i = 1, x%bands
+               !$omp parallel do private(r1, r2)
                do n = 0, no - 1
                   r1 = n1(:, i) / (w1 ** 2 + im%omega(n) ** 2)
                   r2 = n2(:, i) / (w2 ** 2 + im%omega(n) ** 2)
@@ -169,7 +172,9 @@ contains
                   im%Z(n, i) = im%Z(n, i) - sum(im%omega(n) * (r1 + r2))
                   im%chi(n, i) = im%chi(n, i) + sum(w1 * r1 + w2 * r2)
                end do
+               !$omp end parallel do
 
+               !$omp parallel do private(c1, c2)
                do n = 1, x%points
                   c1 = n1(:, i) / (w1 ** 2 - omega(n) ** 2)
                   c2 = n2(:, i) / (w2 ** 2 - omega(n) ** 2)
@@ -177,6 +182,7 @@ contains
                   re%Z(n, i) = re%Z(n, i) - sum(omega(n) * (c1 + c2))
                   re%chi(n, i) = re%chi(n, i) + sum(w1 * c1 + w2 * c2)
                end do
+               !$omp end parallel do
 
                if (x%chiC) then
                   const = weight(m) * aimag(G(m, j)) &
@@ -214,10 +220,12 @@ contains
 
          do
             do i = 1, x%bands
+               !$omp parallel do
                do n = 1, x%points
                   G(n, i) = sum(weight_dos(:, i) &
                      / (omega(n) - x%energy + oc%mu - Sigma(n, i)))
                end do
+               !$omp end parallel do
             end do
 
             w(:) = weight * sum(aimag(G), 2)

@@ -27,6 +27,7 @@ contains
       allocate(re%dos(x%points, x%bands))
 
       do i = 1, x%bands
+         !$omp parallel do private(omg, phi, eps)
          do n = 1, x%points
             omg = re%Z(n, i) * cmplx(re%omega(n), x%eta, dp)
             phi = re%Z(n, i) * re%Delta(n, i)
@@ -36,6 +37,7 @@ contains
             re%dos(n, i) = -sum(weight_dos(:, i) / pi &
                * aimag((omg + eps) / (omg ** 2 - eps ** 2 - phi ** 2)))
          end do
+         !$omp end parallel do
       end do
 
       re%dos(:, :) = abs(re%dos)
@@ -59,6 +61,7 @@ contains
       allocate(re%dos(x%points, x%bands))
 
       do i = 1, x%bands
+         !$omp parallel do private(omg, eps)
          do n = 0, size(im%omega) - 1
             omg = im%Z(n, i) * im%omega(n)
 
@@ -67,6 +70,7 @@ contains
             green(n) = -sum(weight_dos(:, i) * cmplx(eps, omg, dp) &
                / (omg ** 2 + eps ** 2 + im%phi(n, i) ** 2))
          end do
+         !$omp end parallel do
 
          call coefficients(im%omega, green)
 

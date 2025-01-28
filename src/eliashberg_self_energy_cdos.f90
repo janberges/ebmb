@@ -36,6 +36,7 @@ contains
 
       allocate(lambda(1 - no:2 * no - 1, x%bands, x%bands))
 
+      !$omp parallel do
       do n = 1 - no, 2 * no - 1
          if (x%la2F) then
             call lambda_from_a2F(x, lambda(n, :, :), n)
@@ -43,6 +44,7 @@ contains
             lambda(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
          end if
       end do
+      !$omp end parallel do
 
       allocate(muStar(x%bands, x%bands))
 
@@ -87,6 +89,7 @@ contains
                Delta = 0 !!! but for each band and frequency separately.
 
                do j = 1, x%bands
+                  !$omp parallel do reduction(+: Z, Delta)
                   do m = 0, no - 1
                      Z = Z + im%omega(m) * A(m, j) &
                         * (lambda(n - m, j, i) - lambda(n + m + 1, j, i))
@@ -94,6 +97,7 @@ contains
                      Delta = Delta + im%Delta(m, j) * A(m, j) * (mu(m, j, i) &
                         +  lambda(n - m, j, i) + lambda(n + m + 1, j, i))
                   end do
+                  !$omp end parallel do
                end do
 
                Z = 1 + pi * kB * x%T * Z / im%omega(n)
