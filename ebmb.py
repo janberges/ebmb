@@ -267,6 +267,59 @@ def chain_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, replace=True):
 
     return e, dos
 
+def chain_a2F(file='a2F.in', dw=1e-4, l=1.0, w0=0.02, wlog=None, replace=True):
+    """Calculate and save Eliashberg spectral function of 1D lattice.
+
+    See Eqs. (63) and (64) of Phys. Rev. X 13, 041009 (2023). Averaging the
+    electron-phonon coupling over k yields this Eliashberg spectral function.
+    The lambda parameter `l` is g0 / w0 squared times the density of states.
+
+    Parameters
+    ----------
+    file : str
+        Path to output file.
+    dw : float
+        Energy resolution.
+    l : float
+        Effective electron-phonon coupling.
+    w0 : float
+        Second-moment average phonon frequency.
+    wlog : float
+        Logarithmic average phonon frequency.
+    replace : bool
+        Overwrite existing output file?
+
+    Returns
+    -------
+    ndarray
+        Energy.
+    ndarray
+        Eliashberg spectral function.
+    """
+    if not replace and path.exists(file):
+        return
+
+    if wlog is None:
+        wlog = w0 / np.sqrt(2)
+
+    points = int(round(2 * wlog / dw)) + 1
+
+    w, dw = np.linspace(2 * wlog, 0, points, endpoint=False, retstep=True)
+    w = w[::-1]
+    dw *= -1
+
+    a2F = np.empty(points)
+
+    a2F[:-1] = l / np.pi * w[:-1] / np.sqrt((2 * wlog) ** 2 - w[:-1] ** 2)
+
+    a2F[-1] = (l / dw - a2F[0] / w[0] - 2 * sum(a2F[1:-1] / w[1:-1])) * w[-1]
+
+    with open(file, 'w') as out:
+        for i in range(points):
+            out.write('% .10f %.10f\n' % (w[i], a2F[i]))
+
+    return w, a2F
+
 def square_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, replace=True):
     """Calculate density of states of square lattice and save it to file.
 
