@@ -148,6 +148,8 @@ contains
          if (all(abs(G0 - G) .ap. 0.0_dp)) exit
       end do
 
+      re%dos(:, :) = -aimag(G) / pi
+
       im%Z(:, :) = 0.0_dp
       im%phi(:, :) = 0.0_dp
       im%chi(:, :) = 0.0_dp
@@ -158,6 +160,8 @@ contains
       re%Z(:, :) = (0.0_dp, 0.0_dp)
       re%chi(:, :) = (0.0_dp, 0.0_dp)
       re%Delta(:, :) = (0.0_dp, 0.0_dp)
+
+      G = G0 ! We do not want another iteration but Z and chi for current Sigma!
 
       do j = 1, x%bands
          do m = 1, x%points
@@ -201,8 +205,6 @@ contains
          im%Z(:, i) = 1.0_dp - im%Z(:, i) / im%omega
          re%Z(:, i) = 1.0_dp - re%Z(:, i) / omega
       end do
-
-      re%dos(:, :) = -aimag(G) / pi
 
    contains
 
