@@ -257,7 +257,7 @@ def chain_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, replace=True):
 
     dos = np.empty(points)
 
-    dos[1:-1] = 1 / np.sqrt(1 - (e[1:-1] / (2 * t)) ** 2) / (2 * np.pi * t)
+    dos[1:-1] = 1 / (np.pi * np.sqrt((2 * t) ** 2 - e[1:-1] ** 2))
 
     dos[0] = dos[-1] = 1 / de - sum(dos[1:-1])
 
