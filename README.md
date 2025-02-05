@@ -1,9 +1,7 @@
-![ebmb logo](logo/ebmb.svg)
-
-Solve multiband Eliashberg equations.
+# Solve multiband Eliashberg equations
 
 For further information typeset `manual/ebmb.tex` or read it
-[here](https://janberges.github.io/ebmb/ebmb.pdf).
+[here](https://janberges.github.io/ebmb).
 
 ## Installation
 

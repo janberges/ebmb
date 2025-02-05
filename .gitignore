@@ -15,3 +15,6 @@ dist
 a2f.in
 dos.in
 ~temporary.dat
+
+doctrees
+html
