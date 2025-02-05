@@ -54,7 +54,8 @@ def run(program='ebmb', redirect=False, **parameters):
     Parameters
     ----------
     program : str
-        Name of or path to executable.
+        Name of or path to executable. If not found, the path to a directory
+        'bin' located next to this module is prepended before trying again.
     redirect : bool
         Do not print but return standard output of program.
     **parameters
@@ -65,10 +66,15 @@ def run(program='ebmb', redirect=False, **parameters):
     for key, value in parameters.items():
         command.append('='.join([key, ','.join(map(str, np.ravel(value)))]))
 
-    if redirect:
-        return subprocess.check_output(command)
-    else:
-        subprocess.call(command)
+    for attempt in range(2):
+        try:
+            if redirect:
+                return subprocess.check_output(command)
+            else:
+                return subprocess.call(command)
+        except FileNotFoundError:
+            command[0] = path.join(path.dirname(path.abspath(__file__)), 'bin',
+                command[0])
 
 def read_char(file):
     """Read character from binary or text file (for Python-3 compatibility).
