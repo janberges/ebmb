@@ -85,7 +85,7 @@ def read_char(file):
         File opened in binary or text mode.
 
     Returns
-    ------
+    -------
     str
         Next character from file.
     """
