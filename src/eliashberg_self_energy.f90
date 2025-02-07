@@ -249,6 +249,16 @@ contains
             end do
          end do
 
+         if (x%chiC) then
+            call calculate_residue(nC)
+
+            do i = 1, x%bands
+               im%chiC(i) = 2 * kB * x%T &
+                  * sum(sum(integral_chi(:nC - 1, :), 1) * muC(:, i)) &
+                  + sum(residues * muC(:, i)) / 2
+            end do
+         end if
+
          if (x%conserve) then
             call calculate_residue(no)
 
@@ -258,16 +268,6 @@ contains
             done = done .and. (oc%mu .ap. mu)
 
             oc%mu = mu
-         end if
-
-         if (x%chiC) then
-            if (.not. x%conserve .or. no .ne. nC) call calculate_residue(nC)
-
-            do i = 1, x%bands
-               im%chiC(i) = 2 * kB * x%T &
-                  * sum(sum(integral_chi(:nC - 1, :), 1) * muC(:, i)) &
-                  + sum(residues * muC(:, i)) / 2
-            end do
          end if
 
          if (done) then
