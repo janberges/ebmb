@@ -44,7 +44,8 @@ contains
          write (unit) 'DIM:', 0_i4
 
          write (unit) 'states:', oc%states
-         write (unit) 'inspect:', oc%inspect
+
+         if (x%points .gt. 0) write (unit) 'inspect:', oc%inspect
 
          write (unit) 'n0:', oc%n0
          write (unit) "n:", oc%n

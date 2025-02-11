@@ -30,6 +30,7 @@
 \def\till#1{\sp{\mathrlap{#1}}}
 
 \def\s{($\ast$)}
+\def\st{($\ast\ast$)}
 
 \let\vec\boldsymbol
 
@@ -566,7 +567,7 @@
          \multicolumn3l{\textbf{occupancy results}} \hfill \s~\texttt{DOS given} \\
          \hline
          \tt states             & integral of density of states        & $\sum_i \int \D \epsilon \, n_i(\epsilon)$ \\
-         \tt inspect            & integral of spectral function            & $\sum_i \int \D \omega \, A_i(\omega)$ \\
+         \tt inspect            & integral of spectral function \st        & $\sum_i \int \D \omega \, A_i(\omega)$ \\
          \tt \stack{l}{n0} {n}  & \stack{r}{initial}{final} $\Big\}$ occupancy number   & \stack{r}{$n_0$}  {$n$}   \\
          \tt \stack{l}{mu0}{mu} & \stack{r}{initial}{final} $\Big\}$ chemical potential & \stack{r}{$\mu_0$}{$\mu$} \\
          \hline
@@ -577,7 +578,7 @@
          \tt omegaLog & logarithmic average frequency   & $\omega \sub{log}$   \\
          \tt omega2nd & second-moment average frequency & $\overline \omega_2$ \\
          \hline
-         \multicolumn3l{\textbf{real-axis results} \hfill \texttt{points} > 0} \\
+         \multicolumn3l{\textbf{real-axis results} \hfill \st~\texttt{points} > 0} \\
          \hline
          \tt omega                           & frequency                                           & $\omega$           \\
          \tt \stack{l}{Re[Delta]}{Im[Delta]} & \stack{r}{real}{imaginary} $\Big\}$ gap             & $\Delta_i(\omega)$ \\
