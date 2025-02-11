@@ -90,7 +90,7 @@ contains
          oc%mu = x%mu
       end if
 
-      call dos(x%n, x%n .ge. 0)
+      call dos(x%n, x%n .ge. 0, .true.)
 
       oc%n0 = oc%n
       oc%mu0 = oc%mu
@@ -207,7 +207,7 @@ contains
          im%chi(:, :) = im%chi * kB * x%T
 
          if (x%chiC) then
-            call calculate_residue(nC)
+            call calculate_residue(nC, .false.)
 
             do i = 1, x%bands
                im%chiC(i) = 2 * kB * x%T &
@@ -218,7 +218,7 @@ contains
             end do
          end if
 
-         call dos(oc%n0, x%conserve)
+         call dos(oc%n0, x%conserve, .false.)
 
          if (all(im%Z .ap. Z) .and. all(im%phi .ap. phi) &
                .and. all(im%chi .ap. chi)) then
@@ -258,9 +258,9 @@ contains
 
    contains
 
-      subroutine dos(ntarget, optimize)
+      subroutine dos(ntarget, optimize, exact)
          real(dp), intent(in) :: ntarget
-         logical, intent(in) :: optimize
+         logical, intent(in) :: optimize, exact
 
          do
             do i = 1, x%bands
@@ -271,7 +271,7 @@ contains
                !$omp end parallel do
             end do
 
-            call calculate_residue(no)
+            call calculate_residue(no, exact)
 
             oc%n = oc%states - 4 * kB * x%T * sum(integral_chi) - residue
 
@@ -297,14 +297,24 @@ contains
          integral_chi(n, i) = A(n, i) * (im%chi(n, i) - oc%mu) + B(n, i)
       end subroutine integrate
 
-      subroutine calculate_residue(nM)
+      subroutine calculate_residue(nM, exact)
          integer, intent(in) :: nM
+         logical, intent(in) :: exact
 
          do i = 1, x%bands
-            matsum(:) = 2 / pi * atan2(x%energy - oc%mu + im%chiC(i), &
-               domega * (nM + 0.5_dp))
+            matsum(:) = x%energy - oc%mu + im%chiC(i)
 
-            residues(i) = sum(weight(:, i) * matsum)
+            if (exact) then
+               residues(i) = sum(weight(:, i) * tanh(matsum / (2 * kB * x%T)))
+
+               do n = 0, nM - 1
+                  residues(i) = residues(i) - 4 * kB * x%T * sum(weight(:, i) &
+                     * matsum / (im%omega(n) ** 2 + matsum ** 2))
+               end do
+            else
+               residues(i) = 2 / pi * sum(weight(:, i) * atan2(matsum, &
+                  domega * (nM + 0.5_dp)))
+            end if
          end do
 
          residue = sum(residues)
