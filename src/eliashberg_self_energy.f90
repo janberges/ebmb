@@ -37,6 +37,46 @@ contains
 
       if (initial) call initialize(x, oc)
 
+      domega = 2 * pi * kB * x%T
+
+      nE = x%omegaE / domega
+
+      no = ceiling(x%cutoff  * nE - 0.5_dp)
+      nC = ceiling(x%cutoffC * nE - 0.5_dp)
+
+      allocate(im%omega(0:no - 1))
+
+      do n = 0, no - 1
+         im%omega(n) = domega * (n + 0.5_dp)
+      end do
+
+      allocate(im%Z(0:no - 1, x%bands))
+
+      im%Z(:, :) = 1
+
+      allocate(im%phi(0:no - 1, x%bands))
+
+      im%phi(:, :) = 0
+
+      if (.not. (x%normal .or. present(kernel))) im%phi(0, :) = 1
+
+      allocate(im%chi(0:no - 1, x%bands))
+
+      im%chi(:, :) = 0
+
+      allocate(im%chiC(x%bands))
+
+      im%chiC(:) = 0
+
+      allocate(A(0:no - 1, x%bands))
+      allocate(B(0:no - 1, x%bands))
+
+      allocate(integral_Z  (0:no - 1, x%bands))
+      allocate(integral_phi(0:no - 1, x%bands))
+      allocate(integral_chi(0:no - 1, x%bands))
+
+      allocate(residues(x%bands))
+
       if (x%n .ge. 0) then
          oc%n = x%n
 
@@ -89,19 +129,6 @@ contains
       else
          dosef(:) = 1.0_dp
       end if
-
-      domega = 2 * pi * kB * x%T
-
-      nE = x%omegaE / domega
-
-      no = ceiling(x%cutoff  * nE - 0.5_dp)
-      nC = ceiling(x%cutoffC * nE - 0.5_dp)
-
-      allocate(im%omega(0:no - 1))
-
-      do n = 0, no - 1
-         im%omega(n) = domega * (n + 0.5_dp)
-      end do
 
       allocate(g(1 - no:2 * no - 1, x%bands, x%bands))
 
@@ -168,33 +195,6 @@ contains
       end do
 
       U(nC:, :, :) = 0
-
-      allocate(im%Z(0:no - 1, x%bands))
-
-      im%Z(:, :) = 1
-
-      allocate(im%phi(0:no - 1, x%bands))
-
-      im%phi(:, :) = 0
-
-      if (.not. (x%normal .or. present(kernel))) im%phi(0, :) = 1
-
-      allocate(im%chi(0:no - 1, x%bands))
-
-      im%chi(:, :) = 0
-
-      allocate(im%chiC(x%bands))
-
-      im%chiC(:) = 0
-
-      allocate(A(0:no - 1, x%bands))
-      allocate(B(0:no - 1, x%bands))
-
-      allocate(integral_Z  (0:no - 1, x%bands))
-      allocate(integral_phi(0:no - 1, x%bands))
-      allocate(integral_chi(0:no - 1, x%bands))
-
-      allocate(residues(x%bands))
 
       do i = 1, x%bands
          do n = 0, no - 1
