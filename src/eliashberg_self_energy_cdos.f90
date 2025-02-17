@@ -15,17 +15,13 @@ contains
       type(parameters), intent(in) :: x
       type(matsubara), intent(out) :: im
 
-      real(dp) :: nE
+      real(dp) :: nE, Z, Delta
 
       real(dp), allocatable :: lambda(:, :, :), mu(:, :, :)
       real(dp), allocatable :: muStar(:, :), A(:, :)
-      real(dp), allocatable :: Z(:, :), Delta(:, :)
 
       integer :: step, i, j, n, m, no, nC
-
-      if (.not. x%normal .and. x%limit .le. 10) then
-         print "('Warning: Superconducting solution should be self-consistent')"
-      end if
+      logical :: done
 
       nE = x%omegaE / (2 * pi * kB * x%T)
 
@@ -78,45 +74,47 @@ contains
 
       allocate(A(0:no - 1, x%bands))
 
-      allocate(Z(0:no - 1, x%bands))
-      allocate(Delta(0:no - 1, x%bands))
+      do i = 1, x%bands
+         A(:, i) = 1 / sqrt(im%omega ** 2 + im%Delta(:, i) ** 2)
+      end do
 
       im%status = -1
 
       do step = 1, x%limit
-         do i = 1, x%bands
-            A(:, i) = 1 / sqrt(im%omega ** 2 + im%Delta(:, i) ** 2)
-         end do
-
-         Z(:, :) = im%Z
-         Delta(:, :) = im%Delta
-
-         im%Z(:, :) = 0.0_dp
-         im%Delta(:, :) = 0.0_dp
+         done = .true.
 
          do i = 1, x%bands
-            !$omp parallel do
             do n = 0, no - 1
+               Z = 0     !!! The self-energy is not updated as a whole,
+               Delta = 0 !!! but for each band and frequency separately.
+
                do j = 1, x%bands
+                  !$omp parallel do reduction(+: Z, Delta)
                   do m = 0, no - 1
-                     im%Z(n, i) = im%Z(n, i) + im%omega(m) * A(m, j) &
+                     Z = Z + im%omega(m) * A(m, j) &
                         * (lambda(n - m, j, i) - lambda(n + m + 1, j, i))
 
-                     im%Delta(n, i) = im%Delta(n, i) + Delta(m, j) * A(m, j) &
-                        * (lambda(n - m, j, i) + lambda(n + m + 1, j, i) &
-                           + mu(m, j, i))
+                     Delta = Delta + im%Delta(m, j) * A(m, j) * (mu(m, j, i) &
+                        +  lambda(n - m, j, i) + lambda(n + m + 1, j, i))
                   end do
+                  !$omp end parallel do
                end do
 
-            end do
-            !$omp end parallel do
+               Z = 1 + pi * kB * x%T * Z / im%omega(n)
+               Delta = pi * kB * x%T * Delta / Z
 
-            im%Z(:, i) = 1 + pi * kB * x%T * im%Z(:, i) / im%omega
+               done = done &
+                  .and. (im%Z    (n, i) .ap. Z) &
+                  .and. (im%Delta(n, i) .ap. Delta)
+
+               im%Z    (n, i) = Z
+               im%Delta(n, i) = Delta
+
+               A(n, i) = 1 / sqrt(im%omega(n) ** 2 + Delta ** 2)
+            end do
          end do
 
-         im%Delta(:, :) = pi * kB * x%T * im%Delta / Z
-
-         if (all(im%Z .ap. Z) .and. all(im%Delta .ap. Delta)) then
+         if (done) then
             im%status = step
             exit
          end if
