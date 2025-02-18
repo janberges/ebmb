@@ -17,7 +17,9 @@
 
 \def\bottomfraction{0.9}
 
+\let\Re\relax
 \let\Im\relax
+\DeclareMathOperator\Re{Re}
 \DeclareMathOperator\Im{Im}
 
 \def\D{\mathrm d}
@@ -417,8 +419,9 @@
       \frac{n_i(\epsilon)}
          {\omega - \epsilon + \mu - \Sigma_{1 1 i}(\omega)}.
    \end{equation*}
-
-   \newpage
+   %
+   Note that in the code $\Sigma_{1 1 i}(\omega + \I \eta)$ is replaced by $\Re
+   \Sigma_{1 1 i}(\omega + \I \eta) + \I \Im \Sigma_{1 1 i}(\omega + \I 0^+)$.
 
    \headline{Acknowledgment}
 

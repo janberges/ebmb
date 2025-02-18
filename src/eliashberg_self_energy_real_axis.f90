@@ -24,7 +24,7 @@ contains
       integer :: step, i, j, n, m, no
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
       real(dp) :: beta, fermi, domega, const
-      real(dp), allocatable :: weight(:), bose(:), dosef(:)
+      real(dp), allocatable :: weight(:), bose(:), dosef(:), dImSigma(:, :)
       real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
       complex(dp), allocatable :: omega(:), G0(:, :), G(:, :), Sigma(:, :)
       complex(dp), allocatable :: c1(:), c2(:)
@@ -75,6 +75,7 @@ contains
       allocate(omega(x%points))
       allocate(G(x%points, x%bands))
       allocate(Sigma(x%points, x%bands))
+      allocate(dImSigma(x%points, x%bands))
       allocate(n1(size(x%omega), x%bands))
       allocate(n2(size(x%omega), x%bands))
       allocate(dosef(x%bands))
@@ -141,6 +142,27 @@ contains
             end do
          end do
 
+         ! Send eta to zero and replace Im[1/(x + i0+)] by -pi delta(x):
+
+         !$omp parallel do private(n1, n2)
+         do n = 1, x%points
+            do m = 1, size(x%omega)
+               n1(m, :) = aimag(Ginter(re%omega(n) - x%omega(m))) / dosef &
+                  * (1.0_dp - fermi_fun(re%omega(n) - x%omega(m)) + bose(m))
+
+               n2(m, :) = aimag(Ginter(re%omega(n) + x%omega(m))) / dosef &
+                  * (fermi_fun(re%omega(n) + x%omega(m)) + bose(m))
+            end do
+
+            do i = 1, x%bands
+               dImSigma(n, i) = sum(weight_a2F(:, :, i) * (n1 + n2)) &
+                  - aimag(Sigma(n, i))
+            end do
+         end do
+         !$omp end parallel do
+
+         Sigma(:, :) = Sigma + cmplx(0.0_dp, dImSigma, dp)
+
          G0 = G
 
          call dos(oc%n0, x%conserve)
@@ -206,7 +228,36 @@ contains
          re%Z(:, i) = 1.0_dp - re%Z(:, i) / omega
       end do
 
+      re%chi(:, :) = re%chi + cmplx(0.0_dp, dImSigma, dp)
+
    contains
+
+      function Ginter(omega)
+         complex(dp) :: Ginter(x%bands)
+
+         real(dp), intent(in) :: omega
+
+         integer :: n, m
+
+         n = minloc(abs(re%omega - omega), 1)
+
+         if (re%omega(n) .gt. omega .and. n .gt. 1) then
+            m = n - 1
+         else if (re%omega(n) .lt. omega .and. n .lt. size(re%omega)) then
+            m = n + 1
+         else
+            m = n
+         end if
+
+         if (re%omega(n) .ap. re%omega(m)) then
+            Ginter(:) = G(n, :)
+         else
+            Ginter(:) &
+               = (G(n, :) * (omega - re%omega(m)) &
+               + (re%omega(n) - omega) * G(m, :)) &
+               / (re%omega(n) - re%omega(m))
+         end if
+      end function Ginter
 
       subroutine dos(ntarget, optimize)
          real(dp), intent(in) :: ntarget
