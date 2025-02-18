@@ -1,4 +1,6 @@
-# Solve multiband Eliashberg equations
+# ebmb
+
+Solve multiband Eliashberg equations.
 
 For further information typeset `manual/ebmb.tex` or read it
 [here](https://io.janberges.de/ebmb).
