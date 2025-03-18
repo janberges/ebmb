@@ -12,7 +12,7 @@ parameters = dict(
     cutoff=100.0,
     upper=0.2,
     points=1000,
-    )
+)
 
 ebmb.square_dos(parameters['dos'])
 

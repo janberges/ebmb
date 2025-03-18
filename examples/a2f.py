@@ -12,7 +12,7 @@ Tc_a2F = ebmb.get(
    program='critical',
    tell=False,
    a2F='a2f.in',
-   )
+)
 
 print('Tc from Eliashberg function: %g K' % Tc_a2F)
 
@@ -21,6 +21,6 @@ Tc_E = ebmb.get(
    tell=False,
    lamda=lamda,
    omegaE=omegaE,
-   )
+)
 
 print('Tc from Einstein frequency: %g K' % Tc_E)
