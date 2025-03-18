@@ -26,4 +26,7 @@ print('Integral of quasi-particle DOS: %g' % results['inspect'])
 plt.fill_between(e - mu, dos, color='lightgray')
 plt.plot(results['omega'], results['DOS'])
 
+plt.xlabel(r'Energy (eV)')
+plt.ylabel(r'Density of states (1/eV)')
+
 plt.savefig('dos.png')
