@@ -13,6 +13,7 @@
    :hidden:
 
    examples/selfen
+   examples/gap
    examples/dos
    examples/residue
 

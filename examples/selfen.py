@@ -16,8 +16,9 @@ parameters = dict(
 
 ebmb.square_dos(parameters['dos'])
 
-results = ebmb.get(T=0.5 * ebmb.get(program='critical', **parameters),
-    **parameters)
+Tc = ebmb.get('critical', **parameters)
+
+results = ebmb.get(T=0.5 * Tc, **parameters)
 
 fig, ax = plt.subplots(3, sharex='col', sharey='row')
 
