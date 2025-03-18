@@ -26,4 +26,4 @@ print('Integral of quasi-particle DOS: %g' % results['inspect'])
 plt.fill_between(e - mu, dos, color='lightgray')
 plt.plot(results['omega'], results['DOS'])
 
-plt.show()
+plt.savefig('dos.png')

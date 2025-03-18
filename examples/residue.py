@@ -19,4 +19,4 @@ for N, ax in enumerate(sub.flat):
 
     ax.label_outer()
 
-plt.show()
+fig.savefig('residue.png')

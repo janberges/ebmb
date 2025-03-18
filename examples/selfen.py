@@ -32,4 +32,4 @@ for x, X in zip(ax, ['Z', 'chi', 'Delta']):
 plt.xlabel(r'$\omega$ (eV)')
 plt.xlim(0.0, parameters['upper'])
 
-plt.show()
+fig.savefig('selfen.png')
