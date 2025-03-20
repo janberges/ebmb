@@ -19,3 +19,5 @@ html_theme_options = {
     'logo_only': True,
     'style_nav_header_background': '#e7f2fa',
     }
+html_static_path = ['files']
+html_css_files = ['style.css']
