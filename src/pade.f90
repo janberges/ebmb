@@ -25,8 +25,9 @@ contains
       if (allocated(c)) deallocate(c)
       allocate(c(n, n))
 
-      if (all(abs(u) .ap. 0.0_dp)) then
+      if (all(u .ap. u(1))) then
          c(:, :) = 0
+         c(1, 1) = u(1)
          return
       end if
 
