@@ -167,7 +167,7 @@ contains
 
          call dos(oc%n0, x%conserve)
 
-         if (all(abs(G0 - G) .ap. 0.0_dp)) exit
+         if (all(G .ap. G0)) exit
       end do
 
       re%dos(:, :) = -aimag(G) / pi

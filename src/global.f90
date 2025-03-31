@@ -114,11 +114,11 @@ module global
    real(dp) :: eps = 451 * epsilon(1.0_dp) ! negligible float difference (a.u.)
 
    interface operator(.ap.)
-      module procedure ap
+      module procedure ap, apc
    end interface
 
    interface operator(.na.)
-      module procedure na
+      module procedure na, nac
    end interface
 
 contains
@@ -136,4 +136,18 @@ contains
 
       na = abs(lhs - rhs) .gt. eps
    end function na
+
+   elemental function apc(lhs, rhs)
+      logical :: apc
+      complex(dp), intent(in) :: lhs, rhs
+
+      apc = abs(lhs - rhs) .le. eps
+   end function apc
+
+   elemental function nac(lhs, rhs)
+      logical :: nac
+      complex(dp), intent(in) :: lhs, rhs
+
+      nac = abs(lhs - rhs) .gt. eps
+   end function nac
 end module global
