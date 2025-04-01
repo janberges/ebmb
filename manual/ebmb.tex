@@ -45,7 +45,7 @@
 \newlength\gap
 \setlength\gap{6pt}
 
-\def\slant#1{\smash{\rlap{\rotatebox{45}{#1}}\vphantom{\rotatebox{45}{#1}}}}
+\def\slant#1{\rlap{\rotatebox{45}{#1}}\vphantom{\rotatebox{45}{#1}}}
 
 \def\stack#1#2#3{\begin{tabular}{@{}#1@{}}#2\\#3\end{tabular}}
 
@@ -421,6 +421,40 @@
          %
          The available keys and default values are listed in
          Table~\ref{parameters}.
+         %
+         \begin{itemize}[itemsep=0pt]
+            \item
+               The columns \texttt{ebmb}, \texttt{tc} and \texttt{critical} show
+               which keys are used by these programs.
+
+            \item
+               The rightmost column indicates which parameters may be chosen as
+               variable for \texttt{critical}. The variable is marked with a
+               negative sign; its absolute value is used as initial guess. If no
+               parameter is negative, the critical temperature is searched for.
+
+            \item
+               \texttt{lambda}, \texttt{muStar}, and \texttt{muC} expect
+               flattened square matrices of equal size the elements of which
+               are separated by commas. It is impossible to vary more than one
+               element at once.
+
+            \item
+               \texttt{dos} has lines $\epsilon$/eV $n_1 / \mathrm{eV}^{-1}$
+               $n_2 / \mathrm{eV}^{-1}$ $\dots$ with $\epsilon$ ascending but
+               not necessarily equidistant.
+
+            \item
+               \texttt{a2F} has lines $\omega$/eV $\alpha^2 F_{1, 1}$ $\alpha^2
+               F_{2, 1}$ $\dots$ with $\omega$ ascending but not necessarily
+               equidistant.
+
+            \item
+               The relative change in the sample spacing of the real-axis
+               frequencies between $\omega = 0$ and $\omega = x$ is
+               $\texttt{logscale} \cdot |x|$. Thus, $\texttt{logscale} = 0$
+               corresponds to equidistant sampling.
+         \end{itemize}
 
       \item
          Unless \texttt{tell=false}, the results are printed to standard output.
@@ -515,44 +549,7 @@
          \tt realgw        & \tt false   & --               & --                  & do real-axis GW$_0$ calculation?           & $+$ & $-$ & $-$ & $-$ \\[\gap]
          \tt power         & \tt true    & --               & --                  & power method for single band?              & $-$ & $-$ & $+$ & $-$
       \end{tabular}
-      \captionsetup{singlelinecheck=off}
-      \caption[Input parameters]{
-         Input parameters.
-
-         \begin{itemize}[itemsep=0pt]
-            \item
-               The columns \texttt{ebmb}, \texttt{tc} and \texttt{critical} show
-               which keys are used by these programs.
-
-            \item
-               The rightmost column indicates which parameters may be chosen as
-               variable for \texttt{critical}. The variable is marked with a
-               negative sign; its absolute value is used as initial guess. If no
-               parameter is negative, the critical temperature is searched for.
-
-            \item
-               \texttt{lambda}, \texttt{muStar}, and \texttt{muC} expect
-               flattened square matrices of equal size the elements of which
-               are separated by commas. It is impossible to vary more than one
-               element at once.
-
-            \item
-               \texttt{dos} has lines $\epsilon$/eV $n_1 / \mathrm{eV}^{-1}$
-               $n_2 / \mathrm{eV}^{-1}$ $\dots$ with $\epsilon$ ascending but
-               not necessarily equidistant.
-
-            \item
-               \texttt{a2F} has lines $\omega$/eV $\alpha^2 F_{1, 1}$ $\alpha^2
-               F_{2, 1}$ $\dots$ with $\omega$ ascending but not necessarily
-               equidistant.
-
-            \item
-               The relative change in the sample spacing of the real-axis
-               frequencies between $\omega = 0$ and $\omega = x$ is
-               $\texttt{logscale} \cdot |x|$. Thus, $\texttt{logscale} = 0$
-               corresponds to equidistant sampling.
-         \end{itemize}
-         }
+      \caption{Input parameters.}
       \label{parameters}
    \end{table}
 
