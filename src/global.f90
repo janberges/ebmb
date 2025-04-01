@@ -52,7 +52,7 @@ module global
       logical :: chi      = .true.  ! consider energy shift?
       logical :: chiC     = .false. ! consider Coulomb part of energy shift?
 
-      integer(i4) :: limit = 250000 ! maximum number of iterations
+      integer(i4) :: steps = 250000 ! maximum number of iterations
 
       real(dp) :: error = 1e-05_dp ! bisection error (a.u.)
       real(dp) :: toln  = 1e-10_dp ! tolerance for occupancy number

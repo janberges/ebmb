@@ -117,7 +117,7 @@ contains
          dosef(:) = 1.0_dp
       end if
 
-      do step = 1, x%limit
+      do step = 1, x%steps
          if (x%tell) print "('GW iteration ', I0)", step
 
          Sigma(:, :) = (0.0_dp, 0.0_dp)

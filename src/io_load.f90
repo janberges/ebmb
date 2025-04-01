@@ -88,7 +88,7 @@ contains
             case ('chi');      read (rhs, *, iostat=error) x%chi
             case ('chiC');     read (rhs, *, iostat=error) x%chiC
 
-            case ('limit'); read (rhs, *, iostat=error) x%limit
+            case ('steps', 'limit'); read (rhs, *, iostat=error) x%steps
 
             case ('epsilon'); read (rhs, *, iostat=error) eps
             case ('toln');    read (rhs, *, iostat=error) x%toln

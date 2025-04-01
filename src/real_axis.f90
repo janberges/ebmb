@@ -48,7 +48,7 @@ contains
                re%Delta0(i) = 1
                re%status(i) = -1
 
-               do n = 1, x%limit
+               do n = 1, x%steps
                   Delta0 = real(continuation(cmplx(re%Delta0(i), kind=dp)))
 
                   if (re%Delta0(i) .ap. Delta0) re%status(i) = n

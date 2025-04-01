@@ -23,7 +23,7 @@ contains
 
       integer :: step, i, j, n, m, no, nC
 
-      if (.not. x%normal .and. x%limit .le. 10) then
+      if (.not. x%normal .and. x%steps .le. 10) then
          print "('Warning: Superconducting solution should be self-consistent')"
       end if
 
@@ -83,7 +83,7 @@ contains
 
       im%status = -1
 
-      do step = 1, x%limit
+      do step = 1, x%steps
          do i = 1, x%bands
             A(:, i) = 1 / sqrt(im%omega ** 2 + im%Delta(:, i) ** 2)
          end do
