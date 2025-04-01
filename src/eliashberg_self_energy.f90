@@ -12,7 +12,7 @@ module eliashberg_self_energy
 
    logical :: initial = .true.
 
-   real(dp), allocatable :: weight(:, :), trapezia(:), matsum(:), dosef(:)
+   real(dp), allocatable :: weight(:, :), matsum(:), dosef(:)
 
 contains
 
@@ -23,17 +23,21 @@ contains
 
       real(dp), allocatable, intent(out), optional :: kernel(:, :)
 
-      real(dp) :: nE, Z, phi, chi, mu, domega, A0, B0, residue
+      real(dp) :: nE, domega, residue
 
       real(dp), allocatable :: g(:, :, :), U(:, :, :), residues(:)
       real(dp), allocatable :: muC(:, :), muStar(:, :), A(:, :), B(:, :)
+      real(dp), allocatable :: Z(:, :), phi(:, :), chi(:, :)
 
       real(dp), allocatable :: integral_Z  (:, :)
       real(dp), allocatable :: integral_phi(:, :)
       real(dp), allocatable :: integral_chi(:, :)
 
       integer :: step, i, j, n, m, p, q, no, nC
-      logical :: done
+
+      if (.not. x%normal .and. x%limit .le. 10) then
+         print "('Warning: Superconducting solution should be self-consistent')"
+      end if
 
       if (initial) call initialize(x, oc)
 
@@ -58,8 +62,6 @@ contains
 
       im%phi(:, :) = 0
 
-      if (.not. (x%normal .or. present(kernel))) im%phi(0, :) = 1
-
       allocate(im%chi(0:no - 1, x%bands))
 
       im%chi(:, :) = 0
@@ -67,6 +69,10 @@ contains
       allocate(im%chiC(x%bands))
 
       im%chiC(:) = 0
+
+      allocate(Z(0:no - 1, x%bands))
+      allocate(phi(0:no - 1, x%bands))
+      allocate(chi(0:no - 1, x%bands))
 
       allocate(A(0:no - 1, x%bands))
       allocate(B(0:no - 1, x%bands))
@@ -78,50 +84,15 @@ contains
       allocate(residues(x%bands))
 
       if (x%n .ge. 0) then
-         oc%n = x%n
-
-         oc%mu = (x%energy(1) * (2 * oc%states - oc%n) &
-            + x%energy(size(x%energy)) * oc%n) / (2 * oc%states)
-
-         done = .false.
-
-         do while (.not. done)
-            where (x%energy .ap. oc%mu)
-               matsum = 1 / (2 * kB * x%T)
-            elsewhere
-               matsum = x%energy - oc%mu
-               matsum = tanh(matsum / (2 * kB * x%T)) / matsum
-            end where
-
-            A0 = 0
-            B0 = 0
-
-            do i = 1, x%bands
-               trapezia(:) = weight(:, i) * matsum
-
-               A0 = A0 + sum(trapezia)
-               B0 = B0 + sum(trapezia * x%energy)
-            end do
-
-            mu = (oc%n - oc%states + B0) / A0
-
-            if (oc%mu .ap. mu) done = .true.
-
-            oc%mu = mu
-         end do
+         oc%mu = (x%energy(1) * (2 * oc%states - x%n) &
+            + x%energy(size(x%energy)) * x%n) / (2 * oc%states)
       else
          oc%mu = x%mu
-
-         oc%n = oc%states
-
-         matsum(:) = tanh((x%energy - x%mu) / (2 * kB * x%T))
-
-         do i = 1, x%bands
-            oc%n = oc%n - sum(weight(:, i) * matsum)
-         end do
       end if
 
-      oc%n0  = oc%n
+      call dos(x%n, x%n .ge. 0, .true.)
+
+      oc%n0 = oc%n
       oc%mu0 = oc%mu
 
       if (x%divdos) then
@@ -196,58 +167,44 @@ contains
 
       U(nC:, :, :) = 0
 
-      do i = 1, x%bands
-         do n = 0, no - 1
-            call integrate(n, i)
-         end do
-      end do
+      if (.not. (x%normal .or. present(kernel))) integral_phi(0, :) = 1.0_dp
 
       im%status = -1
 
       do step = 1, x%limit
-         done = .true.
+         Z(:, :) = im%Z
+         phi(:, :) = im%phi
+         chi(:, :) = im%chi
+
+         im%Z(:, :) = 0.0_dp
+         im%phi(:, :) = 0.0_dp
+         im%chi(:, :) = 0.0_dp
 
          do i = 1, x%bands
+            !$omp parallel do
             do n = 0, no - 1
-               Z = 0   !!! The self-energy is not updated as a whole,
-               phi = 0 !!! but for each band and frequency separately.
-               chi = 0 !!!
-
                do j = 1, x%bands
-                  !$omp parallel do reduction(+: Z, phi, chi)
                   do m = 0, no - 1
-                     Z = Z + integral_Z(m, j) &
+                     im%Z(n, i) = im%Z(n, i) + integral_Z(m, j) &
                         * (g(n - m, j, i) - g(n + m + 1, j, i))
 
-                     phi = phi + integral_phi(m, j) &
+                     im%phi(n, i) = im%phi(n, i) + integral_phi(m, j) &
                         * (g(n - m, j, i) + g(n + m + 1, j, i) + U(m, j, i))
 
                      if (x%chi) then
-                        chi = chi - integral_chi(m, j) &
+                        im%chi(n, i) = im%chi(n, i) - integral_chi(m, j) &
                            * (g(n - m, j, i) + g(n + m + 1, j, i))
                      end if
                   end do
-                  !$omp end parallel do
                end do
-
-               Z = 1 + Z * kB * x%T / im%omega(n)
-               phi = phi * kB * x%T
-               chi = chi * kB * x%T
-
-               if (x%chiC) chi = chi + im%chiC(i)
-
-               done = done &
-                  .and. (im%Z  (n, i) .ap. Z) &
-                  .and. (im%phi(n, i) .ap. phi) &
-                  .and. (im%chi(n, i) .ap. chi)
-
-               im%Z  (n, i) = Z
-               im%phi(n, i) = phi
-               im%chi(n, i) = chi
-
-               call integrate(n, i)
             end do
+            !$omp end parallel do
+
+            im%Z(:, i) = 1 + im%Z(:, i) * kB * x%T / im%omega
          end do
+
+         im%phi(:, :) = im%phi * kB * x%T
+         im%chi(:, :) = im%chi * kB * x%T
 
          if (x%chiC) then
             call calculate_residue(nC, .false.)
@@ -256,21 +213,15 @@ contains
                im%chiC(i) = 2 * kB * x%T &
                   * sum(sum(integral_chi(:nC - 1, :), 1) * muC(:, i)) &
                   + sum(residues * muC(:, i)) / 2
+
+               im%chi(:, i) = im%chi(:, i) + im%chiC(i)
             end do
          end if
 
-         if (x%conserve) then
-            call calculate_residue(no, .false.)
+         call dos(oc%n0, x%conserve, .false.)
 
-            mu = ((oc%n - oc%states + residue) / (4 * kB * x%T) &
-               + sum(A * im%chi + B)) / sum(A)
-
-            done = done .and. (oc%mu .ap. mu)
-
-            oc%mu = mu
-         end if
-
-         if (done) then
+         if (all(im%Z .ap. Z) .and. all(im%phi .ap. phi) &
+               .and. all(im%chi .ap. chi)) then
             im%status = step
             exit
          end if
@@ -285,10 +236,6 @@ contains
       do i = 1, x%bands
          im%phiC(i) = kB * x%T * sum(integral_phi * U(:, :, i))
       end do
-
-      call calculate_residue(no, .false.)
-
-      oc%n = oc%states - 4 * kB * x%T * sum(integral_chi) - residue
 
       if (present(kernel)) then
          allocate(kernel(x%bands * no, x%bands * no))
@@ -311,8 +258,33 @@ contains
 
    contains
 
+      subroutine dos(ntarget, optimize, exact)
+         real(dp), intent(in) :: ntarget
+         logical, intent(in) :: optimize, exact
+
+         do
+            do i = 1, x%bands
+               !$omp parallel do
+               do n = 0, no - 1
+                  call integrate(n, i)
+               end do
+               !$omp end parallel do
+            end do
+
+            call calculate_residue(no, exact)
+
+            oc%n = oc%states - 4 * kB * x%T * sum(integral_chi) - residue
+
+            if ((oc%n .ap. ntarget) .or. .not. optimize) exit
+
+            oc%mu = ((ntarget - oc%states + residue) / (4 * kB * x%T) &
+               + sum(A * im%chi + B)) / sum(A)
+         end do
+      end subroutine dos
+
       subroutine integrate(n, i)
          integer, intent(in) :: n, i
+         real(dp) :: trapezia(size(x%energy))
 
          trapezia(:) = weight(:, i) / ((im%omega(n) * im%Z(n, i)) ** 2 &
             + (x%energy - oc%mu + im%chi(n, i)) ** 2 + im%phi(n, i) ** 2)
@@ -360,9 +332,6 @@ contains
 
       if (allocated(weight)) deallocate(weight)
       allocate(weight(size(x%energy), x%bands))
-
-      if (allocated(trapezia)) deallocate(trapezia)
-      allocate(trapezia(size(x%energy)))
 
       if (allocated(matsum)) deallocate(matsum)
       allocate(matsum(size(x%energy)))
