@@ -115,11 +115,9 @@ contains
          else
             diag(p) = sum(lambda(0, :, i))
 
-            !$omp parallel do
             do n = 1, no - 1
                diag(p + n) = diag(p + n - 1) + 2 * sum(lambda(n, :, i))
             end do
-            !$omp end parallel do
          end if
       end do
 
