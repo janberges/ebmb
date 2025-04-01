@@ -91,6 +91,7 @@ contains
             case ('limit'); read (rhs, *, iostat=error) x%limit
 
             case ('epsilon'); read (rhs, *, iostat=error) eps
+            case ('toln');    read (rhs, *, iostat=error) x%toln
             case ('error');   read (rhs, *, iostat=error) x%error
             case ('zero');    read (rhs, *, iostat=error) x%zero
             case ('rate');    read (rhs, *, iostat=error) x%rate

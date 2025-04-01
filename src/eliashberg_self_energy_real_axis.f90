@@ -291,7 +291,7 @@ contains
                stop 1
             end if
 
-            if ((oc%n .ap. ntarget) .or. .not. optimize) exit
+            if (abs(oc%n - ntarget) .le. x%toln .or. .not. optimize) exit
 
             w(:) = w * bell
 

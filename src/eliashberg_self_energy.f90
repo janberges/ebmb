@@ -275,7 +275,7 @@ contains
 
             oc%n = oc%states - 4 * kB * x%T * sum(integral_chi) - residue
 
-            if ((oc%n .ap. ntarget) .or. .not. optimize) exit
+            if (abs(oc%n - ntarget) .le. x%toln .or. .not. optimize) exit
 
             oc%mu = ((ntarget - oc%states + residue) / (4 * kB * x%T) &
                + sum(A * im%chi + B)) / sum(A)

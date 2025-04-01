@@ -55,6 +55,7 @@ module global
       integer(i4) :: limit = 250000 ! maximum number of iterations
 
       real(dp) :: error = 1e-05_dp ! bisection error (a.u.)
+      real(dp) :: toln  = 1e-10_dp ! tolerance for occupancy number
       real(dp) ::  zero = 1e-10_dp ! negligible gap at critical temperature (eV)
       real(dp) ::  rate = 1e-01_dp ! growth rate for bound search
 
