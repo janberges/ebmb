@@ -106,49 +106,6 @@
       \verb|$ python3 -m pip install -e .|
    \end{quote}
 
-   \headline{I/O}
-
-   \begin{itemize}
-      \item
-         Parameters are defined on the command line:
-         %
-         \begin{quote}
-            \verb|$| \dummy{program}
-               \dummy{key\,1}\verb|=|\dummy{value\,1}
-               \dummy{key\,2}\verb|=|\dummy{value\,2} \verb|...|
-         \end{quote}
-         %
-         The available keys and default values are listed in
-         Table~\ref{parameters}.
-
-      \item
-         Unless \texttt{tell=false}, the results are printed to standard output.
-
-      \item
-         Unless \texttt{file=none}, a binary output file is created. For
-         \texttt{critical} and \texttt{tc} it simply contains one or more double
-         precision floating point numbers, for \texttt{ebmb} the format defined
-         in Tables~\ref{output} and \ref{identifiers} is used.
-
-      \item
-         The provided \emph{Python} wrapper functions load the results into
-         \emph{NumPy} arrays:
-         %
-         \begin{quote}
-            \verb|import ebmb| \\
-            \verb|results = ebmb.get(|%
-            \dummy{program}\verb|, |%
-            \dummy{file}\verb|, |%
-            \dummy{replace}\verb|,| \\
-            \verb|    |%
-               \dummy{key\,1}\verb|=|\dummy{value\,1}\verb|, |%
-               \dummy{key\,2}\verb|=|\dummy{value\,2}\verb|, ...|\verb|)|
-         \end{quote}
-         %
-         \dummy{replace} decides whether an existing \dummy{file} is used or
-         overwritten.
-   \end{itemize}
-
    \headline{\textsc{Eliashberg} theory}
 
    Let $\hbar = k \sub B = 1$. Fermionic and bosonic \textsc{Matsubara}
@@ -422,6 +379,49 @@
    %
    Note that in the code $\Sigma_{1 1 i}(\omega + \I \eta)$ is replaced by $\Re
    \Sigma_{1 1 i}(\omega + \I \eta) + \I \Im \Sigma_{1 1 i}(\omega + \I 0^+)$.
+
+   \headline{I/O}
+
+   \begin{itemize}
+      \item
+         Parameters are defined on the command line:
+         %
+         \begin{quote}
+            \verb|$| \dummy{program}
+               \dummy{key\,1}\verb|=|\dummy{value\,1}
+               \dummy{key\,2}\verb|=|\dummy{value\,2} \verb|...|
+         \end{quote}
+         %
+         The available keys and default values are listed in
+         Table~\ref{parameters}.
+
+      \item
+         Unless \texttt{tell=false}, the results are printed to standard output.
+
+      \item
+         Unless \texttt{file=none}, a binary output file is created. For
+         \texttt{critical} and \texttt{tc} it simply contains one or more double
+         precision floating point numbers, for \texttt{ebmb} the format defined
+         in Tables~\ref{output} and \ref{identifiers} is used.
+
+      \item
+         The provided \emph{Python} wrapper functions load the results into
+         \emph{NumPy} arrays:
+         %
+         \begin{quote}
+            \verb|import ebmb| \\
+            \verb|results = ebmb.get(|%
+            \dummy{program}\verb|, |%
+            \dummy{file}\verb|, |%
+            \dummy{replace}\verb|,| \\
+            \verb|    |%
+               \dummy{key\,1}\verb|=|\dummy{value\,1}\verb|, |%
+               \dummy{key\,2}\verb|=|\dummy{value\,2}\verb|, ...|\verb|)|
+         \end{quote}
+         %
+         \dummy{replace} decides whether an existing \dummy{file} is used or
+         overwritten.
+   \end{itemize}
 
    \headline{Acknowledgment}
 
