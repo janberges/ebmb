@@ -56,19 +56,19 @@ contains
 
       allocate(im%Z(0:no - 1, x%bands))
 
-      im%Z(:, :) = 1
+      im%Z(:, :) = 1.0_dp
 
       allocate(im%phi(0:no - 1, x%bands))
 
-      im%phi(:, :) = 0
+      im%phi(:, :) = 0.0_dp
 
       allocate(im%chi(0:no - 1, x%bands))
 
-      im%chi(:, :) = 0
+      im%chi(:, :) = 0.0_dp
 
       allocate(im%chiC(x%bands))
 
-      im%chiC(:) = 0
+      im%chiC(:) = 0.0_dp
 
       allocate(Z(0:no - 1, x%bands))
       allocate(phi(0:no - 1, x%bands))
@@ -165,7 +165,7 @@ contains
          end do
       end do
 
-      U(nC:, :, :) = 0
+      U(nC:, :, :) = 0.0_dp
 
       if (.not. (x%normal .or. present(kernel))) integral_phi(0, :) = 1.0_dp
 

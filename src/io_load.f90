@@ -142,10 +142,10 @@ contains
             stop 1
          end if
       else
-         x%lambda(:, :) = 0
+         x%lambda(:, :) = 0.0_dp
 
          do i = 1, x%bands
-            x%lambda(i, i) = 1
+            x%lambda(i, i) = 1.0_dp
          end do
       end if
 
@@ -166,7 +166,7 @@ contains
             stop 1
          end if
       else
-         x%muStar(:, :) = 0
+         x%muStar(:, :) = 0.0_dp
       end if
 
       if (allocated(dos_file)) then

@@ -45,7 +45,7 @@ contains
             call coefficients(im%omega, cmplx(im%Delta(:, i), kind=dp))
 
             if (x%measurable) then
-               re%Delta0(i) = 1
+               re%Delta0(i) = 1.0_dp
                re%status(i) = -1
 
                do n = 1, x%steps

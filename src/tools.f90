@@ -30,13 +30,13 @@ contains
 
       integer :: i
 
-      R = 0
+      R = 0.0_dp
       do i = 1, size(matrix, 1)
          S = sum(abs(matrix(i, :)))
          if (S .gt. R) R = S
       end do
 
-      C = 0
+      C = 0.0_dp
       do i = 1, size(matrix, 2)
          S = sum(abs(matrix(:, i)))
          if (S .gt. C) C = S

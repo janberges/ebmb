@@ -33,8 +33,8 @@ contains
          if (.not. allocated(phi)) then
             allocate(phi(size(kernel, 2)))
 
-            phi(:) = 0
-            phi(1) = 1
+            phi(:) = 0.0_dp
+            phi(1) = 1.0_dp
          end if
 
          call power_method(kernel, phi, status)

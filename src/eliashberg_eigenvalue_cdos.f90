@@ -60,8 +60,8 @@ contains
 
          allocate(diag(0:x%bands * no - 1))
 
-         vector(:) = 0
-         vector(0) = 1
+         vector(:) = 0.0_dp
+         vector(0) = 1.0_dp
 
          no0 = no
       end if

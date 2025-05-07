@@ -46,7 +46,7 @@ program tc
 
       do while (lower(i) .lt. 0)
          if (x%T .le. x%error) then
-            T(i) = 0
+            T(i) = 0.0_dp
             cycle bands
          end if
 

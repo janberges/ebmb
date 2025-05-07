@@ -17,7 +17,7 @@ contains
       real(dp), intent(in) :: z(:)
       complex(dp), intent(in) :: u(:)
 
-      complex(dp), parameter :: i = (0, 1)
+      complex(dp), parameter :: i = (0.0_dp, 1.0_dp)
       integer :: p
 
       n = size(z)
@@ -26,7 +26,7 @@ contains
       allocate(c(n, n))
 
       if (all(u .ap. u(1))) then
-         c(:, :) = 0
+         c(:, :) = (0.0_qp, 0.0_qp)
          c(1, 1) = u(1)
          return
       end if
@@ -48,7 +48,7 @@ contains
       complex(qp) :: frac
       integer :: p
 
-      frac = 1
+      frac = (1.0_qp, 0.0_qp)
 
       do p = n, 2, -1
          frac = 1 + (c(p, p) * x + c(p, p - 1)) / frac

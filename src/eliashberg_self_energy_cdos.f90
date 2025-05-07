@@ -64,17 +64,17 @@ contains
          mu(n, :, :) = -2 * muStar
       end do
 
-      mu(nC:, :, :) = 0
+      mu(nC:, :, :) = 0.0_dp
 
       allocate(im%Z(0:no - 1, x%bands))
 
-      im%Z(:, :) = 1
+      im%Z(:, :) = 1.0_dp
 
       allocate(im%Delta(0:no - 1, x%bands))
 
-      im%Delta(:, :) = 0
+      im%Delta(:, :) = 0.0_dp
 
-      if (.not. x%normal) im%Delta(0, :) = 1
+      if (.not. x%normal) im%Delta(0, :) = 1.0_dp
 
       allocate(A(0:no - 1, x%bands))
 
