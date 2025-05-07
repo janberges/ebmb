@@ -107,14 +107,14 @@ contains
          real(dp) :: expo
          real(dp), intent(in) :: x
 
-         expo = sign((exp(abs(x)) - 1.0_dp) / logscale, x)
+         expo = sign((exp(abs(x)) - 1) / logscale, x)
       end function expo
 
       elemental function loga(x)
          real(dp) :: loga
          real(dp), intent(in) :: x
 
-         loga = sign(log(abs(x * logscale) + 1.0_dp), x)
+         loga = sign(log(abs(x * logscale) + 1), x)
       end function loga
    end subroutine interval
 
