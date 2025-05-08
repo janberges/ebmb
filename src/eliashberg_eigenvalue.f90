@@ -12,10 +12,10 @@ module eliashberg_eigenvalue
 
 contains
 
-   subroutine eigenvalue(status, x)
+   subroutine eigenvalue(ev, x)
       type(parameters), intent(in) :: x
 
-      real(dp), intent(out) :: status ! greatest eigenvalue
+      real(dp), intent(out) :: ev ! greatest eigenvalue
 
       real(dp), allocatable :: kernel(:, :) ! Eliashberg kernel
       real(dp), allocatable, save :: phi(:) ! order parameter
@@ -37,9 +37,9 @@ contains
             phi(1) = 1.0_dp
          end if
 
-         call power_method(kernel, phi, status)
+         call power_method(kernel, phi, ev)
       else
-         status = maxval(real(spectrum(kernel), dp))
+         ev = maxval(real(spectrum(kernel), dp))
       end if
    end subroutine eigenvalue
 end module eliashberg_eigenvalue

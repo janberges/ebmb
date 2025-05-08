@@ -81,7 +81,7 @@ contains
       allocate(Z(0:no - 1, x%bands))
       allocate(Delta(0:no - 1, x%bands))
 
-      im%status = -1
+      im%steps = -1
 
       do step = 1, x%steps
          do i = 1, x%bands
@@ -117,7 +117,7 @@ contains
          im%Delta(:, :) = pi * kB * x%T * im%Delta / Z
 
          if (all(im%Z .ap. Z) .and. all(im%Delta .ap. Delta)) then
-            im%status = step
+            im%steps = step
             exit
          end if
       end do

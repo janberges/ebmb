@@ -53,8 +53,8 @@ contains
          error = 0
 
          select case (lhs)
-            case ('file'); x%file = rhs
-            case ('form'); x%form = rhs
+            case ('file'); x%output = rhs
+            case ('form'); x%flomat = rhs
 
             case ('tell'); read (rhs, *, iostat=error) x%tell
 
@@ -185,8 +185,8 @@ contains
       if (x%upper .lt. x%lower) x%upper = x%cutoff * x%omegaE
    end subroutine load
 
-   subroutine load_dos(file, x)
-      character(*), intent(in) :: file
+   subroutine load_dos(filename, x)
+      character(*), intent(in) :: filename
       type(parameters), intent(inout) :: x
 
       integer :: n, m
@@ -194,28 +194,28 @@ contains
       real(dp) :: test
       integer :: error
 
-      open (unit, file=file, action='read', status='old', iostat=error)
+      open (fun, file=filename, action='read', status='old', iostat=error)
 
       if (error .ne. 0) then
-         print "('Error: Cannot open DOS file ""', A, '""')", file
+         print "('Error: Cannot open DOS file ""', A, '""')", filename
          stop 1
       end if
 
       n = 0 ! number of sample points
 
       do
-         read (unit, *, iostat=error) test
+         read (fun, *, iostat=error) test
          if (error .ne. 0) exit
          n = n + 1
       end do
 
-      rewind unit
+      rewind fun
 
       allocate(x%energy(n)) ! free-electron energy (eV)
       allocate(x%dos(n, x%bands)) ! density of states (a.u.)
 
       do m = 1, n
-         read (unit, *, iostat=error) x%energy(m), x%dos(m, :)
+         read (fun, *, iostat=error) x%energy(m), x%dos(m, :)
 
          if (error .ne. 0) then
             print "('Error: DOS file needs ', I0, ' numbers per line')", &
@@ -224,11 +224,11 @@ contains
          end if
       end do
 
-      close (unit)
+      close (fun)
    end subroutine load_dos
 
-   subroutine load_a2F(file, x)
-      character(*), intent(in) :: file
+   subroutine load_a2F(filename, x)
+      character(*), intent(in) :: filename
       type(parameters), intent(inout) :: x
 
       integer :: n, m
@@ -236,22 +236,22 @@ contains
       real(dp) :: test
       integer :: error
 
-      open (unit, file=file, action='read', status='old', iostat=error)
+      open (fun, file=filename, action='read', status='old', iostat=error)
 
       if (error .ne. 0) then
-         print "('Error: Cannot open a2F file ""', A, '""')", file
+         print "('Error: Cannot open a2F file ""', A, '""')", filename
          stop 1
       end if
 
       n = 0 ! number of sample points
 
       do
-         read (unit, *, iostat=error) test
+         read (fun, *, iostat=error) test
          if (error .ne. 0) exit
          if (test .na. 0.0_dp) n = n + 1
       end do
 
-      rewind unit
+      rewind fun
 
       allocate(x%omega(n)) ! phonon energy (frequency argument)
       allocate(x%a2F(n, x%bands, x%bands)) ! Eliashberg spectral function
@@ -260,7 +260,7 @@ contains
 
       do m = 1, n
          do while (x%omega(m) .ap. 0.0_dp)
-            read (unit, *, iostat=error) x%omega(m), x%a2F(m, :, :)
+            read (fun, *, iostat=error) x%omega(m), x%a2F(m, :, :)
 
             if (error .ne. 0) then
                print "('Error: a2F file needs ', I0, ' numbers per line')", &
@@ -270,6 +270,6 @@ contains
          end do
       end do
 
-      close (unit)
+      close (fun)
    end subroutine load_a2F
 end module io_load

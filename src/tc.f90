@@ -22,7 +22,7 @@ program tc
    call load(x)
 
    if (x%tell) then
-      call measure(x%form)
+      call measure(x%flomat)
 
       head = edit('(Aw)')
       body = edit('(x)')
@@ -80,11 +80,11 @@ program tc
       print body, T
    end if
 
-   if (x%file .ne. 'none') then
-      open (unit, &
-         file=x%file, action='write', status='replace', access='stream')
-      write (unit) T
-      close (unit)
+   if (x%output .ne. 'none') then
+      open (fun, &
+         file=x%output, action='write', status='replace', access='stream')
+      write (fun) T
+      close (fun)
    end if
 
 contains

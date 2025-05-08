@@ -169,7 +169,7 @@ contains
 
       if (.not. (x%normal .or. present(kernel))) integral_phi(0, :) = 1.0_dp
 
-      im%status = -1
+      im%steps = -1
 
       do step = 1, x%steps
          Z(:, :) = im%Z
@@ -222,7 +222,7 @@ contains
 
          if (all(im%Z .ap. Z) .and. all(im%phi .ap. phi) &
                .and. all(im%chi .ap. chi)) then
-            im%status = step
+            im%steps = step
             exit
          end if
       end do

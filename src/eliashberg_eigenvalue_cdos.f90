@@ -12,10 +12,10 @@ module eliashberg_eigenvalue_cdos
 
 contains
 
-   subroutine eigenvalue_cdos(status, x)
+   subroutine eigenvalue_cdos(ev, x)
       type(parameters), intent(in) :: x
 
-      real(dp), intent(out) :: status ! greatest eigenvalue
+      real(dp), intent(out) :: ev ! greatest eigenvalue
 
       real(dp), allocatable, save :: &
          lambda(:, :, :), & ! adjusted phonon Green function
@@ -130,10 +130,10 @@ contains
       end do
 
       if (x%power .and. x%bands .eq. 1) then
-         call power_method(matrix, vector, status)
+         call power_method(matrix, vector, ev)
       else
          values(:) = real(spectrum(matrix), dp)
-         status = maxval(values)
+         ev = maxval(values)
       end if
    end subroutine eigenvalue_cdos
 end module eliashberg_eigenvalue_cdos

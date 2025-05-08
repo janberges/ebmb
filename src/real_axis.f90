@@ -23,7 +23,7 @@ contains
 
       if (x%measurable) then
          allocate(re%Delta0(x%bands))
-         allocate(re%status(x%bands))
+         allocate(re%steps(x%bands))
       end if
 
       if (x%points .gt. 0) then
@@ -46,16 +46,16 @@ contains
 
             if (x%measurable) then
                re%Delta0(i) = 1.0_dp
-               re%status(i) = -1
+               re%steps(i) = -1
 
                do n = 1, x%steps
                   Delta0 = real(continuation(cmplx(re%Delta0(i), kind=dp)))
 
-                  if (re%Delta0(i) .ap. Delta0) re%status(i) = n
+                  if (re%Delta0(i) .ap. Delta0) re%steps(i) = n
 
                   re%Delta0(i) = Delta0
 
-                  if (n .eq. re%status(i)) exit
+                  if (n .eq. re%steps(i)) exit
                end do
             end if
 

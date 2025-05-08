@@ -14,11 +14,11 @@ contains
       character(:), allocatable :: argument
       integer, intent(in) :: n
 
-      integer :: size
+      integer :: length
 
-      call get_command_argument(n, length=size)
+      call get_command_argument(n, length=length)
 
-      allocate(character(size) :: argument)
+      allocate(character(length) :: argument)
 
       call get_command_argument(n, value=argument)
    end function argument
@@ -118,16 +118,16 @@ contains
       end function loga
    end subroutine interval
 
-   integer function matches(str, char)
+   integer function matches(str, chr)
       character(*), intent(in) :: str
-      character(1), intent(in) :: char
+      character(1), intent(in) :: chr
 
       integer :: c
 
       matches = 0
 
       do c = 1, len(str)
-         if (str(c:c) .eq. char) matches = matches + 1
+         if (str(c:c) .eq. chr) matches = matches + 1
       end do
    end function matches
 end module tools

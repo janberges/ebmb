@@ -18,97 +18,97 @@ contains
 
       integer :: error
 
-      open (unit, file=x%file, action='write', status='replace', &
+      open (fun, file=x%output, action='write', status='replace', &
          access='stream', iostat=error)
 
       if (error .ne. 0) then
-         print "('Error: Cannot open output file ""', A, '""')", trim(x%file)
+         print "('Error: Cannot open output file ""', A, '""')", trim(x%output)
          stop 1
       end if
 
-      write (unit) 'INT:DIM:', 0_i4
-      write (unit) 'status:', im%status
+      write (fun) 'INT:DIM:', 0_i4
+      write (fun) 'status:', im%steps
 
-      write (unit) 'REAL:DIM:', 1_i4, size(im%omega, kind=i4)
-      write (unit) 'iomega:', im%omega
+      write (fun) 'REAL:DIM:', 1_i4, size(im%omega, kind=i4)
+      write (fun) 'iomega:', im%omega
 
       if (x%bands .gt. 1) &
-         write (unit) 'DIM:', 2_i4, x%bands, size(im%omega, kind=i4)
+         write (fun) 'DIM:', 2_i4, x%bands, size(im%omega, kind=i4)
 
-      write (unit) 'Z:', im%Z
-      write (unit) 'Delta:', im%Delta
+      write (fun) 'Z:', im%Z
+      write (fun) 'Delta:', im%Delta
 
       if (x%ldos) then
-         write (unit) 'chi:', im%chi
+         write (fun) 'chi:', im%chi
 
-         write (unit) 'DIM:', 0_i4
+         write (fun) 'DIM:', 0_i4
 
-         write (unit) 'states:', oc%states
+         write (fun) 'states:', oc%states
 
-         if (x%points .gt. 0) write (unit) 'inspect:', oc%inspect
+         if (x%points .gt. 0) write (fun) 'inspect:', oc%inspect
 
-         write (unit) 'n0:', oc%n0
-         write (unit) "n:", oc%n
+         write (fun) 'n0:', oc%n0
+         write (fun) "n:", oc%n
 
-         write (unit) 'mu0:', oc%mu0
-         write (unit) "mu:", oc%mu
+         write (fun) 'mu0:', oc%mu0
+         write (fun) "mu:", oc%mu
       end if
 
       if (x%la2F) then
-         write (unit) 'DIM:'
+         write (fun) 'DIM:'
 
          if (x%bands .gt. 1) then
-            write (unit) 2_i4, x%bands, x%bands
+            write (fun) 2_i4, x%bands, x%bands
          else
-            write (unit) 0_i4
+            write (fun) 0_i4
          end if
 
-         write (unit) 'lambda:', x%lambda
+         write (fun) 'lambda:', x%lambda
 
-         write (unit) 'DIM:', 0_i4
-         write (unit) 'omegaE:', x%omegaE
-         write (unit) 'omegaLog:', x%omegaLog
-         write (unit) 'omega2nd:', x%omega2nd
+         write (fun) 'DIM:', 0_i4
+         write (fun) 'omegaE:', x%omegaE
+         write (fun) 'omegaLog:', x%omegaLog
+         write (fun) 'omega2nd:', x%omega2nd
       end if
 
-      write (unit) 'DIM:'
+      write (fun) 'DIM:'
 
       if (x%bands .gt. 1) then
-         write (unit) 1_i4, x%bands
+         write (fun) 1_i4, x%bands
       else
-         write (unit) 0_i4
+         write (fun) 0_i4
       end if
 
-      if (x%ldos) write (unit) 'chiC:', im%chiC
+      if (x%ldos) write (fun) 'chiC:', im%chiC
 
-      write (unit) 'phiC:', im%phiC
+      write (fun) 'phiC:', im%phiC
 
       if (x%measurable) then
-         write (unit) 'INT:status0:', re%status
-         write (unit) 'REAL:Delta0:', re%Delta0
+         write (fun) 'INT:status0:', re%steps
+         write (fun) 'REAL:Delta0:', re%Delta0
       end if
 
       if (x%points .gt. 0) then
-         write (unit) 'DIM:', 1_i4, x%points
+         write (fun) 'DIM:', 1_i4, x%points
 
-         write (unit) 'omega:', re%omega
+         write (fun) 'omega:', re%omega
 
-         if (x%bands .gt. 1) write (unit) 'DIM:', 2_i4, x%bands, x%points
+         if (x%bands .gt. 1) write (fun) 'DIM:', 2_i4, x%bands, x%points
 
-         write (unit) 'Re[Z]:', real(re%Z)
-         write (unit) 'Im[Z]:', aimag(re%Z)
+         write (fun) 'Re[Z]:', real(re%Z)
+         write (fun) 'Im[Z]:', aimag(re%Z)
 
-         write (unit) 'Re[Delta]:', real(re%Delta)
-         write (unit) 'Im[Delta]:', aimag(re%Delta)
+         write (fun) 'Re[Delta]:', real(re%Delta)
+         write (fun) 'Im[Delta]:', aimag(re%Delta)
 
          if (x%ldos) then
-            write (unit) 'Re[chi]:', real(re%chi)
-            write (unit) 'Im[chi]:', aimag(re%chi)
+            write (fun) 'Re[chi]:', real(re%chi)
+            write (fun) 'Im[chi]:', aimag(re%chi)
 
-            write (unit) 'DOS:', re%dos
+            write (fun) 'DOS:', re%dos
          end if
       end if
 
-      close (unit)
+      close (fun)
    end subroutine store
 end module io_store

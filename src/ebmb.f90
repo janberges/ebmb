@@ -38,7 +38,7 @@ program ebmb
       end if
    end if
 
-   if (x%file .ne. 'none') call store(x, im, re, oc)
+   if (x%output .ne. 'none') call store(x, im, re, oc)
 
    if (x%tell) call tell(x, im, re, oc)
 end program ebmb

@@ -13,12 +13,12 @@ module formatting
 
 contains
 
-   subroutine measure(form)
-      character(*), intent(in) :: form
+   subroutine measure(flomat)
+      character(*), intent(in) :: flomat
 
       character(100) :: test
 
-      x = trim(form)
+      x = trim(flomat)
 
       write (test, "(" // x // ", '|')") pi
       width = index(test, '|') - 1

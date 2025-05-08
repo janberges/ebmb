@@ -14,11 +14,11 @@ module globals
    real(dp), parameter :: kBSI = 1.380649e-23_dp    ! Boltzmann constant (J/K)
    real(dp), parameter :: kB = kBSI / eVSI          ! Boltzmann constant (eV/K)
 
-   integer, parameter :: unit = 11 ! file unit number
+   integer, parameter :: fun = 11 ! file unit number
 
    type parameters
-      character(1024) :: file = 'none'   ! name of output file
-      character(50)   :: form = 'F16.12' ! number format
+      character(1024) :: output = 'none'   ! name of output file
+      character(50)   :: flomat = 'F16.12' ! number format
 
       logical :: tell = .true. ! use standard output?
 
@@ -91,7 +91,7 @@ module globals
       real(dp), allocatable :: chiC (:)    ! Coulomb part of energy shift (eV)
       real(dp), allocatable :: phiC (:)    ! Coulomb part of order parameter (eV)
 
-      integer(i4) :: status ! convergence status
+      integer(i4) :: steps ! steps until convergence
    end type matsubara
 
    type continued
@@ -102,7 +102,7 @@ module globals
       real   (dp), allocatable :: Delta0(:)    ! measurable gap (eV)
       real   (dp), allocatable :: dos   (:, :) ! quasiparticle density (1/eV)
 
-      integer(i4), allocatable :: status(:) ! convergence status
+      integer(i4), allocatable :: steps(:) ! steps until convergence
    end type continued
 
    type occupancy

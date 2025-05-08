@@ -19,14 +19,14 @@ contains
 
       integer :: i, n ! band and Matsubara indices
 
-      character(:), allocatable :: head, body, form ! edit descriptors
+      character(:), allocatable :: head, body, more ! edit descriptors
 
-      call measure(x%form)
+      call measure(x%flomat)
 
       head = edit('(99Aw)') ! 99 replaces Fortran-2008 unlimited format control.
       body = edit('(99x)')
 
-      print "('imaginary-axis solution [', I0, ']:', /)", im%status
+      print "('imaginary-axis solution [', I0, ']:', /)", im%steps
 
       if (x%ldos) then
          print head, 'omega/eV', 'Z', 'Delta/eV', 'chi/eV'
@@ -50,22 +50,22 @@ contains
          end do
       end if
 
-      form = edit('(x)')
+      more = edit('(x)')
 
       if (x%ldos) then
          print "(/, 'integral of density of states:', /)"
-         print form, oc%states
+         print more, oc%states
 
          if (x%points .gt. 0) then
             print "(/, 'integral of spectral function:', /)"
-            print form, oc%inspect
+            print more, oc%inspect
          end if
 
          print "(/, 'initial and final occupancy number:', /)"
-         print form, oc%n0, oc%n
+         print more, oc%n0, oc%n
 
          print "(/, 'initial and final chemical potential (eV):', /)"
-         print form, oc%mu0, oc%mu
+         print more, oc%mu0, oc%mu
       end if
 
       if (x%la2F) then
@@ -75,30 +75,30 @@ contains
          end do
 
          print "(/, 'effective phonon frequency (eV):', /)"
-         print form, x%omegaE
+         print more, x%omegaE
 
          print "(/, 'logarithmic average phonon frequency (eV):', /)"
-         print form, x%omegaLog
+         print more, x%omegaLog
 
          print "(/, 'second-moment average phonon frequency (eV):', /)"
-         print form, x%omega2nd
+         print more, x%omega2nd
       end if
 
       if (x%ldos) then
          print "(/, 'Coulomb part of energy shift (eV):', /)"
-         print form, im%chiC
+         print more, im%chiC
       end if
 
       print "(/, 'Coulomb part of order parameter (eV):', /)"
-      print form, im%phiC
+      print more, im%phiC
 
       if (x%measurable) then
          print "(/, 'measurable gap (eV):', /)"
 
-         form = edit("(x, ' [', I0, ']')")
+         more = edit("(x, ' [', I0, ']')")
 
          do i = 1, x%bands
-            print form, re%Delta0(i), re%status(i)
+            print more, re%Delta0(i), re%steps(i)
          end do
       end if
 
