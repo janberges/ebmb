@@ -2,7 +2,7 @@
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
 module eigenvalues
-   use global
+   use globals
    use tools, only: bound
    implicit none
    private
@@ -13,7 +13,7 @@ module eigenvalues
       subroutine dgeev(jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr, &
          work, lwork, info)
 
-         use global
+         use globals
 
          character, intent(in) :: jobvl, jobvr
 

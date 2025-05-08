@@ -3,7 +3,7 @@
 
 module eliashberg_self_energy
    use eliashberg_spectral_function, only: lambda_from_a2F
-   use global
+   use globals
    use tools, only: differential
    implicit none
 

@@ -6,7 +6,7 @@ program ebmb
    use eliashberg_self_energy
    use eliashberg_self_energy_cdos
    use eliashberg_self_energy_real_axis
-   use global
+   use globals
    use io_load
    use io_store
    use io_tell

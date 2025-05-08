@@ -3,7 +3,7 @@
 
 module io_tell
    use formatting
-   use global
+   use globals
    implicit none
 
    private

@@ -4,7 +4,7 @@
 program critical
    use eliashberg_eigenvalue
    use eliashberg_eigenvalue_cdos
-   use global
+   use globals
    use io_load
    implicit none
 

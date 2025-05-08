@@ -1,7 +1,7 @@
 ! Copyright (C) 2016-2025 Jan Berges
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
-module global
+module globals
    implicit none
 
    integer, parameter :: dp = selected_real_kind(15) ! double precision (8 B)
@@ -151,4 +151,4 @@ contains
 
       nac = abs(lhs - rhs) .gt. eps
    end function nac
-end module global
+end module globals

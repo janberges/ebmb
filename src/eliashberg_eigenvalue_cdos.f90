@@ -4,7 +4,7 @@
 module eliashberg_eigenvalue_cdos
    use eigenvalues
    use eliashberg_spectral_function
-   use global
+   use globals
    implicit none
 
    private

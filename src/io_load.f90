@@ -3,7 +3,7 @@
 
 module io_load
    use eliashberg_spectral_function
-   use global
+   use globals
    use tools, only: argument, matches
    implicit none
 

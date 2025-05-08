@@ -6,7 +6,7 @@ module eliashberg_self_energy_real_axis
       only: initialize_dos => initialize, weight_dos => weight
    use eliashberg_spectral_function, &
       only: initialize_a2F => initialize, weight_a2F => weight
-   use global
+   use globals
    use tools, only: differential, interval
    implicit none
 

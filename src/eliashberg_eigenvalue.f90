@@ -4,7 +4,7 @@
 module eliashberg_eigenvalue
    use eigenvalues
    use eliashberg_self_energy
-   use global
+   use globals
    implicit none
 
    private

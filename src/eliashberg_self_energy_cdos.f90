@@ -3,7 +3,7 @@
 
 module eliashberg_self_energy_cdos
    use eliashberg_spectral_function
-   use global
+   use globals
    implicit none
 
    private

@@ -2,7 +2,7 @@
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
 module tools
-   use global
+   use globals
    implicit none
 
    private

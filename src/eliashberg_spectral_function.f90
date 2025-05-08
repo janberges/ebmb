@@ -2,7 +2,7 @@
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
 module eliashberg_spectral_function
-   use global
+   use globals
    use tools, only: differential
    implicit none
 

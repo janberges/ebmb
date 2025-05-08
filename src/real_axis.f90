@@ -2,7 +2,7 @@
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
 module real_axis
-   use global
+   use globals
    use pade
    use tools, only: interval
    implicit none
