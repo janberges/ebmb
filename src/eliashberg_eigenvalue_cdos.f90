@@ -36,7 +36,7 @@ contains
 
       real(dp) :: nE ! 'index' defining omegaE as bosonic Matsubara frequency
 
-      nE = x%omegaE / (2 * pi * kB * x%T)
+      nE = x%omegaE / (2.0_dp * pi * kB * x%T)
 
       no = ceiling(x%cutoff  * nE - 0.5_dp)
       nC = ceiling(x%cutoffC * nE - 0.5_dp)
@@ -71,13 +71,13 @@ contains
          if (x%la2F) then
             call lambda_from_a2F(x, lambda(n, :, :), n)
          else
-            lambda(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
+            lambda(n, :, :) = x%lambda / (1.0_dp + (n / nE) ** 2)
          end if
       end do
       !$omp end parallel do
 
       if (x%rescale) then
-         muStar(:, :) = x%muStar / (1 + x%muStar * log(nE / (nC + 0.5_dp)))
+         muStar(:, :) = x%muStar / (1.0_dp + x%muStar * log(nE / (nC + 0.5_dp)))
       else
          muStar(:, :) = x%muStar
       end if
@@ -98,7 +98,7 @@ contains
             !$omp end parallel do
 
             matrix(q:q + nC - 1, p:p + no - 1) = &
-            matrix(q:q + nC - 1, p:p + no - 1) - 2 * muStar(j, i)
+            matrix(q:q + nC - 1, p:p + no - 1) - 2.0_dp * muStar(j, i)
          end do
       end do
 
@@ -116,7 +116,7 @@ contains
             diag(p) = sum(lambda(0, :, i))
 
             do n = 1, no - 1
-               diag(p + n) = diag(p + n - 1) + 2 * sum(lambda(n, :, i))
+               diag(p + n) = diag(p + n - 1) + 2.0_dp * sum(lambda(n, :, i))
             end do
          end if
       end do

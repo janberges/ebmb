@@ -36,35 +36,35 @@ program tc
    allocate(upper(x%bands))
    allocate(lower(x%bands))
 
-   lower(:) = -1
-   upper(:) = -1
+   lower(:) = -1.0_dp
+   upper(:) = -1.0_dp
 
    call bounds
 
    bands: do i = 1, x%bands
       x%T = upper(i)
 
-      do while (lower(i) .lt. 0)
+      do while (lower(i) .lt. 0.0_dp)
          if (x%T .le. x%error) then
             T(i) = 0.0_dp
             cycle bands
          end if
 
-         x%T = x%T * (1 - x%rate)
+         x%T = x%T * (1.0_dp - x%rate)
          call bounds
       end do
 
       x%T = lower(i)
 
-      do while (upper(i) .lt. 0)
-         x%T = x%T * (1 + x%rate)
+      do while (upper(i) .lt. 0.0_dp)
+         x%T = x%T * (1.0_dp + x%rate)
          call bounds
       end do
 
       do
-         x%T = (lower(i) + upper(i)) / 2
+         x%T = 0.5_dp * (lower(i) + upper(i))
 
-         if (upper(i) - lower(i) .le. 2 * x%error) then
+         if (upper(i) - lower(i) .le. 2.0_dp * x%error) then
             T(i) = x%T
             cycle bands
          end if
@@ -100,9 +100,9 @@ contains
 
       do j = 1, x%bands
          if (abs(im%Delta(0, j)) .le. x%zero) then
-            if (upper(j) .gt. x%T .or. upper(j) .lt. 0) upper(j) = x%T
+            if (upper(j) .gt. x%T .or. upper(j) .lt. 0.0_dp) upper(j) = x%T
          else
-            if (lower(j) .lt. x%T .or. lower(j) .lt. 0) lower(j) = x%T
+            if (lower(j) .lt. x%T .or. lower(j) .lt. 0.0_dp) lower(j) = x%T
          end if
       end do
    end subroutine bounds

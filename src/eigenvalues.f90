@@ -78,7 +78,7 @@ contains
          matrix(i, i) = matrix(i, i) + shift
       end do
 
-      value0 = -1
+      value0 = -1.0_dp
 
       do
          vector(:) = matmul(matrix, vector)

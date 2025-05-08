@@ -180,7 +180,7 @@ contains
          call integrate_a2F(x)
       end if
 
-      if (x%cutoffC .lt. 0) x%cutoffC = x%cutoff
+      if (x%cutoffC .lt. 0.0_dp) x%cutoffC = x%cutoff
 
       if (x%upper .lt. x%lower) x%upper = x%cutoff * x%omegaE
    end subroutine load

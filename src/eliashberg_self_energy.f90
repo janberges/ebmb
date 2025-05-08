@@ -41,7 +41,7 @@ contains
 
       if (initial) call initialize(x, oc)
 
-      domega = 2 * pi * kB * x%T
+      domega = 2.0_dp * pi * kB * x%T
 
       nE = x%omegaE / domega
 
@@ -83,9 +83,9 @@ contains
 
       allocate(residues(x%bands))
 
-      if (x%n .ge. 0) then
-         oc%mu = (x%energy(1) * (2 * oc%states - x%n) &
-            + x%energy(size(x%energy)) * x%n) / (2 * oc%states)
+      if (x%n .ge. 0.0_dp) then
+         oc%mu = (x%energy(1) * (2.0_dp * oc%states - x%n) &
+            + x%energy(size(x%energy)) * x%n) / (2.0_dp * oc%states)
       else
          oc%mu = x%mu
       end if
@@ -108,7 +108,7 @@ contains
          if (x%la2F) then
             call lambda_from_a2F(x, g(n, :, :), n)
          else
-            g(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
+            g(n, :, :) = x%lambda / (1.0_dp + (n / nE) ** 2)
          end if
 
          do i = 1, x%bands
@@ -121,7 +121,7 @@ contains
 
       if (x%unscale) then
          where (x%energy .ap. oc%mu)
-            matsum = 1 / x%omegaE
+            matsum = 1.0_dp / x%omegaE
          elsewhere
             matsum = x%energy - oc%mu
             matsum = atan2(matsum, x%omegaE) / matsum
@@ -130,7 +130,7 @@ contains
          do i = 1, x%bands
             residue = sum(weight(:, i) / dosef(i) * matsum) / pi
 
-            muC(i, :) = x%muStar(i, :) / (1 - x%muStar(i, :) * residue)
+            muC(i, :) = x%muStar(i, :) / (1.0_dp - x%muStar(i, :) * residue)
          end do
       else
          muC(:, :) = x%muStar
@@ -140,7 +140,7 @@ contains
 
       if (x%rescale) then
          where (x%energy .ap. oc%mu)
-            matsum = 1 / (domega * (nC + 0.5_dp))
+            matsum = 1.0_dp / (domega * (nC + 0.5_dp))
          elsewhere
             matsum = x%energy - oc%mu
             matsum = atan2(matsum, domega * (nC + 0.5_dp)) / matsum
@@ -149,7 +149,7 @@ contains
          do i = 1, x%bands
             residue = sum(weight(:, i) / dosef(i) * matsum) / pi
 
-            muStar(i, :) = muC(i, :) / (1 + muC(i, :) * residue)
+            muStar(i, :) = muC(i, :) / (1.0_dp + muC(i, :) * residue)
          end do
       else
          muStar(:, :) = muC
@@ -158,7 +158,7 @@ contains
       allocate(U(0:no - 1, x%bands, x%bands))
 
       do n = 0, nC - 1
-         U(n, :, :) = -2 * muStar
+         U(n, :, :) = -2.0_dp * muStar
 
          do i = 1, x%bands
             U(n, :, i) = U(n, :, i) / dosef
@@ -200,7 +200,7 @@ contains
             end do
             !$omp end parallel do
 
-            im%Z(:, i) = 1 + im%Z(:, i) * kB * x%T / im%omega
+            im%Z(:, i) = 1.0_dp + im%Z(:, i) * kB * x%T / im%omega
          end do
 
          im%phi(:, :) = im%phi * kB * x%T
@@ -210,9 +210,9 @@ contains
             call calculate_residue(nC, .false.)
 
             do i = 1, x%bands
-               im%chiC(i) = 2 * kB * x%T &
+               im%chiC(i) = 2.0_dp * kB * x%T &
                   * sum(sum(integral_chi(:nC - 1, :), 1) * muC(:, i)) &
-                  + sum(residues * muC(:, i)) / 2
+                  + sum(residues * muC(:, i)) / 2.0_dp
 
                im%chi(:, i) = im%chi(:, i) + im%chiC(i)
             end do
@@ -273,11 +273,11 @@ contains
 
             call calculate_residue(no, exact)
 
-            oc%n = oc%states - 4 * kB * x%T * sum(integral_chi) - residue
+            oc%n = oc%states - 4.0_dp * kB * x%T * sum(integral_chi) - residue
 
             if (abs(oc%n - ntarget) .le. x%toln .or. .not. optimize) exit
 
-            oc%mu = ((ntarget - oc%states + residue) / (4 * kB * x%T) &
+            oc%mu = ((ntarget - oc%states + residue) / (4.0_dp * kB * x%T) &
                + sum(A * im%chi + B)) / sum(A)
          end do
       end subroutine dos
@@ -305,15 +305,17 @@ contains
             matsum(:) = x%energy - oc%mu + im%chiC(i)
 
             if (exact) then
-               residues(i) = sum(weight(:, i) * tanh(matsum / (2 * kB * x%T)))
+               residues(i) = sum(weight(:, i) &
+                  * tanh(matsum / (2.0_dp * kB * x%T)))
 
                do n = 0, nM - 1
-                  residues(i) = residues(i) - 4 * kB * x%T * sum(weight(:, i) &
-                     * matsum / (im%omega(n) ** 2 + matsum ** 2))
+                  residues(i) = residues(i) &
+                     - 4.0_dp * kB * x%T * sum(weight(:, i) &
+                        * matsum / (im%omega(n) ** 2 + matsum ** 2))
                end do
             else
-               residues(i) = 2 / pi * sum(weight(:, i) * atan2(matsum, &
-                  domega * (nM + 0.5_dp)))
+               residues(i) = 2.0_dp / pi * sum(weight(:, i) &
+                  * atan2(matsum, domega * (nM + 0.5_dp)))
             end if
          end do
 

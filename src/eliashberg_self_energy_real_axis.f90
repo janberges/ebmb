@@ -22,7 +22,7 @@ contains
       type(occupancy), intent(out) :: oc
 
       integer :: step, i, j, n, m, no
-      real(dp), parameter :: xmax = log(huge(1.0_dp) / 2 - 1)
+      real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
       real(dp) :: beta, fermi, domega, const
       real(dp), allocatable :: weight(:), bose(:), dosef(:), dImSigma(:, :)
       real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
@@ -53,7 +53,7 @@ contains
       call initialize_dos(x, oc)
       call initialize_a2F(x)
 
-      domega = 2 * pi * kB * x%T
+      domega = 2.0_dp * pi * kB * x%T
 
       no = ceiling(x%cutoff * x%omegaE / domega - 0.5_dp)
 
@@ -80,7 +80,7 @@ contains
       allocate(n2(size(x%omega), x%bands))
       allocate(dosef(x%bands))
 
-      beta = 1 / (kB * x%T)
+      beta = 1.0_dp / (kB * x%T)
 
       bose = bose_fun(x%omega)
 
@@ -97,16 +97,16 @@ contains
 
       omega = cmplx(re%omega, x%eta, dp)
 
-      if (x%n .ge. 0) then
-         oc%mu = (x%energy(1) * (2 * oc%states - x%n) &
-            + x%energy(size(x%energy)) * x%n) / (2 * oc%states)
+      if (x%n .ge. 0.0_dp) then
+         oc%mu = (x%energy(1) * (2.0_dp * oc%states - x%n) &
+            + x%energy(size(x%energy)) * x%n) / (2.0_dp * oc%states)
       else
          oc%mu = x%mu
       end if
 
       Sigma(:, :) = (0.0_dp, 0.0_dp)
 
-      call dos(x%n, x%n .ge. 0)
+      call dos(x%n, x%n .ge. 0.0_dp)
 
       oc%n0 = oc%n
       oc%mu0 = oc%mu
@@ -148,7 +148,7 @@ contains
          do n = 1, x%points
             do m = 1, size(x%omega)
                n1(m, :) = aimag(Ginter(re%omega(n) - x%omega(m))) / dosef &
-                  * (1 - fermi_fun(re%omega(n) - x%omega(m)) + bose(m))
+                  * (1.0_dp - fermi_fun(re%omega(n) - x%omega(m)) + bose(m))
 
                n2(m, :) = aimag(Ginter(re%omega(n) + x%omega(m))) / dosef &
                   * (fermi_fun(re%omega(n) + x%omega(m)) + bose(m))
@@ -224,8 +224,8 @@ contains
       end do
 
       do i = 1, x%bands
-         im%Z(:, i) = 1 - im%Z(:, i) / im%omega
-         re%Z(:, i) = 1 - re%Z(:, i) / omega
+         im%Z(:, i) = 1.0_dp - im%Z(:, i) / im%omega
+         re%Z(:, i) = (1.0_dp, 0.0_dp) - re%Z(:, i) / omega
       end do
 
       re%chi(:, :) = re%chi + cmplx(0.0_dp, dImSigma, dp)
@@ -283,7 +283,7 @@ contains
 
             w(:) = weight * sum(aimag(G), 2)
 
-            oc%n = 2 * sum(w * fermi_fun(re%omega))
+            oc%n = 2.0_dp * sum(w * fermi_fun(re%omega))
             oc%inspect = sum(w)
 
             if (oc%inspect .ap. 0.0_dp) then
@@ -315,7 +315,7 @@ contains
          w2 = -re%omega(m) + x%omega
 
          do i = 1, x%bands
-            n1(:, i) = spec(:, i) * (1 - fermi + bose)
+            n1(:, i) = spec(:, i) * (1.0_dp - fermi + bose)
             n2(:, i) = spec(:, i) * (fermi + bose)
          end do
       end subroutine prepare
@@ -324,14 +324,14 @@ contains
          real(dp) :: fermi_fun
          real(dp), intent(in) :: omega
 
-         fermi_fun = 1 / (exp(min(omega * beta, xmax)) + 1)
+         fermi_fun = 1.0_dp / (exp(min(omega * beta, xmax)) + 1.0_dp)
       end function fermi_fun
 
       elemental function bose_fun(omega)
          real(dp) :: bose_fun
          real(dp), intent(in) :: omega
 
-         bose_fun = 1 / (exp(min(omega * beta, xmax)) - 1)
+         bose_fun = 1.0_dp / (exp(min(omega * beta, xmax)) - 1.0_dp)
       end function bose_fun
    end subroutine self_energy_real_axis
 end module eliashberg_self_energy_real_axis

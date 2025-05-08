@@ -51,7 +51,7 @@ contains
       frac = (1.0_qp, 0.0_qp)
 
       do p = n, 2, -1
-         frac = 1 + (c(p, p) * x + c(p, p - 1)) / frac
+         frac = (1.0_dp, 0.0_dp) + (c(p, p) * x + c(p, p - 1)) / frac
       end do
 
       frac = c(1, 1) / frac

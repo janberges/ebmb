@@ -23,10 +23,10 @@ contains
 
       call lambda_from_a2F(x, x%lambda, 0)
 
-      x%omegaLog = exp(2 / sum(x%lambda) &
+      x%omegaLog = exp(2.0_dp / sum(x%lambda) &
          * sum(sum(sum(weight, 2), 2) * log(x%omega) / x%omega))
 
-      x%omega2nd = sqrt(2 / sum(x%lambda) &
+      x%omega2nd = sqrt(2.0_dp / sum(x%lambda) &
          * sum(sum(sum(weight, 2), 2) * x%omega))
 
       do i = size(x%omega), 1, -1
@@ -50,8 +50,8 @@ contains
 
       do i = 1, x%bands
          do j = 1, x%bands
-            lambda(j, i) = 2 * sum(weight(:, j, i) * x%omega &
-               / (x%omega ** 2 + (2 * pi * n * kB * x%T) ** 2))
+            lambda(j, i) = 2.0_dp * sum(weight(:, j, i) * x%omega &
+               / (x%omega ** 2 + (2 * n * pi * kB * x%T) ** 2))
          end do
       end do
    end subroutine lambda_from_a2F

@@ -27,7 +27,7 @@ contains
          print "('Warning: Superconducting solution should be self-consistent')"
       end if
 
-      nE = x%omegaE / (2 * pi * kB * x%T)
+      nE = x%omegaE / (2.0_dp * pi * kB * x%T)
 
       no = ceiling(x%cutoff  * nE - 0.5_dp)
       nC = ceiling(x%cutoffC * nE - 0.5_dp)
@@ -45,7 +45,7 @@ contains
          if (x%la2F) then
             call lambda_from_a2F(x, lambda(n, :, :), n)
          else
-            lambda(n, :, :) = x%lambda / (1 + (n / nE) ** 2)
+            lambda(n, :, :) = x%lambda / (1.0_dp + (n / nE) ** 2)
          end if
       end do
       !$omp end parallel do
@@ -53,7 +53,7 @@ contains
       allocate(muStar(x%bands, x%bands))
 
       if (x%rescale) then
-         muStar(:, :) = x%muStar / (1 + x%muStar * log(nE / (nC + 0.5_dp)))
+         muStar(:, :) = x%muStar / (1.0_dp + x%muStar * log(nE / (nC + 0.5_dp)))
       else
          muStar(:, :) = x%muStar
       end if
@@ -61,7 +61,7 @@ contains
       allocate(mu(0:no - 1, x%bands, x%bands))
 
       do n = 0, nC - 1
-         mu(n, :, :) = -2 * muStar
+         mu(n, :, :) = -2.0_dp * muStar
       end do
 
       mu(nC:, :, :) = 0.0_dp
@@ -85,7 +85,7 @@ contains
 
       do step = 1, x%steps
          do i = 1, x%bands
-            A(:, i) = 1 / sqrt(im%omega ** 2 + im%Delta(:, i) ** 2)
+            A(:, i) = 1.0_dp / sqrt(im%omega ** 2 + im%Delta(:, i) ** 2)
          end do
 
          Z(:, :) = im%Z
@@ -111,7 +111,7 @@ contains
             end do
             !$omp end parallel do
 
-            im%Z(:, i) = 1 + pi * kB * x%T * im%Z(:, i) / im%omega
+            im%Z(:, i) = 1.0_dp + pi * kB * x%T * im%Z(:, i) / im%omega
          end do
 
          im%Delta(:, :) = pi * kB * x%T * im%Delta / Z

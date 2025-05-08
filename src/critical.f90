@@ -29,24 +29,24 @@ program critical
 
    variable => x%T
 
-   if (x%T .lt. 0) then
+   if (x%T .lt. 0.0_dp) then
       variable => x%T
       variable = -variable
    end if
 
-   if (x%omegaE .lt. 0) then
+   if (x%omegaE .lt. 0.0_dp) then
       variable => x%omegaE
       variable = -variable
    end if
 
    do i = 1, x%bands
       do j = 1, x%bands
-         if (x%lambda(j, i) .lt. 0) then
+         if (x%lambda(j, i) .lt. 0.0_dp) then
             variable => x%lambda(j, i)
             variable = -variable
          end if
 
-         if (x%muStar(j, i) .lt. 0) then
+         if (x%muStar(j, i) .lt. 0.0_dp) then
             variable => x%muStar(j, i)
             variable = -variable
          end if
@@ -63,12 +63,12 @@ program critical
 
    status0 = status
 
-   sc1 = status .ge. 1
+   sc1 = status .ge. 1.0_dp
    try = .true.
 
    do
       bound(1) = variable
-      variable = variable * (1 + x%rate)
+      variable = variable * (1.0_dp + x%rate)
 
       call solver(status, x)
 
@@ -77,7 +77,7 @@ program critical
          stop 1
       end if
 
-      if (sc1 .neqv. status .ge. 1) exit
+      if (sc1 .neqv. status .ge. 1.0_dp) exit
 
       if (sc1 .eqv. status .gt. status0) then
          if (try) then
@@ -97,13 +97,13 @@ program critical
    bound(2) = variable
 
    do
-      variable = sum(bound) / 2
+      variable = 0.5_dp * sum(bound)
 
       if (abs(variable - bound(1)) .le. x%error) exit
 
       call solver(status, x)
 
-      if (sc1 .eqv. status .ge. 1) then
+      if (sc1 .eqv. status .ge. 1.0_dp) then
          bound(1) = variable
       else
          bound(2) = variable

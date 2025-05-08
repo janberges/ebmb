@@ -56,7 +56,7 @@ contains
       dx(2:n - 1) = x(3:n) - x(1:n - 2)
       dx(n) = x(n) - x(n - 1)
 
-      dx(:) = dx / 2
+      dx(:) = 0.5_dp * dx
    end subroutine differential
 
    subroutine interval(x, a, b, lower, upper, logscale)
@@ -107,14 +107,14 @@ contains
          real(dp) :: expo
          real(dp), intent(in) :: x
 
-         expo = sign((exp(abs(x)) - 1) / logscale, x)
+         expo = sign((exp(abs(x)) - 1.0_dp) / logscale, x)
       end function expo
 
       elemental function loga(x)
          real(dp) :: loga
          real(dp), intent(in) :: x
 
-         loga = sign(log(abs(x * logscale) + 1), x)
+         loga = sign(log(abs(x * logscale) + 1.0_dp), x)
       end function loga
    end subroutine interval
 
