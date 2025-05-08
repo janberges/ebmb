@@ -32,7 +32,7 @@ contains
 
       integer :: error ! I/O status
 
-      real(dp) :: elements ! number of elements in lambda and muStar
+      integer :: elements ! number of elements in lambda and muStar
 
       elements = x%bands ** 2
       x%bands = -1
@@ -129,7 +129,7 @@ contains
          end if
       end do
 
-      if (x%bands .eq. -1) x%bands = int(sqrt(elements))
+      if (x%bands .eq. -1) x%bands = int(sqrt(real(elements, dp)))
 
       allocate(x%lambda(x%bands, x%bands))
       allocate(x%muStar(x%bands, x%bands))
