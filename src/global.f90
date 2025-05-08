@@ -112,7 +112,7 @@ module global
       real(dp) :: mu0, mu ! initial and final chemical potential (eV)
    end type occupancy
 
-   real(dp) :: eps = 451 * epsilon(1.0_dp) ! negligible float difference (a.u.)
+   real(dp) :: eps = 1e-13_dp ! negligible float difference (a.u.)
 
    interface operator(.ap.)
       module procedure ap, apc
