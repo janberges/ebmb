@@ -11,13 +11,13 @@ extensions = [
     'sphinx.ext.viewcode',
     'numpydoc',
     'myst_parser',
-    ]
+]
 
 html_theme = 'sphinx_rtd_theme'
 html_logo = '../logo/ebmb.svg'
 html_theme_options = {
     'logo_only': True,
     'style_nav_header_background': '#e7f2fa',
-    }
+}
 html_css_files = ['style.css']
 html_static_path = html_css_files
