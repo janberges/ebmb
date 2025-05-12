@@ -26,7 +26,7 @@ contains
       real(dp) :: beta, fermi, domega, const
       real(dp), allocatable :: weight(:), bose(:), dosef(:), dImSigma(:, :)
       real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
-      complex(dp), allocatable :: omega(:), G0(:, :), G(:, :), Sigma(:, :)
+      complex(dp), allocatable :: omega(:), G0(:, :), G(:, :)
       complex(dp), allocatable :: c1(:), c2(:)
 
       character(:), allocatable :: absent
@@ -68,13 +68,13 @@ contains
       allocate(re%omega(x%points))
       allocate(re%Z(x%points, x%bands))
       allocate(re%chi(x%points, x%bands))
+      allocate(re%Sigma(x%points, x%bands))
       allocate(re%Delta(x%points, x%bands))
       allocate(re%dos(x%points, x%bands))
 
       allocate(weight(x%points))
       allocate(omega(x%points))
       allocate(G(x%points, x%bands))
-      allocate(Sigma(x%points, x%bands))
       allocate(dImSigma(x%points, x%bands))
       allocate(n1(size(x%omega), x%bands))
       allocate(n2(size(x%omega), x%bands))
@@ -104,7 +104,7 @@ contains
          oc%mu = x%mu
       end if
 
-      Sigma(:, :) = (0.0_dp, 0.0_dp)
+      re%Sigma(:, :) = (0.0_dp, 0.0_dp)
 
       call dos(x%n, x%n .ge. 0.0_dp)
 
@@ -120,7 +120,7 @@ contains
       do step = 1, x%steps
          if (x%tell) print "('GW iteration ', I0)", step
 
-         Sigma(:, :) = (0.0_dp, 0.0_dp)
+         re%Sigma(:, :) = (0.0_dp, 0.0_dp)
 
          do j = 1, x%bands
             do m = 1, x%points
@@ -129,14 +129,15 @@ contains
                do i = 1, x%bands
                   !$omp parallel do
                   do n = 1, x%points
-                     Sigma(n, i) = Sigma(n, i) + sum( &
+                     re%Sigma(n, i) = re%Sigma(n, i) + sum( &
                         n1(:, i) / (omega(n) + w1) + n2(:, i) / (omega(n) + w2))
                   end do
                   !$omp end parallel do
 
                   if (x%chiC) then
-                     Sigma(:, i) = Sigma(:, i) + weight(m) * aimag(G(m, j)) &
-                        * (0.5_dp - fermi) * x%muStar(j, i) / dosef(j)
+                     re%Sigma(:, i) = re%Sigma(:, i) + weight(m) &
+                        * aimag(G(m, j)) * (0.5_dp - fermi) &
+                        * x%muStar(j, i) / dosef(j)
                   end if
                end do
             end do
@@ -156,12 +157,12 @@ contains
 
             do i = 1, x%bands
                dImSigma(n, i) = sum(weight_a2F(:, :, i) * (n1 + n2)) &
-                  - aimag(Sigma(n, i))
+                  - aimag(re%Sigma(n, i))
             end do
          end do
          !$omp end parallel do
 
-         Sigma(:, :) = Sigma + cmplx(0.0_dp, dImSigma, dp)
+         re%Sigma(:, :) = re%Sigma + cmplx(0.0_dp, dImSigma, dp)
 
          G0 = G
 
@@ -276,7 +277,7 @@ contains
                !$omp parallel do
                do n = 1, x%points
                   G(n, i) = sum(weight_dos(:, i) &
-                     / (omega(n) - x%energy + oc%mu - Sigma(n, i)))
+                     / (omega(n) - x%energy + oc%mu - re%Sigma(n, i)))
                end do
                !$omp end parallel do
             end do

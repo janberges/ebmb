@@ -107,6 +107,11 @@ contains
 
             write (fun) 'DOS:', re%dos
          end if
+
+         if (x%Sigma) then
+            write (fun) 'Re[Sigma]:', real(re%Sigma)
+            write (fun) 'Im[Sigma]:', aimag(re%Sigma)
+         end if
       end if
 
       close (fun)

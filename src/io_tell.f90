@@ -28,7 +28,17 @@ contains
 
       print "('imaginary-axis solution [', I0, ']:', /)", im%steps
 
-      if (x%ldos) then
+      if (x%Sigma) then
+         print head, 'omega/eV', 'Re[Sigma]/eV', 'Im[Sigma]/eV', 'Delta/eV'
+
+         do i = 1, x%bands
+            print rule(4)
+
+            do n = 0, size(im%omega) - 1
+               print body, im%omega(n), im%Sigma(n, i), im%Delta(n, i)
+            end do
+         end do
+      else if (x%ldos) then
          print head, 'omega/eV', 'Z', 'Delta/eV', 'chi/eV'
 
          do i = 1, x%bands
@@ -105,7 +115,19 @@ contains
       if (x%points .gt. 0) then
          print "(/, 'real-axis solution:', /)"
 
-         if (x%ldos) then
+         if (x%Sigma) then
+            print head, 'omega/eV', 'Re[Sigma]', 'Im[Sigma]', &
+               'Re[Delta]/eV', 'Im[Delta]/eV', 'DOS/(1/eV)'
+
+            do i = 1, x%bands
+               print rule(6)
+
+               do n = 1, x%points
+                  print body, re%omega(n), re%Sigma(n, i), re%Delta(n, i), &
+                     re%dos(n, i)
+               end do
+            end do
+         else if (x%ldos) then
             print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
                'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]', 'Im[chi]', &
                'DOS/(1/eV)'

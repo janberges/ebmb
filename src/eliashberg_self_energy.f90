@@ -8,7 +8,7 @@ module eliashberg_self_energy
    implicit none
 
    private
-   public :: self_energy, initialize, weight
+   public :: self_energy, initialize, weight, combine_self_energy_components
 
    logical :: initial = .true.
 
@@ -351,4 +351,23 @@ contains
 
       oc%states = sum(weight)
    end subroutine initialize
+
+   subroutine combine_self_energy_components(x, im)
+      type(parameters), intent(in) :: x
+      type(matsubara), intent(inout) :: im
+
+      integer :: i
+
+      allocate(im%Sigma(lbound(im%omega, 1):ubound(im%omega, 1), x%bands))
+
+      do i = 1, x%bands
+         if (x%ldos) then
+            im%Sigma(:, i) = cmplx(im%chi(:, i), &
+               im%omega * (1.0_dp - im%Z(:, i)), dp)
+         else
+            im%Sigma(:, i) = cmplx(0.0_dp, &
+               im%omega * (1.0_dp - im%Z(:, i)), dp)
+         end if
+      end do
+   end subroutine combine_self_energy_components
 end module eliashberg_self_energy

@@ -28,6 +28,8 @@ program ebmb
       call self_energy_cdos(x, im)
    end if
 
+   if (x%Sigma) call combine_self_energy_components(x, im)
+
    if (.not. x%realgw) call realize(x, im, re)
 
    if (.not. x%realgw .and. x%ldos .and. x%points .gt. 0) then

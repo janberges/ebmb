@@ -526,7 +526,8 @@
          \tt mu            & 0           & eV               & $\mu_0$             & initial chemical potential                 & $+$ & $+$ & $+$ & $-$ \\
          \tt conserve      & \tt true    & --               & --                  & conserve particle number?                  & $+$ & $+$ & $+$ & $-$ \\
          \tt chi           & \tt true    & --               & --                  & consider energy shift $\chi_i(n)$?         & $+$ & $+$ & $+$ & $-$ \\
-         \tt chiC          & \tt false   & --               & --           & consider \textsc{Coulomb} part ${\chi \sub C}_i$? & $+$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt chiC          & \tt false   & --               & --           & consider \textsc{Coulomb} part ${\chi \sub C}_i$? & $+$ & $+$ & $+$ & $-$ \\
+         \tt Sigma         & \tt false   & --               & --                  & calculate $\varSigma_{1 1 i}$?             & $+$ & $-$ & $-$ & $-$ \\[\gap]
          \tt steps         & 250000      & 1                & --                  & maximum number of iterations               & $+$ & $+$ & $+$ & $-$ \\[\gap]
          \tt epsilon       & $10^{-13}$  & a.u.             & --                  & negligible float difference                & $+$ & $+$ & $+$ & $-$ \\
          \tt toln          & $10^{-10}$  & 1                & --                  & tolerance for occupancy number             & $+$ & $+$ & $+$ & $-$ \\
@@ -586,6 +587,7 @@
          \tt Delta  & gap                                         & $\Delta_i(n)$     \\
          \tt Z      & renormalization                             & $Z_i(n)$          \\
          \tt chi    & energy shift \s                             & $\chi_i(n)$       \\
+         \tt Sigma  & normal self-energy (\#)~\texttt{Sigma=true} & $\varSigma_{1 1 i}(n)$ \\
          \tt chiC   & \textsc{Coulomb} part of energy shift \s    & ${\chi \sub C}_i$ \\
          \tt phiC   & \textsc{Coulomb} part of order parameter    & ${\phi \sub C}_i$ \\
          \tt status & status (steps until convergence or $-1$)    & --                \\
@@ -610,6 +612,7 @@
          \tt \stack{l}{Re[Delta]}{Im[Delta]} & \stack{r}{real}{imaginary} $\Big\}$ gap             & $\Delta_i(\omega)$ \\
          \tt \stack{l}{Re[Z]}    {Im[Z]}     & \stack{r}{real}{imaginary} $\Big\}$ renormalization & $Z_i(\omega)$      \\
          \tt \stack{l}{Re[chi]}  {Im[chi]}   & \stack{r}{real}{imaginary} $\Big\}$ energy shift \s & $\chi_i(\omega)$   \\
+         \tt \stack{l}{Re[Sigma]}{Im[Sigma]} & \stack{r}{real}{imaginary} $\Big\}$ normal self-energy (\#) & $\varSigma_{1 1 i}(\omega)$ \\
          \tt DOS                             & quasiparticle density of states \s                  & $A_i(\omega)$      \\
          \hline
          \multicolumn3l{\textbf{measurable results} \hfill \texttt{measurable=true}} \\

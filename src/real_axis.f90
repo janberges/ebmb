@@ -33,6 +33,7 @@ contains
          allocate(re%Z(x%points, x%bands))
 
          if (x%ldos) allocate(re%chi(x%points, x%bands))
+         if (x%Sigma) allocate(re%Sigma(x%points, x%bands))
 
          call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true., &
             logscale=x%logscale)
@@ -68,6 +69,11 @@ contains
                if (x%ldos) then
                   call coefficients(im%omega, cmplx(im%chi(:, i), kind=dp))
                   re%chi(:, i) = continuation(omega)
+               end if
+
+               if (x%Sigma) then
+                  call coefficients(im%omega, im%Sigma(:, i))
+                  re%Sigma(:, i) = continuation(omega)
                end if
             end if
          end do

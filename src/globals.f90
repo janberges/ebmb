@@ -51,6 +51,7 @@ module globals
       logical :: conserve = .true.  ! conserve particle number?
       logical :: chi      = .true.  ! consider energy shift?
       logical :: chiC     = .false. ! consider Coulomb part of energy shift?
+      logical :: Sigma    = .false. ! calculate normal self-energy?
 
       integer(i4) :: steps = 250000 ! maximum number of iterations
 
@@ -91,6 +92,8 @@ module globals
       real(dp), allocatable :: chiC (:)    ! Coulomb part of energy shift (eV)
       real(dp), allocatable :: phiC (:)    ! Coulomb part of order parameter (eV)
 
+      complex(dp), allocatable :: Sigma(:, :) ! normal self-energy (eV)
+
       integer(i4) :: steps ! steps until convergence
    end type matsubara
 
@@ -98,6 +101,7 @@ module globals
       real   (dp), allocatable :: omega (:)    ! frequency (eV)
       complex(dp), allocatable :: Z     (:, :) ! renormalization
       complex(dp), allocatable :: chi   (:, :) ! energy shift (eV)
+      complex(dp), allocatable :: Sigma (:, :) ! normal self-energy (eV)
       complex(dp), allocatable :: Delta (:, :) ! gap (eV)
       real   (dp), allocatable :: Delta0(:)    ! measurable gap (eV)
       real   (dp), allocatable :: dos   (:, :) ! quasiparticle density (1/eV)

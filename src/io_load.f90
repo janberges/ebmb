@@ -87,6 +87,7 @@ contains
             case ('conserve'); read (rhs, *, iostat=error) x%conserve
             case ('chi');      read (rhs, *, iostat=error) x%chi
             case ('chiC');     read (rhs, *, iostat=error) x%chiC
+            case ('Sigma');    read (rhs, *, iostat=error) x%Sigma
 
             case ('steps', 'limit'); read (rhs, *, iostat=error) x%steps
 
