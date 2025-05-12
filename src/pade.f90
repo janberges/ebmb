@@ -20,18 +20,16 @@ contains
       complex(dp), parameter :: i = (0.0_dp, 1.0_dp)
       integer :: p
 
-      n = size(z)
+      if (all(u .ap. u(1))) then
+         n = 1
+      else
+         n = size(z)
+      end if
 
       if (allocated(c)) deallocate(c)
       allocate(c(n, n))
 
-      if (all(u .ap. u(1))) then
-         c(:, :) = (0.0_qp, 0.0_qp)
-         c(1, 1) = u(1)
-         return
-      end if
-
-      c(1, :) = u
+      c(1, :) = u(:n)
 
       do p = 2, n
          c(p, p:) = (c(p - 1, p - 1) - c(p - 1, p:)) &
