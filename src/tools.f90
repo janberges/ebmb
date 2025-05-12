@@ -89,6 +89,11 @@ contains
          if (upper) i = i - 1
       end if
 
+      if (i + j .eq. 0) then
+         i = 1
+         j = 1
+      end if
+
       do k = 1, size(x)
          x(k) = i * l + j * m
          i = i - 1
