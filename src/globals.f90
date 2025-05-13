@@ -67,7 +67,7 @@ module globals
 
       real(dp) :: logscale = 1.0_dp ! scaling of logarithmic sampling
 
-      real(dp) :: eta = 1e-3_dp ! infinitesimal energy (eV)
+      real(dp) :: eta = 1e-3_dp ! broadening of retarded objects (eV)
 
       logical :: measurable = .false. ! find measurable gap?
 
