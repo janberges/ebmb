@@ -184,6 +184,8 @@ contains
       re%chi(:, :) = (0.0_dp, 0.0_dp)
       re%Delta(:, :) = (0.0_dp, 0.0_dp)
 
+      if (x%noZchi) return
+
       G = G0 ! We do not want another iteration but Z and chi for current Sigma!
 
       do j = 1, x%bands

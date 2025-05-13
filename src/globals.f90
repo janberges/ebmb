@@ -79,6 +79,7 @@ module globals
       logical :: stable = .false. ! calculate quasiparticle DOS differently?
       logical :: normal = .false. ! enforce normal state?
       logical :: realgw = .false. ! do real-axis GW0 calculation?
+      logical :: noZchi = .false. ! skip normal self-energy components?
 
       logical :: power = .true. ! use power method for single band?
    end type parameters
