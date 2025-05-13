@@ -116,6 +116,7 @@ contains
             case ('stable'); read (rhs, *, iostat=error) x%stable
             case ('normal'); read (rhs, *, iostat=error) x%normal
             case ('realgw'); read (rhs, *, iostat=error) x%realgw
+            case ('eta0Im'); read (rhs, *, iostat=error) x%eta0Im
             case ('noZchi'); read (rhs, *, iostat=error) x%noZchi
 
             case ('power'); read (rhs, *, iostat=error) x%power

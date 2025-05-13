@@ -143,26 +143,30 @@ contains
             end do
          end do
 
-         ! Send eta to zero and replace Im[1/(x + i0+)] by -pi delta(x):
+         if (x%eta0Im) then
+            ! Send eta to zero and replace Im[1/(x + i0+)] by -pi delta(x):
 
-         !$omp parallel do private(n1, n2)
-         do n = 1, x%points
-            do m = 1, size(x%omega)
-               n1(m, :) = aimag(Ginter(re%omega(n) - x%omega(m))) / dosef &
-                  * (1.0_dp - fermi_fun(re%omega(n) - x%omega(m)) + bose(m))
+            !$omp parallel do private(n1, n2)
+            do n = 1, x%points
+               do m = 1, size(x%omega)
+                  n1(m, :) = aimag(Ginter(re%omega(n) - x%omega(m))) / dosef &
+                     * (1.0_dp - fermi_fun(re%omega(n) - x%omega(m)) + bose(m))
 
-               n2(m, :) = aimag(Ginter(re%omega(n) + x%omega(m))) / dosef &
-                  * (fermi_fun(re%omega(n) + x%omega(m)) + bose(m))
+                  n2(m, :) = aimag(Ginter(re%omega(n) + x%omega(m))) / dosef &
+                     * (fermi_fun(re%omega(n) + x%omega(m)) + bose(m))
+               end do
+
+               do i = 1, x%bands
+                  dImSigma(n, i) = sum(weight_a2F(:, :, i) * (n1 + n2)) &
+                     - aimag(re%Sigma(n, i))
+               end do
             end do
+            !$omp end parallel do
 
-            do i = 1, x%bands
-               dImSigma(n, i) = sum(weight_a2F(:, :, i) * (n1 + n2)) &
-                  - aimag(re%Sigma(n, i))
-            end do
-         end do
-         !$omp end parallel do
-
-         re%Sigma(:, :) = re%Sigma + cmplx(0.0_dp, dImSigma, dp)
+            re%Sigma(:, :) = re%Sigma + cmplx(0.0_dp, dImSigma, dp)
+         else
+            dImSigma(:, :) = 0.0_dp
+         end if
 
          G0 = G
 

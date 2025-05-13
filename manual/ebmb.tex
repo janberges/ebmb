@@ -404,7 +404,7 @@
          {\omega - \epsilon + \mu - \Sigma_{1 1 i}(\omega)}.
    \end{equation*}
    %
-   Note that in the code $\Sigma_{1 1 i}(\omega + \I \eta)$ is replaced by $\Re
+   Note that the code can replace $\Sigma_{1 1 i}(\omega + \I \eta)$ by $\Re
    \Sigma_{1 1 i}(\omega + \I \eta) + \I \Im \Sigma_{1 1 i}(\omega + \I 0^+)$.
 
    \headline{I/O}
@@ -547,6 +547,7 @@
          \tt stable        & \tt false   & --               & --                  & calculate $A_i(\omega)$ differently?       & $+$ & $-$ & $-$ & $-$ \\
          \tt normal        & \tt false   & --               & --                  & enforce normal state?                      & $+$ & $-$ & $-$ & $-$ \\
          \tt realgw        & \tt false   & --               & --                  & do real-axis GW$_0$ calculation?           & $+$ & $-$ & $-$ & $-$ \\
+         \tt etaIm0        & \tt true    & -- & -- & send $\eta \rightarrow 0^+$ in $\Im \varSigma_{1 1 i}(\omega + \I \eta)$? & $+$ & $-$ & $-$ & $-$ \\
          \tt noZchi        & \tt false   & --               & --                  & skip $Z$ and $\chi$ for \texttt{realgw}?   & $+$ & $-$ & $-$ & $-$ \\[\gap]
          \tt power         & \tt true    & --               & --                  & power method for single band?              & $-$ & $-$ & $+$ & $-$
       \end{tabular}
