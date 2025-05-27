@@ -38,6 +38,10 @@ contains
       write (fun) 'Z:', im%Z
       write (fun) 'Delta:', im%Delta
 
+      if (x%Sigma) then
+         write (fun) 'domega:', aimag(im%Sigma)
+      end if
+
       if (x%ldos) then
          write (fun) 'chi:', im%chi
 

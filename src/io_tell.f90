@@ -116,41 +116,56 @@ contains
          print "(/, 'real-axis solution:', /)"
 
          if (x%Sigma) then
-            print head, 'omega/eV', 'Re[Sigma]', 'Im[Sigma]', &
-               'Re[Delta]/eV', 'Im[Delta]/eV', 'DOS/(1/eV)'
+            if (x%ldos) then
+               print head, 'omega/eV', 'Re[Sigma]', 'Im[Sigma]', &
+                  'Re[Delta]/eV', 'Im[Delta]/eV', 'DOS/(1/eV)'
 
-            do i = 1, x%bands
-               print rule(6)
+               do i = 1, x%bands
+                  print rule(6)
 
-               do n = 1, x%points
-                  print body, re%omega(n), re%Sigma(n, i), re%Delta(n, i), &
-                     re%dos(n, i)
+                  do n = 1, x%points
+                     print body, re%omega(n), re%Sigma(n, i), re%Delta(n, i), &
+                        re%dos(n, i)
+                  end do
                end do
-            end do
-         else if (x%ldos) then
-            print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
-               'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]', 'Im[chi]', &
-               'DOS/(1/eV)'
+            else
+               print head, 'omega/eV', 'Re[Sigma]', 'Im[Sigma]', &
+                  'Re[Delta]/eV', 'Im[Delta]/eV'
 
-            do i = 1, x%bands
-               print rule(8)
+               do i = 1, x%bands
+                  print rule(5)
 
-               do n = 1, x%points
-                  print body, re%omega(n), re%Z(n, i), re%Delta(n, i), &
-                     re%chi(n, i), re%dos(n, i)
+                  do n = 1, x%points
+                     print body, re%omega(n), re%Sigma(n, i), re%Delta(n, i)
+                  end do
                end do
-            end do
+            end if
          else
-            print head, &
-               'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
+            if (x%ldos) then
+               print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
+                  'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]', 'Im[chi]', &
+                  'DOS/(1/eV)'
 
-            do i = 1, x%bands
-               print rule(5)
+               do i = 1, x%bands
+                  print rule(8)
 
-               do n = 1, x%points
-                  print body, re%omega(n), re%Z(n, i), re%Delta(n, i)
+                  do n = 1, x%points
+                     print body, re%omega(n), re%Z(n, i), re%Delta(n, i), &
+                        re%chi(n, i), re%dos(n, i)
+                  end do
                end do
-            end do
+            else
+               print head, &
+                  'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
+
+               do i = 1, x%bands
+                  print rule(5)
+
+                  do n = 1, x%points
+                     print body, re%omega(n), re%Z(n, i), re%Delta(n, i)
+                  end do
+               end do
+            end if
          end if
       end if
    end subroutine tell
