@@ -39,13 +39,13 @@ contains
             end do
          end do
       else if (x%ldos) then
-         print head, 'omega/eV', 'Z', 'Delta/eV', 'chi/eV'
+         print head, 'omega/eV', 'Z', 'chi/eV', 'Delta/eV'
 
          do i = 1, x%bands
             print rule(4)
 
             do n = 0, size(im%omega) - 1
-               print body, im%omega(n), im%Z(n, i), im%Delta(n, i), im%chi(n, i)
+               print body, im%omega(n), im%Z(n, i), im%chi(n, i), im%Delta(n, i)
             end do
          end do
       else
@@ -143,15 +143,15 @@ contains
          else
             if (x%ldos) then
                print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
-                  'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]', 'Im[chi]', &
+                  'Re[chi]', 'Im[chi]', 'Re[Delta]/eV', 'Im[Delta]/eV', &
                   'DOS/(1/eV)'
 
                do i = 1, x%bands
                   print rule(8)
 
                   do n = 1, x%points
-                     print body, re%omega(n), re%Z(n, i), re%Delta(n, i), &
-                        re%chi(n, i), re%dos(n, i)
+                     print body, re%omega(n), re%Z(n, i), re%chi(n, i), &
+                        re%Delta(n, i), re%dos(n, i)
                   end do
                end do
             else
