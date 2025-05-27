@@ -144,9 +144,10 @@
    %
    \begin{equation*}
       \vec \Sigma_i(n)
-      = \I \omega_n [1 - Z_i(n)] \vec 1
+      = \I \! \underbrace{\omega_n [1 - Z_i(n)]}
+      _{\displaystyle (\delta \omega_n)_i} \vec 1
       + \underbrace{Z_i(n) \, \Delta_i(n)}
-      _ {\displaystyle \phi_i(n)} \vec \sigma_1
+      _{\displaystyle \phi_i(n)} \vec \sigma_1
       + \chi_i(n) \vec \sigma_3,
    \end{equation*}
    %
@@ -589,7 +590,7 @@
          \tt Delta  & gap                                         & $\Delta_i(n)$     \\
          \tt Z      & renormalization                             & $Z_i(n)$          \\
          \tt chi    & energy shift \s    & \llap{$\chi_i(n) = \Re \Sigma_{1 1 i}(n)$} \\
-         \tt domega & frequency shift (\#)~\texttt{Sigma=true} & $\Im \Sigma_{1 1 i}(n)$ \\
+         \tt domega & frequency shift (\#)~\texttt{Sigma=true} & \llap{$(\delta \omega_n)_i = \Im \Sigma_{1 1 i}(n)$} \\
          \tt chiC   & \textsc{Coulomb} part of energy shift \s    & ${\chi \sub C}_i$ \\
          \tt phiC   & \textsc{Coulomb} part of order parameter    & ${\phi \sub C}_i$ \\
          \tt status & status (steps until convergence or $-1$)    & --                \\
