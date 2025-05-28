@@ -14,6 +14,7 @@ module eigenvalues
          work, lwork, info)
 
          use globals
+         implicit none
 
          character, intent(in) :: jobvl, jobvr
 

@@ -3,6 +3,7 @@
 
 module globals
    implicit none
+   public
 
    integer, parameter :: dp = selected_real_kind(15) ! double precision (8 B)
    integer, parameter :: qp = selected_real_kind(30) ! quad precision (16 B)
