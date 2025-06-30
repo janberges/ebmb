@@ -12,7 +12,7 @@ module eliashberg_self_energy
 
    logical :: initial = .true.
 
-   real(dp), allocatable :: weight(:, :), matsum(:), dosef(:)
+   real(dp), allocatable :: weight(:, :), matsum(:)
 
 contains
 
@@ -25,7 +25,7 @@ contains
 
       real(dp) :: nE, domega, residue
 
-      real(dp), allocatable :: g(:, :, :), U(:, :, :), residues(:)
+      real(dp), allocatable :: g(:, :, :), U(:, :, :), dosef(:), residues(:)
       real(dp), allocatable :: muC(:, :), muStar(:, :), A(:, :), B(:, :)
       real(dp), allocatable :: Z(:, :), phi(:, :), chi(:, :)
 
@@ -94,6 +94,8 @@ contains
 
       oc%n0 = oc%n
       oc%mu0 = oc%mu
+
+      allocate(dosef(x%bands))
 
       if (x%divdos) then
          dosef(:) = x%dos(minloc(abs(x%energy - oc%mu), 1), :)
@@ -337,9 +339,6 @@ contains
 
       if (allocated(matsum)) deallocate(matsum)
       allocate(matsum(size(x%energy)))
-
-      if (allocated(dosef)) deallocate(dosef)
-      allocate(dosef(size(x%energy)))
 
       call differential(x%energy, weight(:, 1))
 
