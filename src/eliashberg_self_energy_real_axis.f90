@@ -16,7 +16,7 @@ module eliashberg_self_energy_real_axis
 contains
 
    subroutine self_energy_real_axis(x, im, re, oc)
-      type(parameters), intent(inout) :: x
+      type(parameters), intent(in) :: x
       type(matsubara), intent(out) :: im
       type(continued), intent(out) :: re
       type(occupancy), intent(out) :: oc
