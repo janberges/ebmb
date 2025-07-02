@@ -186,6 +186,8 @@ contains
             !$omp parallel do
             do n = 0, no - 1
                do j = 1, x%bands
+                  if (x%diag .and. i .ne. j) cycle
+
                   do m = 0, no - 1
                      im%Z(n, i) = im%Z(n, i) + integral_Z(m, j) &
                         * (g(n - m, j, i) - g(n + m + 1, j, i))

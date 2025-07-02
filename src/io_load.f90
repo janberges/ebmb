@@ -27,7 +27,7 @@ contains
 
       integer :: equals ! position of '='
 
-      integer :: i ! band index
+      integer :: i, j ! band indices
       integer :: n ! argument number
 
       integer :: error ! I/O status
@@ -182,6 +182,20 @@ contains
          call load_a2F(a2F_file, x)
          call integrate_a2F(x)
       end if
+
+      x%diag = .true.
+
+      outer: do i = 1, x%bands
+         do j = 1, x%bands
+            if (i .eq. j) cycle
+
+            if ((x%lambda(j, i) .na. 0.0_dp) .or. &
+                (x%muStar(j, i) .na. 0.0_dp)) then
+               x%diag = .false.
+               exit outer
+            end if
+         end do
+      end do outer
 
       if (x%cutoffC .lt. 0.0_dp) x%cutoffC = x%cutoff
 

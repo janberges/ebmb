@@ -127,6 +127,8 @@ contains
                call prepare(m, j)
 
                do i = 1, x%bands
+                  if (x%diag .and. i .ne. j) cycle
+
                   !$omp parallel do
                   do n = 1, x%points
                      re%Sigma(n, i) = re%Sigma(n, i) + sum( &
@@ -197,6 +199,8 @@ contains
             call prepare(m, j)
 
             do i = 1, x%bands
+               if (x%diag .and. i .ne. j) cycle
+
                !$omp parallel do private(r1, r2)
                do n = 0, no - 1
                   r1 = n1(:, i) / (w1 ** 2 + im%omega(n) ** 2)
