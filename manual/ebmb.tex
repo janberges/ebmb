@@ -438,7 +438,8 @@
                \texttt{lambda}, \texttt{muStar}, and \texttt{muC} expect
                flattened square matrices of equal size the elements of which
                are separated by commas. It is impossible to vary more than one
-               element at once.
+               element at once. If \texttt{diag}, the off-diagonal elements
+               shall be omitted.
 
             \item
                \texttt{dos} has lines $\epsilon$/eV $n_1 / \mathrm{eV}^{-1}$
@@ -446,7 +447,8 @@
 
             \item
                \texttt{a2F} has lines $\omega$/eV $\alpha^2 F_{1, 1}$ $\alpha^2
-               F_{2, 1}$ $\dots$ with $\omega$ increasing.
+               F_{2, 1}$ $\dots$ with $\omega$ increasing. If \texttt{diag}, the
+               off-diagonal elements shall be omitted.
 
             \item
                The relative change in the sample spacing of the real-axis
@@ -520,7 +522,8 @@
          \tt lambda, lamda & 1           & 1                & $\lambda_{i j}$     & electron-phonon coupling                   & $+$ & $+$ & $+$ & $+$ \\
          \tt muStar, mu*   & 0           & 1                & $\mu^*_{i j}$       & rescaled \textsc{Coulomb} potential        & $+$ & $+$ & $+$ & $+$ \\
          \tt muC           & 0           & 1                & $\mu_{i j}$         & unscaled \textsc{Coulomb} parameter        & $+$ & $+$ & $+$ & $+$ \\[\gap]
-         \tt bands         & 1           & 1                & --                  & number of bands                            & $+$ & $+$ & $+$ & $-$ \\[\gap]
+         \tt bands         & 1           & 1                & --                  & number of bands                            & $+$ & $+$ & $+$ & $-$ \\
+         \tt diag          & \tt false   & --               & --                  & only diagonal coupling given?              & $+$ & $+$ & $+$ & $-$ \\[\gap]
          \tt dos, DOS      & \tt none    & --               & --                  & file with density of states                & $+$ & $+$ & $+$ & $-$ \\
          \tt a2f, a2F      & \tt none    & --               & --                  & file with \textsc{Eliashberg} function     & $+$ & $+$ & $+$ & $-$ \\[\gap]
          \tt n             & --          & 1                & $n_0$               & initial occupancy number                   & $+$ & $+$ & $+$ & $-$ \\

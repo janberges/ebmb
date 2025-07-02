@@ -34,7 +34,12 @@ contains
 
       integer :: elements ! number of elements in lambda and muStar
 
-      elements = x%bands ** 2
+      if (x%diag) then
+         elements = x%bands
+      else
+         elements = x%bands ** 2
+      end if
+
       x%bands = -1
 
       do n = 1, command_argument_count()
@@ -77,6 +82,7 @@ contains
                elements = matches(rhs, ',') + 1
 
             case ('bands'); read (rhs, *, iostat=error) x%bands
+            case ('diag');  read (rhs, *, iostat=error) x%diag
 
             case ('dos', 'DOS'); dos_file = rhs
             case ('a2f', 'a2F'); a2F_file = rhs
@@ -132,28 +138,44 @@ contains
          end if
       end do
 
-      if (x%bands .eq. -1) x%bands = int(sqrt(real(elements, dp)))
+      if (x%bands .eq. -1) then
+         if (x%diag) then
+            x%bands = elements
+         else
+            x%bands = int(sqrt(real(elements, dp)))
+         end if
+      end if
 
       allocate(x%lambda(x%bands, x%bands))
       allocate(x%muStar(x%bands, x%bands))
 
+      x%lambda(:, :) = 0.0_dp
+
+      do i = 1, x%bands
+         x%lambda(i, i) = 1.0_dp
+      end do
+
       if (allocated(lambda)) then
-         read (lambda, *, iostat=error) x%lambda
+         if (x%diag) then
+            read (lambda, *, iostat=error) (x%lambda(i, i), i = 1, x%bands)
+         else
+            read (lambda, *, iostat=error) x%lambda
+         end if
 
          if (error .ne. 0) then
             print "('Error: ""lambda"" needs ', I0, ' numbers')", size(x%lambda)
             stop 1
          end if
-      else
-         x%lambda(:, :) = 0.0_dp
-
-         do i = 1, x%bands
-            x%lambda(i, i) = 1.0_dp
-         end do
       end if
 
+      x%muStar(:, :) = 0.0_dp
+
       if (allocated(muC)) then
-         read (muC, *, iostat=error) x%muStar
+         if (x%diag) then
+            read (muC, *, iostat=error) (x%muStar(i, i), i = 1, x%bands)
+         else
+            read (muC, *, iostat=error) x%muStar
+         end if
 
          if (error .ne. 0) then
             print "('""muC"" needs ', I0, ' numbers')", size(x%muStar)
@@ -162,14 +184,16 @@ contains
 
          x%unscale = .false.
       else if (allocated(muStar)) then
-         read (muStar, *, iostat=error) x%muStar
+         if (x%diag) then
+            read (muStar, *, iostat=error) (x%muStar(i, i), i = 1, x%bands)
+         else
+            read (muStar, *, iostat=error) x%muStar
+         end if
 
          if (error .ne. 0) then
             print "('""muStar"" needs ', I0, ' numbers')", size(x%muStar)
             stop 1
          end if
-      else
-         x%muStar(:, :) = 0.0_dp
       end if
 
       if (allocated(dos_file)) then
@@ -183,19 +207,21 @@ contains
          call integrate_a2F(x)
       end if
 
-      x%diag = .true.
+      if (.not. x%diag) then
+         x%diag = .true.
 
-      outer: do i = 1, x%bands
-         do j = 1, x%bands
-            if (i .eq. j) cycle
+         outer: do i = 1, x%bands
+            do j = 1, x%bands
+               if (i .eq. j) cycle
 
-            if ((x%lambda(j, i) .na. 0.0_dp) .or. &
-                (x%muStar(j, i) .na. 0.0_dp)) then
-               x%diag = .false.
-               exit outer
-            end if
-         end do
-      end do outer
+               if ((x%lambda(j, i) .na. 0.0_dp) .or. &
+                   (x%muStar(j, i) .na. 0.0_dp)) then
+                  x%diag = .false.
+                  exit outer
+               end if
+            end do
+         end do outer
+      end if
 
       if (x%cutoffC .lt. 0.0_dp) x%cutoffC = x%cutoff
 
@@ -248,7 +274,7 @@ contains
       character(*), intent(in) :: filename
       type(parameters), intent(inout) :: x
 
-      integer :: n, m
+      integer :: i, n, m
 
       real(dp) :: test
       integer :: error
@@ -277,7 +303,13 @@ contains
 
       do m = 1, n
          do while (x%omega(m) .ap. 0.0_dp)
-            read (fun, *, iostat=error) x%omega(m), x%a2F(m, :, :)
+            if (x%diag) then
+               x%a2F(m, :, :) = 0.0_dp
+               read (fun, *, iostat=error) x%omega(m), (x%a2F(m, i, i), &
+                  i = 1, x%bands)
+            else
+               read (fun, *, iostat=error) x%omega(m), x%a2F(m, :, :)
+            end if
 
             if (error .ne. 0) then
                print "('Error: a2F file needs ', I0, ' numbers per line')", &
