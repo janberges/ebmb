@@ -55,7 +55,7 @@ contains
 
       domega = 2.0_dp * pi * kB * x%T
 
-      no = ceiling(x%cutoff * x%omegaE / domega - 0.5_dp)
+      no = max(1, ceiling(x%cutoff * x%omegaE / domega - 0.5_dp))
 
       allocate(im%omega(0:no - 1))
       allocate(im%Z(0:no - 1, x%bands))

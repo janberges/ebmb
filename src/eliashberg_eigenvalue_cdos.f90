@@ -41,6 +41,8 @@ contains
       no = ceiling(x%cutoff  * nE - 0.5_dp)
       nC = ceiling(x%cutoffC * nE - 0.5_dp)
 
+      if (no .lt. 1)  no = 1
+
       if (no .ne. no0) then
          if (no0 .ne. -1) then
             deallocate(lambda)

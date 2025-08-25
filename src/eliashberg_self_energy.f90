@@ -48,6 +48,8 @@ contains
       no = ceiling(x%cutoff  * nE - 0.5_dp)
       nC = ceiling(x%cutoffC * nE - 0.5_dp)
 
+      if (no .lt. 1)  no = 1
+
       allocate(im%omega(0:no - 1))
 
       do n = 0, no - 1
