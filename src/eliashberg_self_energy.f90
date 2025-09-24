@@ -212,7 +212,7 @@ contains
          im%phi(:, :) = im%phi * kB * x%T
          im%chi(:, :) = im%chi * kB * x%T
 
-         if (x%chiC) then
+         if (x%chi .and. x%chiC) then
             call calculate_residue(nC, .false.)
 
             do i = 1, x%bands
