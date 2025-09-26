@@ -18,6 +18,8 @@ program ebmb
    type(continued) :: re
    type(occupancy) :: oc
 
+   if (x%tell) print "('This is ebmb v2.0.0')"
+
    call load(x)
 
    if (x%realgw) then

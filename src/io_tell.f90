@@ -26,38 +26,41 @@ contains
       head = edit('(99Aw)') ! 99 replaces Fortran-2008 unlimited format control.
       body = edit('(99x)')
 
-      print "('imaginary-axis solution [', I0, ']:', /)", im%steps
+      if (x%output .eq. 'none') then
+         print "(/, 'imaginary-axis solution [', I0, ']:', /)", im%steps
 
-      if (x%Sigma) then
-         print head, 'omega/eV', 'Re[Sigma]/eV', 'Im[Sigma]/eV', 'Delta/eV'
+         if (x%Sigma) then
+            print head, 'omega/eV', 'Re[Sigma]/eV', 'Im[Sigma]/eV', 'Delta/eV'
 
-         do i = 1, x%bands
-            print rule(4)
+            do i = 1, x%bands
+               print rule(4)
 
-            do n = 0, size(im%omega) - 1
-               print body, im%omega(n), im%Sigma(n, i), im%Delta(n, i)
+               do n = 0, size(im%omega) - 1
+                  print body, im%omega(n), im%Sigma(n, i), im%Delta(n, i)
+               end do
             end do
-         end do
-      else if (x%ldos) then
-         print head, 'omega/eV', 'Z', 'chi/eV', 'Delta/eV'
+         else if (x%ldos) then
+            print head, 'omega/eV', 'Z', 'chi/eV', 'Delta/eV'
 
-         do i = 1, x%bands
-            print rule(4)
+            do i = 1, x%bands
+               print rule(4)
 
-            do n = 0, size(im%omega) - 1
-               print body, im%omega(n), im%Z(n, i), im%chi(n, i), im%Delta(n, i)
+               do n = 0, size(im%omega) - 1
+                  print body, im%omega(n), im%Z(n, i), im%chi(n, i), &
+                     im%Delta(n, i)
+               end do
             end do
-         end do
-      else
-         print head, 'omega/eV', 'Z', 'Delta/eV'
+         else
+            print head, 'omega/eV', 'Z', 'Delta/eV'
 
-         do i = 1, x%bands
-            print rule(3)
+            do i = 1, x%bands
+               print rule(3)
 
-            do n = 0, size(im%omega) - 1
-               print body, im%omega(n), im%Z(n, i), im%Delta(n, i)
+               do n = 0, size(im%omega) - 1
+                  print body, im%omega(n), im%Z(n, i), im%Delta(n, i)
+               end do
             end do
-         end do
+         end if
       end if
 
       more = edit('(x)')
@@ -112,7 +115,7 @@ contains
          end do
       end if
 
-      if (x%points .gt. 0) then
+      if (x%output .eq. 'none' .and. x%points .gt. 0) then
          print "(/, 'real-axis solution:', /)"
 
          if (x%Sigma) then
@@ -167,6 +170,11 @@ contains
                end do
             end if
          end if
+      end if
+
+      if (x%output .ne. 'none') then
+         print "(/, 'The complete results are stored in ""', A, '""')", &
+            trim(x%output)
       end if
    end subroutine tell
 end module io_tell
