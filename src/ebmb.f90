@@ -18,14 +18,14 @@ program ebmb
    type(continued) :: re
    type(occupancy) :: oc
 
+   call load(x)
+
    if (x%tell) then
       print "('This is  _   v2.0.0  __')"
       print "('    ___ | |_  __ __ ( (_')"
       print "('   / __)| _ \/  Y  \| _ \')"
       print "('   \___,|___/\  |  /|___/.')"
    end if
-
-   call load(x)
 
    if (x%realgw) then
       call self_energy_real_axis(x, im, re, oc)
