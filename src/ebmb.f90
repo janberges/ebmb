@@ -37,13 +37,15 @@ program ebmb
 
    if (x%Sigma) call combine_self_energy_components(x, im)
 
-   if (.not. x%realgw) call realize(x, im, re)
+   if (.not. x%realgw) then
+      call realize(x, im, re)
 
-   if (.not. x%realgw .and. x%ldos .and. x%points .gt. 0) then
-      if (x%stable) then
-         call density_of_states_stable(x, im, re, oc)
-      else
-         call density_of_states(x, re, oc)
+      if (x%ldos .and. x%points .gt. 0) then
+         if (x%stable) then
+            call density_of_states_stable(x, im, re, oc)
+         else
+            call density_of_states(x, re, oc)
+         end if
       end if
    end if
 
