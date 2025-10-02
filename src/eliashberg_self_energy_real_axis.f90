@@ -190,6 +190,8 @@ contains
       re%chi(:, :) = (0.0_dp, 0.0_dp)
       re%Delta(:, :) = (0.0_dp, 0.0_dp)
 
+      if (x%readjust) call dos(oc%n0, .true.)
+
       if (x%noZchi) return
 
       G = G0 ! We do not want another iteration but Z and chi for current Sigma!

@@ -262,6 +262,8 @@ contains
          end do
       end if
 
+      if (x%readjust) call dos(oc%n0, .true., .false.)
+
    contains
 
       subroutine dos(ntarget, optimize, exact)
