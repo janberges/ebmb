@@ -78,7 +78,7 @@ module globals
       logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
       logical :: imitate = .false. ! cut off renormalization function?
 
-      logical :: divdos = .true.  ! divide by DOS at Fermi level?
+      logical :: divdos = .true.  ! divide by DOS at chemical potential?
       logical :: stable = .false. ! calculate quasiparticle DOS differently?
       logical :: normal = .false. ! enforce normal state?
       logical :: realgw = .false. ! do real-axis GW0 calculation?
