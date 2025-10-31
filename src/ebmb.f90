@@ -18,6 +18,8 @@ program ebmb
    type(continued) :: re
    type(occupancy) :: oc
 
+   integer :: omp_num_threads
+
    call load(x)
 
    if (x%tell) then
@@ -25,6 +27,17 @@ program ebmb
       print "('    ___ | |_  __ __ ( (_')"
       print "('   / __)| _ \/  Y  \| _ \')"
       print "('   \___,|___/\  |  /|___/.')"
+
+      omp_num_threads = 0
+      !$omp parallel reduction(+:omp_num_threads)
+      omp_num_threads = 1
+      !$omp end parallel
+
+      if (omp_num_threads .eq. 1) then
+         print "(/, 'Running serially.')"
+      else
+         print "(/, 'Running on ', I0, ' threads.')", omp_num_threads
+      end if
    end if
 
    if (x%realgw) then
