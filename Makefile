@@ -1,7 +1,7 @@
 FC = gfortran
 
-flags_gfortran = -std=f2003 -pedantic -Wall -Wno-maybe-uninitialized
-flags_ifort = -O0 -stand f03 -warn all
+flags_gfortran = -std=f2003 -pedantic -Wall -Wno-maybe-uninitialized -fopenmp
+flags_ifort = -O0 -stand f03 -warn all -qopenmp
 flags_ifx = ${flags_ifort}
 
 libs_gfortran = -llapack -lblas
