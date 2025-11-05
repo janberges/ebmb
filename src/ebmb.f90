@@ -18,15 +18,17 @@ program ebmb
    type(continued) :: re
    type(occupancy) :: oc
 
+   character(*), parameter :: version = '2.0.0'
+
    integer :: omp_num_threads
 
    call load(x)
 
    if (x%tell) then
-      print "('This is  _   v2.0.0  __')"
-      print "('    ___ | |_  __ __ ( (_')"
-      print "('   / __)| _ \/  Y  \| _ \')"
-      print "('   \___,|___/\  |  /|___/.')"
+      print "('This is  _           _')"
+      print "('    ___ | |_  __ __ | /_')"
+      print "('   / __)| _ \|  |  || _ \')"
+      print "('   \___ |___/|  |  ||___/ v', A)", version
 
       omp_num_threads = 0
       !$omp parallel reduction(+:omp_num_threads)
@@ -34,9 +36,9 @@ program ebmb
       !$omp end parallel
 
       if (omp_num_threads .eq. 1) then
-         print "(/, 'Running serially.')"
+         print "(/, 'running serially.')"
       else
-         print "(/, 'Running on ', I0, ' threads.')", omp_num_threads
+         print "(/, 'running on ', I0, ' threads.')", omp_num_threads
       end if
    end if
 
