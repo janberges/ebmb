@@ -216,9 +216,9 @@ contains
             call calculate_residue(nC, .false.)
 
             do i = 1, x%bands
-               im%chiC(i) = 2.0_dp * kB * x%T &
-                  * sum(sum(integral_chi(:nC - 1, :), 1) * muC(:, i)) &
-                  + sum(residues * muC(:, i)) / 2.0_dp
+               im%chiC(i) = sum( &
+                  (2.0_dp * kB * x%T * sum(integral_chi(:nC - 1, :), 1) &
+                     + residues / 2.0_dp) * muC(:, i) / dosef)
 
                im%chi(:, i) = im%chi(:, i) + im%chiC(i)
             end do
