@@ -24,7 +24,8 @@ contains
       integer :: step, i, j, n, m, no
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
       real(dp) :: beta, fermi, domega, const
-      real(dp), allocatable :: weight(:), bose(:), dosef(:), dImSigma(:, :)
+      real(dp), allocatable :: weight(:), bose(:), dosef(:), kernel(:)
+      real(dp), allocatable :: ReSigma(:, :), ImSigma(:, :), dImSigma(:, :)
       real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
       complex(dp), allocatable :: omega(:), G0(:, :), G(:, :)
       complex(dp), allocatable :: c1(:), c2(:)
@@ -74,7 +75,10 @@ contains
 
       allocate(weight(x%points))
       allocate(omega(x%points))
+      allocate(kernel(x%points))
       allocate(G(x%points, x%bands))
+      allocate(ReSigma(x%points, x%bands))
+      allocate(ImSigma(x%points, x%bands))
       allocate(dImSigma(x%points, x%bands))
       allocate(n1(size(x%omega), x%bands))
       allocate(n2(size(x%omega), x%bands))
@@ -159,13 +163,27 @@ contains
                end do
 
                do i = 1, x%bands
-                  dImSigma(n, i) = sum(weight_a2F(:, :, i) * (n1 + n2)) &
-                     - aimag(re%Sigma(n, i))
+                  ImSigma(n, i) = sum(weight_a2F(:, :, i) * (n1 + n2))
                end do
             end do
             !$omp end parallel do
 
-            re%Sigma(:, :) = re%Sigma + cmplx(0.0_dp, dImSigma, dp)
+            ! Compute real part of self-energy via Kramers-Kronig relation:
+
+            !$omp parallel do private(kernel)
+            do n = 1, x%points
+               kernel(:) = re%omega(n) - re%omega
+               kernel(:) = weight * kernel / (kernel ** 2 + x%eta ** 2)
+
+               do i = 1, x%bands
+                  ReSigma(n, i) = sum(kernel * ImSigma(:, i))
+               end do
+            end do
+            !$omp end parallel do
+
+            re%Sigma(:, :) = cmplx(ReSigma, ImSigma, dp)
+
+            dImSigma(:, :) = ImSigma - aimag(re%Sigma)
          else
             dImSigma(:, :) = 0.0_dp
          end if
