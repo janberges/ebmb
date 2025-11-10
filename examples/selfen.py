@@ -20,7 +20,7 @@ Tc = ebmb.get('critical', **parameters)
 
 results = ebmb.get(T=0.5 * Tc, **parameters)
 
-fig, ax = plt.subplots(3, sharex='col', sharey='row')
+fig, ax = plt.subplots(3, sharex='col')
 
 for x, X in zip(ax, ['Z', 'chi', 'Delta']):
     x.plot(results['iomega'], results[X], 'bo')
