@@ -236,6 +236,8 @@ contains
                end do
                !$omp end parallel do
 
+               if (x%lower .eq. -x%upper) cycle
+
                !$omp parallel do private(c1, c2)
                do n = 1, x%points
                   c1 = n1(:, i) / (w1 ** 2 - omega(n) ** 2)
@@ -247,6 +249,9 @@ contains
             end do
          end do
       end do
+
+      if (x%lower .eq. -x%upper) re%Z(:, :) = (0.5_dp, 0.0_dp) &
+         * (re%Sigma - conjg(re%Sigma(size(re%omega):1:-1, :)))
 
       re%chi(:, :) = re%Sigma - re%Z
 
