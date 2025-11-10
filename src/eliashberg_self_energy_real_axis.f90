@@ -23,8 +23,8 @@ contains
 
       integer :: step, i, j, n, m, no
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
-      real(dp) :: beta, fermi, domega, const
-      real(dp), allocatable :: weight(:), bose(:), dosef(:), kernel(:)
+      real(dp) :: beta, domega, const
+      real(dp), allocatable :: weight(:), fermi(:), bose(:), dosef(:), kernel(:)
       real(dp), allocatable :: ReSigma(:, :), ImSigma(:, :), dImSigma(:, :)
       real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
       complex(dp), allocatable :: omega(:), G0(:, :), G(:, :)
@@ -86,8 +86,6 @@ contains
 
       beta = 1.0_dp / (kB * x%T)
 
-      bose = bose_fun(x%omega)
-
       do n = 0, no - 1
          im%omega(n) = domega * (n + 0.5_dp)
       end do
@@ -100,6 +98,9 @@ contains
       weight = -weight / pi
 
       omega = cmplx(re%omega, x%eta, dp)
+
+      fermi = fermi_fun(re%omega)
+      bose = bose_fun(x%omega)
 
       if (x%n .ge. 0.0_dp) then
          oc%mu = (x%energy(1) * (2.0_dp * oc%states - x%n) &
@@ -314,7 +315,7 @@ contains
 
             w(:) = weight * sum(aimag(G), 2)
 
-            oc%n = 2.0_dp * sum(w * fermi_fun(re%omega))
+            oc%n = 2.0_dp * sum(w * fermi)
             oc%inspect = sum(w)
 
             if (oc%inspect .ap. 0.0_dp) then
@@ -338,16 +339,14 @@ contains
          integer, intent(in) :: m, j
          real(dp) :: spec(size(x%omega), x%bands)
 
-         fermi = fermi_fun(re%omega(m))
-
          spec = weight(m) * weight_a2F(:, j, :) * aimag(G(m, j)) / dosef(j)
 
          w1 = -re%omega(m) - x%omega
          w2 = -re%omega(m) + x%omega
 
          do i = 1, x%bands
-            n1(:, i) = spec(:, i) * (1.0_dp - fermi + bose)
-            n2(:, i) = spec(:, i) * (fermi + bose)
+            n1(:, i) = spec(:, i) * (1.0_dp - fermi(m) + bose)
+            n2(:, i) = spec(:, i) * (fermi(m) + bose)
          end do
       end subroutine prepare
 
