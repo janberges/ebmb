@@ -25,7 +25,7 @@ contains
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
       real(dp) :: beta, domega
       real(dp), allocatable :: weight(:), fermi(:), bose(:), dosef(:), kernel(:)
-      real(dp), allocatable :: ReSigma(:, :), ImSigma(:, :), dImSigma(:, :)
+      real(dp), allocatable :: ReSigma(:, :), ImSigma(:, :)
       real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
       complex(dp), allocatable :: omega(:), G0(:, :), G(:, :)
       complex(dp), allocatable :: c1(:), c2(:)
@@ -79,7 +79,6 @@ contains
       allocate(G(x%points, x%bands))
       allocate(ReSigma(x%points, x%bands))
       allocate(ImSigma(x%points, x%bands))
-      allocate(dImSigma(x%points, x%bands))
       allocate(n1(size(x%omega), x%bands))
       allocate(n2(size(x%omega), x%bands))
       allocate(dosef(x%bands))
@@ -125,25 +124,6 @@ contains
       do step = 1, x%steps
          if (x%tell) print "('GW iteration ', I0)", step
 
-         re%Sigma(:, :) = (0.0_dp, 0.0_dp)
-
-         do j = 1, x%bands
-            do m = 1, x%points
-               call prepare(m, j)
-
-               do i = 1, x%bands
-                  if (x%diag .and. i .ne. j) cycle
-
-                  !$omp parallel do
-                  do n = 1, x%points
-                     re%Sigma(n, i) = re%Sigma(n, i) + sum( &
-                        n1(:, i) / (omega(n) + w1) + n2(:, i) / (omega(n) + w2))
-                  end do
-                  !$omp end parallel do
-               end do
-            end do
-         end do
-
          if (x%eta0Im) then
             ! Send eta to zero and replace Im[1/(x + i0+)] by -pi delta(x):
 
@@ -177,10 +157,26 @@ contains
             !$omp end parallel do
 
             re%Sigma(:, :) = cmplx(ReSigma, ImSigma, dp)
-
-            dImSigma(:, :) = ImSigma - aimag(re%Sigma)
          else
-            dImSigma(:, :) = 0.0_dp
+            re%Sigma(:, :) = (0.0_dp, 0.0_dp)
+
+            do j = 1, x%bands
+               do m = 1, x%points
+                  call prepare(m, j)
+
+                  do i = 1, x%bands
+                     if (x%diag .and. i .ne. j) cycle
+
+                     !$omp parallel do
+                     do n = 1, x%points
+                        re%Sigma(n, i) = re%Sigma(n, i) + sum( &
+                             n1(:, i) / (omega(n) + w1) &
+                           + n2(:, i) / (omega(n) + w2))
+                     end do
+                     !$omp end parallel do
+                  end do
+               end do
+            end do
          end if
 
          im%chiC(:) = 0.0_dp
@@ -246,24 +242,20 @@ contains
                   c2 = n2(:, i) / (w2 ** 2 - omega(n) ** 2)
 
                   re%Z(n, i) = re%Z(n, i) - sum(omega(n) * (c1 + c2))
-                  re%chi(n, i) = re%chi(n, i) + sum(w1 * c1 + w2 * c2)
                end do
                !$omp end parallel do
             end do
          end do
       end do
 
+      re%chi(:, :) = re%Sigma - re%Z
+
       do i = 1, x%bands
          im%Z(:, i) = 1.0_dp - im%Z(:, i) / im%omega
          re%Z(:, i) = (1.0_dp, 0.0_dp) - re%Z(:, i) / omega
 
-         if (x%chiC) then
-            im%chi(:, i) = im%chi(:, i) + im%chiC(i)
-            re%chi(:, i) = re%chi(:, i) + im%chiC(i)
-         end if
+         if (x%chiC) im%chi(:, i) = im%chi(:, i) + im%chiC(i)
       end do
-
-      re%chi(:, :) = re%chi + cmplx(0.0_dp, dImSigma, dp)
 
    contains
 
