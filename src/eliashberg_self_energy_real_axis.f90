@@ -23,7 +23,7 @@ contains
 
       integer :: step, i, j, n, m, no
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
-      real(dp) :: beta, domega, const
+      real(dp) :: beta, domega
       real(dp), allocatable :: weight(:), fermi(:), bose(:), dosef(:), kernel(:)
       real(dp), allocatable :: ReSigma(:, :), ImSigma(:, :), dImSigma(:, :)
       real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
@@ -140,12 +140,6 @@ contains
                         n1(:, i) / (omega(n) + w1) + n2(:, i) / (omega(n) + w2))
                   end do
                   !$omp end parallel do
-
-                  if (x%chiC) then
-                     re%Sigma(:, i) = re%Sigma(:, i) + weight(m) &
-                        * aimag(G(m, j)) * (0.5_dp - fermi) &
-                        * x%muStar(j, i) / dosef(j)
-                  end if
                end do
             end do
          end do
@@ -189,6 +183,21 @@ contains
             dImSigma(:, :) = 0.0_dp
          end if
 
+         im%chiC(:) = 0.0_dp
+
+         if (x%chiC) then
+            kernel(:) = weight * (0.5_dp - fermi)
+
+            do j = 1, x%bands
+               im%chiC(:) = im%chiC &
+                  + sum(kernel * aimag(G(:, j))) / dosef(j) * x%muStar(j, :)
+            end do
+
+            do i = 1, x%bands
+               re%Sigma(:, i) = re%Sigma(:, i) + im%chiC(i)
+            end do
+         end if
+
          G0 = G
 
          call dos(oc%n0, x%conserve)
@@ -202,7 +211,6 @@ contains
       im%phi(:, :) = 0.0_dp
       im%chi(:, :) = 0.0_dp
       im%Delta(:, :) = 0.0_dp
-      im%chiC(:) = 0.0_dp
       im%phiC(:) = 0.0_dp
 
       re%Z(:, :) = (0.0_dp, 0.0_dp)
@@ -241,16 +249,6 @@ contains
                   re%chi(n, i) = re%chi(n, i) + sum(w1 * c1 + w2 * c2)
                end do
                !$omp end parallel do
-
-               if (x%chiC) then
-                  const = weight(m) * aimag(G(m, j)) &
-                     * (0.5_dp - fermi) * x%muStar(j, i) / dosef(j)
-
-                  im%chi(:, i) = im%chi(:, i) + const
-                  re%chi(:, i) = re%chi(:, i) + const
-
-                  im%chiC(i) = im%chiC(i) + const
-               end if
             end do
          end do
       end do
@@ -258,6 +256,11 @@ contains
       do i = 1, x%bands
          im%Z(:, i) = 1.0_dp - im%Z(:, i) / im%omega
          re%Z(:, i) = (1.0_dp, 0.0_dp) - re%Z(:, i) / omega
+
+         if (x%chiC) then
+            im%chi(:, i) = im%chi(:, i) + im%chiC(i)
+            re%chi(:, i) = re%chi(:, i) + im%chiC(i)
+         end if
       end do
 
       re%chi(:, :) = re%chi + cmplx(0.0_dp, dImSigma, dp)
