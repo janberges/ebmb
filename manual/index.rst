@@ -16,6 +16,7 @@
    examples/gap
    examples/dos
    examples/residue
+   examples/realgw
 
 .. toctree::
    :caption: More
