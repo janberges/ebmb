@@ -203,13 +203,13 @@ contains
 
       re%dos(:, :) = -aimag(G) / pi
 
-      im%Z(:, :) = 0.0_dp
+      im%Z(:, :) = 1.0_dp
       im%phi(:, :) = 0.0_dp
       im%chi(:, :) = 0.0_dp
       im%Delta(:, :) = 0.0_dp
       im%phiC(:) = 0.0_dp
 
-      re%Z(:, :) = (0.0_dp, 0.0_dp)
+      re%Z(:, :) = (1.0_dp, 0.0_dp)
       re%chi(:, :) = (0.0_dp, 0.0_dp)
       re%Delta(:, :) = (0.0_dp, 0.0_dp)
 
@@ -231,7 +231,7 @@ contains
                   r1 = n1(:, i) / (w1 ** 2 + im%omega(n) ** 2)
                   r2 = n2(:, i) / (w2 ** 2 + im%omega(n) ** 2)
 
-                  im%Z(n, i) = im%Z(n, i) - sum(im%omega(n) * (r1 + r2))
+                  im%Z(n, i) = im%Z(n, i) + sum(r1 + r2)
                   im%chi(n, i) = im%chi(n, i) + sum(w1 * r1 + w2 * r2)
                end do
                !$omp end parallel do
@@ -241,18 +241,15 @@ contains
                   c1 = n1(:, i) / (w1 ** 2 - omega(n) ** 2)
                   c2 = n2(:, i) / (w2 ** 2 - omega(n) ** 2)
 
-                  re%Z(n, i) = re%Z(n, i) - sum(omega(n) * (c1 + c2))
+                  re%Z(n, i) = re%Z(n, i) + sum(c1 + c2)
                end do
                !$omp end parallel do
             end do
          end do
       end do
 
-      re%chi(:, :) = re%Sigma - re%Z
-
       do i = 1, x%bands
-         im%Z(:, i) = 1.0_dp - im%Z(:, i) / im%omega
-         re%Z(:, i) = (1.0_dp, 0.0_dp) - re%Z(:, i) / omega
+         re%chi(:, i) = re%Sigma(:, i) - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
 
          if (x%chiC) im%chi(:, i) = im%chi(:, i) + im%chiC(i)
       end do
