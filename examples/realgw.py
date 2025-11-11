@@ -12,9 +12,9 @@ ebmb.chain_a2F(a2f, dw=1e-2, wlog=2.0, l=1.0)
 fig, ax = plt.subplots(3, sharex='col')
 
 for (realgw, eta0Im, style, label) in [
-    (True, True, 'm', 'real axis (KK)'),
-    (True, False, 'c--', 'real axis'),
-    (False, False, 'k:', 'imag. axis'),
+    (True, True, 'm', 'Kramers-Kronig'),
+    (True, False, 'c--', 'direct'),
+    (False, False, 'k:', 'Pad\xe9'),
 ]:
     results = ebmb.get(
         normal=True,
