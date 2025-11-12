@@ -61,19 +61,38 @@ contains
             end if
 
             if (x%points .gt. 0) then
-               re%Delta(:, i) = continuation(omega)
+               !$omp parallel do
+               do n = 1, x%points
+                  re%Delta(n, i) = continuation(omega(n))
+               end do
+               !$omp end parallel do
 
                call coefficients(im%omega, cmplx(im%Z(:, i), kind=dp))
-               re%Z(:, i) = continuation(omega)
+
+               !$omp parallel do
+               do n = 1, x%points
+                  re%Z(n, i) = continuation(omega(n))
+               end do
+               !$omp end parallel do
 
                if (x%ldos) then
                   call coefficients(im%omega, cmplx(im%chi(:, i), kind=dp))
-                  re%chi(:, i) = continuation(omega)
+
+                  !$omp parallel do
+                  do n = 1, x%points
+                     re%chi(n, i) = continuation(omega(n))
+                  end do
+                  !$omp end parallel do
                end if
 
                if (x%Sigma) then
                   call coefficients(im%omega, im%Sigma(:, i))
-                  re%Sigma(:, i) = continuation(omega)
+
+                  !$omp parallel do
+                  do n = 1, x%points
+                     re%Sigma(n, i) = continuation(omega(n))
+                  end do
+                  !$omp end parallel do
                end if
             end if
          end do

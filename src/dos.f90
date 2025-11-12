@@ -74,7 +74,12 @@ contains
 
          call coefficients(im%omega, green)
 
-         re%dos(:, i) = -aimag(continuation(cmplx(re%omega, x%eta, dp))) / pi
+         !$omp parallel do
+         do n = 1, x%points
+            re%dos(n, i) = -aimag(continuation(cmplx(re%omega(n), x%eta, dp))) &
+               / pi
+         end do
+         !$omp end parallel do
       end do
 
       call differential(re%omega, weight)
