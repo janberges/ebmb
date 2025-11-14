@@ -273,6 +273,7 @@ contains
                      c2 = n2(:, i) / (w2 ** 2 - omega(n) ** 2)
 
                      re%Z(n, i) = re%Z(n, i) + sum(c1 + c2)
+                     re%chi(n, i) = re%chi(n, i) + sum(w1 * c1 + w2 * c2)
                   end do
                   !$omp end parallel do
                end do
@@ -280,9 +281,10 @@ contains
          end do
 
          do i = 1, x%bands
-            re%chi(:, i) = re%Sigma(:, i) - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
-
-            if (x%chiC) im%chi(:, i) = im%chi(:, i) + im%chiC(i)
+            if (x%chiC) then
+               im%chi(:, i) = im%chi(:, i) + im%chiC(i)
+               re%chi(:, i) = re%chi(:, i) + im%chiC(i)
+            end if
 
             if (x%Sigma) im%Sigma(:, i) = cmplx(im%chi(:, i), &
                   im%omega * (1.0_dp - im%Z(:, i)), dp)
