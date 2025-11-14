@@ -246,10 +246,15 @@ contains
          end do
       end do
 
+      if (x%Sigma) allocate(im%Sigma(0:no - 1, x%bands))
+
       do i = 1, x%bands
          re%chi(:, i) = re%Sigma(:, i) - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
 
          if (x%chiC) im%chi(:, i) = im%chi(:, i) + im%chiC(i)
+
+         if (x%Sigma) im%Sigma(:, i) = cmplx(im%chi(:, i), &
+               im%omega * (1.0_dp - im%Z(:, i)), dp)
       end do
 
    contains

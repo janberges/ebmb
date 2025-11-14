@@ -131,5 +131,14 @@ contains
       do i = 1, x%bands
          im%phiC(i) = pi * kB * x%T * sum(im%Delta * A * mu(:, :, i))
       end do
+
+      if (x%Sigma) then
+         allocate(im%Sigma(0:no - 1, x%bands))
+
+         do i = 1, x%bands
+            im%Sigma(:, i) = cmplx(im%phi(:, i), &
+               im%omega * (1.0_dp - im%Z(:, i)), dp)
+         end do
+      end if
    end subroutine self_energy_cdos
 end module eliashberg_self_energy_cdos
