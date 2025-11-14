@@ -45,9 +45,7 @@ for (realgw, eta0Im, style, label) in [
         else:
             x[1].plot(results['iomega'], results[X], style, label=label)
 
-ax[0, 0].set_ylabel(r'$\Sigma$ (eV)')
-ax[1, 0].set_ylabel(r'$Z$')
-ax[2, 0].set_ylabel(r'$\chi$ (eV)')
+        x[0].set_ylabel('$Z$' if X == 'Z' else r'$\%s$ (eV)' % X)
 
 ax[-1, 0].set_xlabel(r'$\omega$ (eV)')
 ax[-1, 1].set_xlabel(r'$\omega_n$ (eV)')
