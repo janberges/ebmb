@@ -1,5 +1,5 @@
-Real axis
-=========
+Normal state
+============
 
 .. literalinclude:: ../../examples/realgw.py
    :language: python

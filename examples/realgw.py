@@ -9,7 +9,7 @@ a2f = 'a2f.in'
 ebmb.chain_dos(dos, de=5e-3, t=1.0)
 ebmb.chain_a2F(a2f, dw=1e-2, wlog=2.0, l=1.0)
 
-fig, ax = plt.subplots(3, sharex='col')
+fig, ax = plt.subplots(3, 2, sharex='col', sharey='row')
 
 for (realgw, eta0Im, style, label) in [
     (True, True, 'm', 'Kramers-Kronig'),
@@ -36,15 +36,22 @@ for (realgw, eta0Im, style, label) in [
     )
 
     for x, X in zip(ax, ['Sigma', 'Z', 'chi']):
-        x.plot(results['omega'], results['Re[%s]' % X], style, label=label)
-        x.plot(results['omega'], results['Im[%s]' % X], style)
+        x[0].plot(results['omega'], results['Re[%s]' % X], style, label=label)
+        x[0].plot(results['omega'], results['Im[%s]' % X], style)
 
-ax[0].legend()
+        if X == 'Sigma':
+            x[1].plot(results['iomega'], results['chi'], style, label=label)
+            x[1].plot(results['iomega'], results['domega'], style)
+        else:
+            x[1].plot(results['iomega'], results[X], style, label=label)
 
-ax[0].set_ylabel(r'$\Sigma$ (eV)')
-ax[1].set_ylabel(r'$Z$')
-ax[2].set_ylabel(r'$\chi$ (eV)')
+ax[0, 0].set_ylabel(r'$\Sigma$ (eV)')
+ax[1, 0].set_ylabel(r'$Z$')
+ax[2, 0].set_ylabel(r'$\chi$ (eV)')
 
-plt.xlabel(r'$\omega$ (eV)')
+ax[-1, 0].set_xlabel(r'$\omega$ (eV)')
+ax[-1, 1].set_xlabel(r'$\omega_n$ (eV)')
+
+ax[1, 1].legend()
 
 plt.savefig('realgw.png')
