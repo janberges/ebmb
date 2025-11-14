@@ -12,7 +12,7 @@ module eliashberg_self_energy
 
    logical :: initial = .true.
 
-   real(dp), allocatable :: weight(:, :), matsum(:)
+   real(dp), allocatable :: weight(:, :)
 
 contains
 
@@ -22,6 +22,8 @@ contains
       type(occupancy), intent(out) :: oc
 
       real(dp), allocatable, intent(out), optional :: kernel(:, :)
+
+      real(dp) :: matsum(size(x%energy))
 
       real(dp) :: nE, domega, residue
 
@@ -317,22 +319,23 @@ contains
       subroutine calculate_residue(nM, exact)
          integer, intent(in) :: nM
          logical, intent(in) :: exact
+         real(dp) :: energy(size(x%energy))
 
          do i = 1, x%bands
-            matsum(:) = x%energy - oc%mu + im%chiC(i)
+            energy(:) = x%energy - oc%mu + im%chiC(i)
 
             if (exact) then
                residues(i) = sum(weight(:, i) &
-                  * tanh(matsum / (2.0_dp * kB * x%T)))
+                  * tanh(energy / (2.0_dp * kB * x%T)))
 
                do n = 0, nM - 1
                   residues(i) = residues(i) &
                      - 4.0_dp * kB * x%T * sum(weight(:, i) &
-                        * matsum / (im%omega(n) ** 2 + matsum ** 2))
+                        * energy / (im%omega(n) ** 2 + energy ** 2))
                end do
             else
                residues(i) = 2.0_dp / pi * sum(weight(:, i) &
-                  * atan2(matsum, domega * (nM + 0.5_dp)))
+                  * atan2(energy, domega * (nM + 0.5_dp)))
             end if
          end do
 
@@ -351,9 +354,6 @@ contains
 
       if (allocated(weight)) deallocate(weight)
       allocate(weight(size(x%energy), x%bands))
-
-      if (allocated(matsum)) deallocate(matsum)
-      allocate(matsum(size(x%energy)))
 
       call differential(x%energy, weight(:, 1))
 
