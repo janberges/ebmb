@@ -234,8 +234,6 @@ contains
                end do
                !$omp end parallel do
 
-               if (x%noZchi) cycle
-
                !$omp parallel do private(c1, c2)
                do n = 1, x%points
                   c1 = n1(:, i) / (w1 ** 2 - omega(n) ** 2)
@@ -249,8 +247,7 @@ contains
       end do
 
       do i = 1, x%bands
-         if (.not. x%noZchi) re%chi(:, i) = re%Sigma(:, i) &
-            - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
+         re%chi(:, i) = re%Sigma(:, i) - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
 
          if (x%chiC) im%chi(:, i) = im%chi(:, i) + im%chiC(i)
       end do
