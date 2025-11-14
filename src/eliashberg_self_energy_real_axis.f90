@@ -28,7 +28,7 @@ contains
       real(dp), allocatable :: ReSigma(:, :), ImSigma(:, :)
       real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
       complex(dp), allocatable :: omega(:), G0(:, :), G(:, :)
-      complex(dp), allocatable :: c1(:), c2(:)
+      complex(dp), allocatable :: c1(:), c2(:), cernel(:)
 
       character(:), allocatable :: absent
 
@@ -62,6 +62,7 @@ contains
       allocate(im%Z(0:no - 1, x%bands))
       allocate(im%phi(0:no - 1, x%bands))
       allocate(im%chi(0:no - 1, x%bands))
+      allocate(im%Sigma(0:no - 1, x%bands))
       allocate(im%Delta(0:no - 1, x%bands))
       allocate(im%chiC(x%bands))
       allocate(im%phiC(x%bands))
@@ -76,6 +77,7 @@ contains
       allocate(weight(x%points))
       allocate(omega(x%points))
       allocate(kernel(x%points))
+      allocate(cernel(x%points))
       allocate(G(x%points, x%bands))
       allocate(ReSigma(x%points, x%bands))
       allocate(ImSigma(x%points, x%bands))
@@ -215,47 +217,77 @@ contains
 
       if (x%readjust) call dos(oc%n0, .true.)
 
-      G = G0 ! We do not want another iteration but Z and chi for current Sigma!
-
-      do j = 1, x%bands
-         do m = 1, x%points
-            call prepare(m, j)
+      if (x%eta0Im) then
+         !$omp parallel do private(cernel)
+         do n = 0, no - 1
+            cernel(:) = weight / cmplx(-re%omega, im%omega(n), dp)
 
             do i = 1, x%bands
-               if (x%diag .and. i .ne. j) cycle
-
-               !$omp parallel do private(r1, r2)
-               do n = 0, no - 1
-                  r1 = n1(:, i) / (w1 ** 2 + im%omega(n) ** 2)
-                  r2 = n2(:, i) / (w2 ** 2 + im%omega(n) ** 2)
-
-                  im%Z(n, i) = im%Z(n, i) + sum(r1 + r2)
-                  im%chi(n, i) = im%chi(n, i) + sum(w1 * r1 + w2 * r2)
-               end do
-               !$omp end parallel do
-
-               !$omp parallel do private(c1, c2)
-               do n = 1, x%points
-                  c1 = n1(:, i) / (w1 ** 2 - omega(n) ** 2)
-                  c2 = n2(:, i) / (w2 ** 2 - omega(n) ** 2)
-
-                  re%Z(n, i) = re%Z(n, i) + sum(c1 + c2)
-               end do
-               !$omp end parallel do
+               im%Sigma(n, i) = sum(cernel * ImSigma(:, i)) + im%chiC(i)
             end do
          end do
-      end do
+         !$omp end parallel do
 
-      if (x%Sigma) allocate(im%Sigma(0:no - 1, x%bands))
+         do i = 1, x%bands
+            im%Z(:, i) = 1.0_dp - aimag(im%Sigma(:, i)) / im%omega
+         end do
 
-      do i = 1, x%bands
-         re%chi(:, i) = re%Sigma(:, i) - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
+         im%chi(:, :) = real(im%Sigma)
 
-         if (x%chiC) im%chi(:, i) = im%chi(:, i) + im%chiC(i)
+         !$omp parallel do private(cernel)
+         do n = 1, x%points
+            cernel(:) = weight / (omega(n) ** 2 - re%omega ** 2)
 
-         if (x%Sigma) im%Sigma(:, i) = cmplx(im%chi(:, i), &
-               im%omega * (1.0_dp - im%Z(:, i)), dp)
-      end do
+            do i = 1, x%bands
+               re%Z(n, i) = (1.0_dp, 0.0_dp) - sum(cernel * ImSigma(:, i))
+            end do
+         end do
+         !$omp end parallel do
+
+         do i = 1, x%bands
+            re%chi(:, i) = re%Sigma(:, i) - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
+         end do
+      else
+         G = G0 ! We do not want another iteration but Z and chi for current Sigma!
+
+         do j = 1, x%bands
+            do m = 1, x%points
+               call prepare(m, j)
+
+               do i = 1, x%bands
+                  if (x%diag .and. i .ne. j) cycle
+
+                  !$omp parallel do private(r1, r2)
+                  do n = 0, no - 1
+                     r1 = n1(:, i) / (w1 ** 2 + im%omega(n) ** 2)
+                     r2 = n2(:, i) / (w2 ** 2 + im%omega(n) ** 2)
+
+                     im%Z(n, i) = im%Z(n, i) + sum(r1 + r2)
+                     im%chi(n, i) = im%chi(n, i) + sum(w1 * r1 + w2 * r2)
+                  end do
+                  !$omp end parallel do
+
+                  !$omp parallel do private(c1, c2)
+                  do n = 1, x%points
+                     c1 = n1(:, i) / (w1 ** 2 - omega(n) ** 2)
+                     c2 = n2(:, i) / (w2 ** 2 - omega(n) ** 2)
+
+                     re%Z(n, i) = re%Z(n, i) + sum(c1 + c2)
+                  end do
+                  !$omp end parallel do
+               end do
+            end do
+         end do
+
+         do i = 1, x%bands
+            re%chi(:, i) = re%Sigma(:, i) - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
+
+            if (x%chiC) im%chi(:, i) = im%chi(:, i) + im%chiC(i)
+
+            if (x%Sigma) im%Sigma(:, i) = cmplx(im%chi(:, i), &
+                  im%omega * (1.0_dp - im%Z(:, i)), dp)
+         end do
+      end if
 
    contains
 
