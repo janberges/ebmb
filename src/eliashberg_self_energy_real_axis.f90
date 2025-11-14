@@ -245,7 +245,8 @@ contains
          !$omp end parallel do
 
          do i = 1, x%bands
-            re%chi(:, i) = re%Sigma(:, i) - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
+            re%chi(:, i) = re%Sigma(:, i) &
+               - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
          end do
       else
          G = G0 ! We do not want another iteration but Z and chi for current Sigma!
