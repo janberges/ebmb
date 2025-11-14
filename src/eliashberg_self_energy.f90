@@ -127,10 +127,10 @@ contains
 
       if (x%unscale) then
          where (x%energy .ap. oc%mu)
-            matsum = 1.0_dp / x%omegaE
+            matsum(:) = 1.0_dp / x%omegaE
          elsewhere
-            matsum = x%energy - oc%mu
-            matsum = atan2(matsum, x%omegaE) / matsum
+            matsum(:) = x%energy - oc%mu
+            matsum(:) = atan2(matsum, x%omegaE) / matsum
          end where
 
          do i = 1, x%bands
@@ -146,10 +146,10 @@ contains
 
       if (x%rescale) then
          where (x%energy .ap. oc%mu)
-            matsum = 1.0_dp / (domega * (nC + 0.5_dp))
+            matsum(:) = 1.0_dp / (domega * (nC + 0.5_dp))
          elsewhere
-            matsum = x%energy - oc%mu
-            matsum = atan2(matsum, domega * (nC + 0.5_dp)) / matsum
+            matsum(:) = x%energy - oc%mu
+            matsum(:) = atan2(matsum, domega * (nC + 0.5_dp)) / matsum
          end where
 
          do i = 1, x%bands
