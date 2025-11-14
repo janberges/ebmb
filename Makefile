@@ -57,7 +57,7 @@ build/eliashberg_self_energy_cdos.o: build/eliashberg_spectral_function.o build/
 build/eliashberg_self_energy_real_axis.o: build/eliashberg_self_energy.o build/eliashberg_spectral_function.o build/globals.o build/tools.o
 build/eliashberg_spectral_function.o: build/globals.o build/tools.o
 build/formatting.o: build/globals.o
-build/io_load.o: build/eliashberg_spectral_function.o build/globals.o build/tools.o
+build/io_load.o: build/eliashberg_self_energy.o build/eliashberg_spectral_function.o build/globals.o build/tools.o
 build/io_store.o: build/globals.o
 build/io_tell.o: build/formatting.o build/globals.o
 build/pade.o: build/globals.o

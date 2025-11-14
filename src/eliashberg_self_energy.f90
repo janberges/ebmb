@@ -10,8 +10,6 @@ module eliashberg_self_energy
    private
    public :: self_energy, initialize, weight
 
-   logical :: initial = .true.
-
    real(dp), allocatable :: weight(:, :)
 
 contains
@@ -40,8 +38,6 @@ contains
       if (.not. x%normal .and. x%steps .le. 10) then
          print "('Warning: Superconducting solution should be self-consistent')"
       end if
-
-      if (initial) call initialize(x)
 
       domega = 2.0_dp * pi * kB * x%T
 
@@ -350,8 +346,6 @@ contains
       type(parameters), intent(in) :: x
 
       integer :: i
-
-      initial = .false.
 
       if (allocated(weight)) deallocate(weight)
       allocate(weight(size(x%energy), x%bands))

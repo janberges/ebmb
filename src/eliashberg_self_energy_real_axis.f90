@@ -2,10 +2,8 @@
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
 module eliashberg_self_energy_real_axis
-   use eliashberg_self_energy, &
-      only: initialize_dos => initialize, weight_dos => weight
-   use eliashberg_spectral_function, &
-      only: initialize_a2F => initialize, weight_a2F => weight
+   use eliashberg_self_energy, only: weight_dos => weight
+   use eliashberg_spectral_function, only: weight_a2F => weight
    use globals
    use tools, only: differential, interval
    implicit none
@@ -50,9 +48,6 @@ contains
          print "('Error: Real-axis GW requires ', A)", absent
          stop 1
       end if
-
-      call initialize_dos(x)
-      call initialize_a2F(x)
 
       domega = 2.0_dp * pi * kB * x%T
 

@@ -2,7 +2,9 @@
 ! This program is free software under the terms of the GNU GPLv3 or later.
 
 module io_load
-   use eliashberg_spectral_function
+   use eliashberg_self_energy, only: initialize_dos => initialize
+   use eliashberg_spectral_function, only: initialize_a2F => initialize, &
+      integrate_a2F
    use globals
    use tools, only: argument, matches
    implicit none
@@ -199,11 +201,13 @@ contains
       if (allocated(dos_file)) then
          x%ldos = .true.
          call load_dos(dos_file, x)
+         call initialize_dos(x)
       end if
 
       if (allocated(a2F_file)) then
          x%la2F = .true.
          call load_a2F(a2F_file, x)
+         call initialize_a2F(x)
          call integrate_a2F(x)
       end if
 

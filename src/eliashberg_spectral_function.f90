@@ -9,8 +9,6 @@ module eliashberg_spectral_function
    private
    public :: integrate_a2F, lambda_from_a2F, initialize, weight
 
-   logical :: initial = .true.
-
    real(dp), allocatable :: weight(:, :, :)
 
 contains
@@ -49,8 +47,6 @@ contains
 
       integer :: i, j
 
-      if (initial) call initialize(x)
-
       do i = 1, x%bands
          do j = 1, x%bands
             lambda(j, i) = 2.0_dp * sum(weight(:, j, i) * x%omega &
@@ -63,8 +59,6 @@ contains
       type(parameters), intent(in) :: x
 
       integer :: i, j
-
-      initial = .false.
 
       if (allocated(weight)) deallocate(weight)
       allocate(weight(size(x%omega), x%bands, x%bands))
