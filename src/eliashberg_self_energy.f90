@@ -41,7 +41,7 @@ contains
          print "('Warning: Superconducting solution should be self-consistent')"
       end if
 
-      if (initial) call initialize(x, oc)
+      if (initial) call initialize(x)
 
       domega = 2.0_dp * pi * kB * x%T
 
@@ -86,6 +86,8 @@ contains
       allocate(integral_chi(0:no - 1, x%bands))
 
       allocate(residues(x%bands))
+
+      oc%states = sum(weight)
 
       if (x%n .ge. 0.0_dp) then
          oc%mu = (x%energy(1) * (2.0_dp * oc%states - x%n) &
@@ -344,9 +346,8 @@ contains
 
    end subroutine self_energy
 
-   subroutine initialize(x, oc)
+   subroutine initialize(x)
       type(parameters), intent(in) :: x
-      type(occupancy), intent(out) :: oc
 
       integer :: i
 
@@ -362,7 +363,5 @@ contains
       end do
 
       weight(:, :) = weight * x%dos
-
-      oc%states = sum(weight)
    end subroutine initialize
 end module eliashberg_self_energy

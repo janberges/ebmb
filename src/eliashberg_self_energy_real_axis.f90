@@ -51,7 +51,7 @@ contains
          stop 1
       end if
 
-      call initialize_dos(x, oc)
+      call initialize_dos(x)
       call initialize_a2F(x)
 
       domega = 2.0_dp * pi * kB * x%T
@@ -102,6 +102,8 @@ contains
 
       fermi = fermi_fun(re%omega)
       bose = bose_fun(x%omega)
+
+      oc%states = sum(weight_dos)
 
       if (x%n .ge. 0.0_dp) then
          oc%mu = (x%energy(1) * (2.0_dp * oc%states - x%n) &
