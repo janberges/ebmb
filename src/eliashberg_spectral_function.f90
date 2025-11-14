@@ -10,7 +10,6 @@ module eliashberg_spectral_function
    public :: integrate_a2F, lambda_from_a2F, initialize, weight
 
    logical :: initial = .true.
-   integer :: i, j
 
    real(dp), allocatable :: weight(:, :, :)
 
@@ -18,6 +17,8 @@ contains
 
    subroutine integrate_a2F(x)
       type(parameters), intent(inout) :: x
+
+      integer :: i
 
       real(dp) :: omegaMax
 
@@ -46,6 +47,8 @@ contains
       real(dp), intent(out) :: lambda(:, :)
       integer, intent(in) :: n
 
+      integer :: i, j
+
       if (initial) call initialize(x)
 
       do i = 1, x%bands
@@ -58,6 +61,8 @@ contains
 
    subroutine initialize(x)
       type(parameters), intent(in) :: x
+
+      integer :: i, j
 
       initial = .false.
 
