@@ -47,6 +47,9 @@ for (realgw, eta0Im, style, label) in [
 
         x[0].set_ylabel('$Z$' if X == 'Z' else r'$\%s$ (eV)' % X)
 
+        x[0].grid()
+        x[1].grid()
+
 ax[-1, 0].set_xlabel(r'$\omega$ (eV)')
 ax[-1, 1].set_xlabel(r'$\omega_n$ (eV)')
 
