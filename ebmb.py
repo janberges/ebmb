@@ -84,26 +84,6 @@ def run(program='ebmb', redirect=False, **parameters):
             command[0] = path.join(path.dirname(path.abspath(__file__)), 'bin',
                 command[0])
 
-def read_char(file):
-    """Read character from binary or text file (for Python-3 compatibility).
-
-    Parameters
-    ----------
-    file : File Object
-        File opened in binary or text mode.
-
-    Returns
-    -------
-    str
-        Next character from file.
-    """
-    char = file.read(1)
-
-    if isinstance(char, str):
-        return char
-    else:
-        return str(char, 'utf-8')
-
 def load(file):
     """Load output file of 'ebmb'.
 
@@ -121,7 +101,7 @@ def load(file):
 
     with open(file, 'rb') as file:
         while True:
-            name = ''.join(iter(lambda: read_char(file) or ':', ':'))
+            name = ''.join(iter(lambda: chr(ord(file.read(1) or ':')), ':'))
 
             if name == 'REAL':
                 dtype = np.float64
