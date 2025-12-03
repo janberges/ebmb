@@ -42,7 +42,6 @@ contains
 
       allocate(lambda(1 - no:2 * no - 1, x%bands, x%bands))
 
-      !$omp parallel do
       do n = 1 - no, 2 * no - 1
          if (x%la2F) then
             call lambda_from_a2F(x, lambda(n, :, :), n)
@@ -50,7 +49,6 @@ contains
             lambda(n, :, :) = x%lambda / (1.0_dp + (n / nE) ** 2)
          end if
       end do
-      !$omp end parallel do
 
       allocate(muStar(x%bands, x%bands))
 

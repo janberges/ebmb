@@ -68,7 +68,6 @@ contains
          no0 = no
       end if
 
-      !$omp parallel do
       do n = 1 - no, 2 * no - 1
          if (x%la2F) then
             call lambda_from_a2F(x, lambda(n, :, :), n)
@@ -76,7 +75,6 @@ contains
             lambda(n, :, :) = x%lambda / (1.0_dp + (n / nE) ** 2)
          end if
       end do
-      !$omp end parallel do
 
       if (x%rescale) then
          muStar(:, :) = x%muStar / (1.0_dp + x%muStar * log(nE / (nC + 0.5_dp)))
@@ -90,14 +88,12 @@ contains
          do j = 0, x%bands - 1
             q = j * no
 
-            !$omp parallel do
             do n = 0, no - 1
                do m = 0, no - 1
                   matrix(q + m, p + n) &
                      = lambda(n - m, j, i) + lambda(n + m + 1, j, i)
                end do
             end do
-            !$omp end parallel do
 
             matrix(q:q + nC - 1, p:p + no - 1) = &
             matrix(q:q + nC - 1, p:p + no - 1) - 2.0_dp * muStar(j, i)
@@ -108,12 +104,10 @@ contains
          p = i * no
 
          if (x%imitate) then
-            !$omp parallel do
             do n = 0, no - 1
                diag(p + n) = sum &
                   (lambda(n:n - no + 1:-1, :, i) - lambda(n + 1:n + no, :, i))
             end do
-            !$omp end parallel do
          else
             diag(p) = sum(lambda(0, :, i))
 

@@ -107,7 +107,6 @@ contains
 
       allocate(g(1 - no:2 * no - 1, x%bands, x%bands))
 
-      !$omp parallel do
       do n = 1 - no, 2 * no - 1
          if (x%la2F) then
             call lambda_from_a2F(x, g(n, :, :), n)
@@ -119,7 +118,6 @@ contains
             g(n, :, i) = g(n, :, i) / dosef
          end do
       end do
-      !$omp end parallel do
 
       allocate(muC(x%bands, x%bands))
 
