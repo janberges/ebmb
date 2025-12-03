@@ -71,7 +71,8 @@ def run(program='ebmb', redirect=False, **parameters):
     command = [program]
 
     for key, value in parameters.items():
-        command.append('='.join([key, ','.join(map(str, np.ravel(value)))]))
+        if value is not None:
+            command.append('='.join([key, ','.join(map(str, np.ravel(value)))]))
 
     for attempt in range(2):
         try:
