@@ -199,16 +199,20 @@ contains
       end if
 
       if (allocated(dos_file)) then
-         x%ldos = .true.
-         call load_dos(dos_file, x)
-         call initialize_dos(x)
+         if (dos_file .ne. 'none') then
+            x%ldos = .true.
+            call load_dos(dos_file, x)
+            call initialize_dos(x)
+         end if
       end if
 
       if (allocated(a2F_file)) then
-         x%la2F = .true.
-         call load_a2F(a2F_file, x)
-         call initialize_a2F(x)
-         call integrate_a2F(x)
+         if (a2F_file .ne. 'none') then
+            x%la2F = .true.
+            call load_a2F(a2F_file, x)
+            call initialize_a2F(x)
+            call integrate_a2F(x)
+         end if
       end if
 
       if (.not. x%diag) then
