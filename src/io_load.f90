@@ -185,7 +185,7 @@ contains
          end if
 
          if (error .ne. 0) then
-            print "('""muStar"" needs ', I0, ' numbers')", size(x%muStar)
+            print "('Error: ""muStar"" needs ', I0, ' numbers')", size(x%muStar)
             stop 1
          end if
       end if
