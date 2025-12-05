@@ -173,19 +173,11 @@ contains
       x%muStar(:, :) = 0.0_dp
 
       if (allocated(muC)) then
-         if (x%diag) then
-            read (muC, *, iostat=error) (x%muStar(i, i), i = 1, x%bands)
-         else
-            read (muC, *, iostat=error) x%muStar
-         end if
-
-         if (error .ne. 0) then
-            print "('""muC"" needs ', I0, ' numbers')", size(x%muStar)
-            stop 1
-         end if
-
          x%unscale = .false.
-      else if (allocated(muStar)) then
+         muStar = muC
+      end if
+
+      if (allocated(muStar)) then
          if (x%diag) then
             read (muStar, *, iostat=error) (x%muStar(i, i), i = 1, x%bands)
          else
