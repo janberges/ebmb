@@ -25,33 +25,26 @@ program critical
    integer :: i, j ! band indices
    integer :: error ! I/O status
 
-   call load(x)
+   integer :: argmin(2) ! indices of minimum matrix element
 
-   variable => x%T
+   call load(x)
 
    if (x%T .lt. 0.0_dp) then
       variable => x%T
-      variable = -variable
-   end if
-
-   if (x%omegaE .lt. 0.0_dp) then
+   else if (x%omegaE .lt. 0.0_dp) then
       variable => x%omegaE
-      variable = -variable
+   else if (any(x%lambda .lt. 0.0_dp)) then
+      argmin(:) = minloc(x%lambda)
+      variable => x%lambda(argmin(1), argmin(2))
+   else if (any(x%muStar .lt. 0.0_dp)) then
+      argmin(:) = minloc(x%muStar)
+      variable => x%muStar(argmin(1), argmin(2))
+   else
+      variable => x%T
+      x%T = -x%T
    end if
 
-   do i = 1, x%bands
-      do j = 1, x%bands
-         if (x%lambda(j, i) .lt. 0.0_dp) then
-            variable => x%lambda(j, i)
-            variable = -variable
-         end if
-
-         if (x%muStar(j, i) .lt. 0.0_dp) then
-            variable => x%muStar(j, i)
-            variable = -variable
-         end if
-      end do
-   end do
+   variable = -variable
 
    if (x%ldos) then
       solver => eigenvalue
