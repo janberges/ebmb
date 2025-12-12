@@ -18,7 +18,6 @@ for (realgw, eta0Im, style, label) in [
 ]:
     results = ebmb.get(
         normal=True,
-        Sigma=True,
         chiC=True,
         realgw=realgw,
         eta0Im=eta0Im,

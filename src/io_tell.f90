@@ -29,17 +29,7 @@ contains
       if (x%output .eq. 'none') then
          print "(/, 'imaginary-axis solution [', I0, ']:', /)", im%steps
 
-         if (x%Sigma) then
-            print head, 'omega/eV', 'Re[Sigma]/eV', 'Im[Sigma]/eV', 'Delta/eV'
-
-            do i = 1, x%bands
-               print rule(4)
-
-               do n = 0, size(im%omega) - 1
-                  print body, im%omega(n), im%Sigma(n, i), im%Delta(n, i)
-               end do
-            end do
-         else if (x%ldos) then
+         if (x%ldos) then
             print head, 'omega/eV', 'Z', 'chi/eV', 'Delta/eV'
 
             do i = 1, x%bands
@@ -118,57 +108,32 @@ contains
       if (x%output .eq. 'none' .and. x%points .gt. 0) then
          print "(/, 'real-axis solution:', /)"
 
-         if (x%Sigma) then
-            if (x%ldos) then
-               print head, 'omega/eV', 'Re[Sigma]', 'Im[Sigma]', &
-                  'Re[Delta]/eV', 'Im[Delta]/eV', 'DOS/(1/eV)'
+         if (x%ldos) then
+            print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
+               'Re[chi]', 'Im[chi]', 'Re[Delta]/eV', 'Im[Delta]/eV', &
+               'Re[Sigma]/eV', 'Im[Sigma]/eV', 'DOS/(1/eV)'
 
-               do i = 1, x%bands
-                  print rule(6)
+            do i = 1, x%bands
+               print rule(10)
 
-                  do n = 1, x%points
-                     print body, re%omega(n), re%Sigma(n, i), re%Delta(n, i), &
-                        re%dos(n, i)
-                  end do
+               do n = 1, x%points
+                  print body, re%omega(n), re%Z(n, i), re%chi(n, i), &
+                     re%Delta(n, i), re%Sigma(n, i), re%dos(n, i)
                end do
-            else
-               print head, 'omega/eV', 'Re[Sigma]', 'Im[Sigma]', &
-                  'Re[Delta]/eV', 'Im[Delta]/eV'
-
-               do i = 1, x%bands
-                  print rule(5)
-
-                  do n = 1, x%points
-                     print body, re%omega(n), re%Sigma(n, i), re%Delta(n, i)
-                  end do
-               end do
-            end if
+            end do
          else
-            if (x%ldos) then
-               print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
-                  'Re[chi]', 'Im[chi]', 'Re[Delta]/eV', 'Im[Delta]/eV', &
-                  'DOS/(1/eV)'
+            print head, &
+               'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV', &
+               'Re[Sigma]/eV', 'Im[Sigma]/eV'
 
-               do i = 1, x%bands
-                  print rule(8)
+            do i = 1, x%bands
+               print rule(7)
 
-                  do n = 1, x%points
-                     print body, re%omega(n), re%Z(n, i), re%chi(n, i), &
-                        re%Delta(n, i), re%dos(n, i)
-                  end do
+               do n = 1, x%points
+                  print body, re%omega(n), re%Z(n, i), re%Delta(n, i), &
+                     re%Sigma(n, i)
                end do
-            else
-               print head, &
-                  'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV'
-
-               do i = 1, x%bands
-                  print rule(5)
-
-                  do n = 1, x%points
-                     print body, re%omega(n), re%Z(n, i), re%Delta(n, i)
-                  end do
-               end do
-            end if
+            end do
          end if
       end if
 

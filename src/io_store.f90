@@ -37,10 +37,7 @@ contains
 
       write (fun) 'Z:', im%Z
       write (fun) 'Delta:', im%Delta
-
-      if (x%Sigma) then
-         write (fun) 'domega:', aimag(im%Sigma)
-      end if
+      write (fun) 'domega:', aimag(im%Sigma)
 
       if (x%ldos) then
          write (fun) 'chi:', im%chi
@@ -112,10 +109,8 @@ contains
             write (fun) 'DOS:', re%dos
          end if
 
-         if (x%Sigma) then
-            write (fun) 'Re[Sigma]:', real(re%Sigma)
-            write (fun) 'Im[Sigma]:', aimag(re%Sigma)
-         end if
+         write (fun) 'Re[Sigma]:', real(re%Sigma)
+         write (fun) 'Im[Sigma]:', aimag(re%Sigma)
       end if
 
       close (fun)

@@ -130,13 +130,11 @@ contains
          im%phiC(i) = pi * kB * x%T * sum(im%Delta * A * mu(:, :, i))
       end do
 
-      if (x%Sigma) then
-         allocate(im%Sigma(0:no - 1, x%bands))
+      allocate(im%Sigma(0:no - 1, x%bands))
 
-         do i = 1, x%bands
-            im%Sigma(:, i) = cmplx(im%Delta(:, i) * im%Z(:, i), &
-               im%omega * (1.0_dp - im%Z(:, i)), dp)
-         end do
-      end if
+      do i = 1, x%bands
+         im%Sigma(:, i) = cmplx(im%Delta(:, i) * im%Z(:, i), &
+            im%omega * (1.0_dp - im%Z(:, i)), dp)
+      end do
    end subroutine self_energy_cdos
 end module eliashberg_self_energy_cdos

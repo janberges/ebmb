@@ -54,7 +54,6 @@ module globals
       logical :: readjust = .false. ! readjust chemical potential?
       logical :: chi      = .true.  ! consider energy shift?
       logical :: chiC     = .false. ! consider Coulomb part of energy shift?
-      logical :: Sigma    = .false. ! calculate normal self-energy?
 
       integer(i4) :: steps = 250000 ! maximum number of iterations
 

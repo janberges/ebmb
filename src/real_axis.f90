@@ -33,7 +33,8 @@ contains
          allocate(re%Z(x%points, x%bands))
 
          if (x%ldos) allocate(re%chi(x%points, x%bands))
-         if (x%Sigma) allocate(re%Sigma(x%points, x%bands))
+
+         allocate(re%Sigma(x%points, x%bands))
 
          call interval(re%omega, x%lower, x%upper, lower=.true., upper=.true., &
             logscale=x%logscale)
@@ -85,15 +86,13 @@ contains
                   !$omp end parallel do
                end if
 
-               if (x%Sigma) then
-                  call coefficients(im%omega, im%Sigma(:, i))
+               call coefficients(im%omega, im%Sigma(:, i))
 
-                  !$omp parallel do
-                  do n = 1, x%points
-                     re%Sigma(n, i) = continuation(omega(n))
-                  end do
-                  !$omp end parallel do
-               end if
+               !$omp parallel do
+               do n = 1, x%points
+                  re%Sigma(n, i) = continuation(omega(n))
+               end do
+               !$omp end parallel do
             end if
          end do
       end if

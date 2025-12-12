@@ -241,14 +241,12 @@ contains
          im%phiC(i) = kB * x%T * sum(integral_phi * U(:, :, i))
       end do
 
-      if (x%Sigma) then
-         allocate(im%Sigma(0:no - 1, x%bands))
+      allocate(im%Sigma(0:no - 1, x%bands))
 
-         do i = 1, x%bands
-            im%Sigma(:, i) = cmplx(im%phi(:, i) + im%chi(:, i), &
-               im%omega * (1.0_dp - im%Z(:, i)), dp)
-         end do
-      end if
+      do i = 1, x%bands
+         im%Sigma(:, i) = cmplx(im%phi(:, i) + im%chi(:, i), &
+            im%omega * (1.0_dp - im%Z(:, i)), dp)
+      end do
 
       if (present(kernel)) then
          allocate(kernel(x%bands * no, x%bands * no))
