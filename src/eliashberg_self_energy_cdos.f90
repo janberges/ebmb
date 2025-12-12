@@ -134,7 +134,7 @@ contains
          allocate(im%Sigma(0:no - 1, x%bands))
 
          do i = 1, x%bands
-            im%Sigma(:, i) = cmplx(im%phi(:, i), &
+            im%Sigma(:, i) = cmplx(im%Delta(:, i) * im%Z(:, i), &
                im%omega * (1.0_dp - im%Z(:, i)), dp)
          end do
       end if
