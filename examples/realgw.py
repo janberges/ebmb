@@ -24,7 +24,6 @@ for (realgw, eta0Im, style, label) in [
         dos=dos,
         a2F=a2f,
         muC=1.0,
-        divdos=True,
         cutoff=10.0,
         lower=-20.0,
         upper=+20.0,
