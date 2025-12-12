@@ -222,13 +222,13 @@ contains
             end do
          end if
 
-         call dos(oc%n0, x%conserve, .false.)
-
          if (all(im%Z .ap. Z) .and. all(im%phi .ap. phi) &
                .and. all(im%chi .ap. chi)) then
             im%steps = step
             exit
          end if
+
+         call dos(oc%n0, x%conserve, .false.)
       end do
 
       allocate(im%Delta(0:no - 1, x%bands))
@@ -267,7 +267,7 @@ contains
          end do
       end if
 
-      if (x%readjust) call dos(oc%n0, .true., .false.)
+      if (x%conserve .or. x%readjust) call dos(oc%n0, .true., .false.)
 
    contains
 
