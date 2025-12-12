@@ -22,7 +22,6 @@ program critical
    logical :: sc1 ! bound(1) within superconducting phase?
    logical :: try ! still trying out direction?
 
-   integer :: i, j ! band indices
    integer :: error ! I/O status
 
    integer :: argmin(2) ! indices of minimum matrix element
