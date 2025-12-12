@@ -110,13 +110,11 @@ contains
                   end do
                end do
 
+               im%Z(n, i) = 1.0_dp + pi * kB * x%T * im%Z(n, i) / im%omega(n)
+               im%Delta(n, i) = pi * kB * x%T * im%Delta(n, i) / Z(n, i)
             end do
             !$omp end parallel do
-
-            im%Z(:, i) = 1.0_dp + pi * kB * x%T * im%Z(:, i) / im%omega
          end do
-
-         im%Delta(:, :) = pi * kB * x%T * im%Delta / Z
 
          if (all(im%Z .ap. Z) .and. all(im%Delta .ap. Delta)) then
             im%steps = step

@@ -201,14 +201,14 @@ contains
                      end if
                   end do
                end do
+
+               im%Z(n, i) = 1.0_dp + im%Z(n, i) * kB * x%T / im%omega(n)
+
+               im%phi(n, i) = im%phi(n, i) * kB * x%T
+               im%chi(n, i) = im%chi(n, i) * kB * x%T
             end do
             !$omp end parallel do
-
-            im%Z(:, i) = 1.0_dp + im%Z(:, i) * kB * x%T / im%omega
          end do
-
-         im%phi(:, :) = im%phi * kB * x%T
-         im%chi(:, :) = im%chi * kB * x%T
 
          if (x%chi .and. x%chiC) then
             call calculate_residue(nC, .false.)
