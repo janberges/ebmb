@@ -110,7 +110,7 @@ contains
 
          if (x%ldos) then
             print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
-               'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]', 'Im[chi]', &
+               'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]/eV', 'Im[chi]/eV', &
                'Re[Sigma]/eV', 'Im[Sigma]/eV', 'DOS/(1/eV)'
 
             do i = 1, x%bands
