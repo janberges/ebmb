@@ -591,12 +591,12 @@
          \multicolumn3l{\textbf{imaginary-axis results} \hfill} \\
          \hline
          \tt iomega & \textsc{Matsubara} frequency (without $\I$) & $\omega_n$        \\
-         \tt Delta  & gap                                         & $\Delta_i(n)$     \\
-         \tt Z      & renormalization                             & $Z_i(n)$          \\
-         \tt chi    & energy shift \s                             & $\chi_i(n)$       \\
          \tt domega & frequency shift                         & $(\delta \omega_n)_i$ \\
-         \tt chiC   & \textsc{Coulomb} part of energy shift \s    & ${\chi \sub C}_i$ \\
+         \tt Z      & renormalization                             & $Z_i(n)$          \\
+         \tt Delta  & gap                                         & $\Delta_i(n)$     \\
+         \tt chi    & energy shift \s                             & $\chi_i(n)$       \\
          \tt phiC   & \textsc{Coulomb} part of order parameter    & ${\phi \sub C}_i$ \\
+         \tt chiC   & \textsc{Coulomb} part of energy shift \s    & ${\chi \sub C}_i$ \\
          \tt status & status (steps until convergence or $-1$)    & --                \\
          \hline
          \multicolumn3l{\textbf{occupancy results}} \hfill \s~\texttt{DOS given} \\
@@ -616,8 +616,8 @@
          \multicolumn3l{\textbf{real-axis results} \hfill \st~\texttt{points} > 0} \\
          \hline
          \tt omega                           & frequency                                           & $\omega$           \\
-         \tt \stack{l}{Re[Delta]}{Im[Delta]} & \stack{r}{real}{imaginary} $\Big\}$ gap             & $\Delta_i(\omega)$ \\
          \tt \stack{l}{Re[Z]}    {Im[Z]}     & \stack{r}{real}{imaginary} $\Big\}$ renormalization & $Z_i(\omega)$      \\
+         \tt \stack{l}{Re[Delta]}{Im[Delta]} & \stack{r}{real}{imaginary} $\Big\}$ gap             & $\Delta_i(\omega)$ \\
          \tt \stack{l}{Re[chi]}  {Im[chi]}   & \stack{r}{real}{imaginary} $\Big\}$ energy shift \s & $\chi_i(\omega)$   \\
          \tt \stack{l}{Re[Sigma]}{Im[Sigma]} & \stack{r}{real}{imaginary} $\Big\}$ self-energy & $\Sigma_{1 1 i}(\omega)$ \\
          \tt DOS                             & quasiparticle density of states \s                  & $A_i(\omega)$      \\

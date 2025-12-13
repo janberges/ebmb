@@ -35,9 +35,9 @@ contains
       if (x%bands .gt. 1) &
          write (fun) 'DIM:', 2_i4, x%bands, size(im%omega, kind=i4)
 
+      write (fun) 'domega:', aimag(im%Sigma)
       write (fun) 'Z:', im%Z
       write (fun) 'Delta:', im%Delta
-      write (fun) 'domega:', aimag(im%Sigma)
 
       if (x%ldos) then
          write (fun) 'chi:', im%chi
@@ -80,9 +80,9 @@ contains
          write (fun) 0_i4
       end if
 
-      if (x%ldos) write (fun) 'chiC:', im%chiC
-
       write (fun) 'phiC:', im%phiC
+
+      if (x%ldos) write (fun) 'chiC:', im%chiC
 
       if (x%measurable) then
          write (fun) 'INT:status0:', re%steps
