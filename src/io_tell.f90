@@ -122,8 +122,8 @@ contains
                end do
             end do
          else
-            print head, &
-               'omega/eV', 'Re[Z]', 'Im[Z]', 'Re[Delta]/eV', 'Im[Delta]/eV', &
+            print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
+               'Re[Delta]/eV', 'Im[Delta]/eV', &
                'Re[Sigma]/eV', 'Im[Sigma]/eV'
 
             do i = 1, x%bands
