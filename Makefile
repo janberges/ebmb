@@ -40,7 +40,7 @@ $(programs):
 	$(FC) $(FFLAGS) -o $@ $^ $(LDLIBS)
 
 build/%.o: src/%.f90
-	$(FC) $(FFLAGS) -c $< -o $@
+	$(FC) $(FFLAGS) -o $@ -c $<
 
 bin/critical: build/critical.o build/eigenvalues.o build/eliashberg_eigenvalue.o build/eliashberg_eigenvalue_cdos.o build/eliashberg_self_energy.o build/eliashberg_spectral_function.o build/globals.o build/io_load.o build/tools.o
 bin/ebmb: build/dos.o build/ebmb.o build/eliashberg_self_energy.o build/eliashberg_self_energy_cdos.o build/eliashberg_self_energy_real_axis.o build/eliashberg_spectral_function.o build/formatting.o build/globals.o build/io_load.o build/io_store.o build/io_tell.o build/pade.o build/real_axis.o build/tools.o
