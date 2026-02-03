@@ -123,7 +123,7 @@ contains
       do step = 1, x%steps
          if (x%tell) print "('GW iteration ', I0)", step
 
-         if (x%eta0Im) then
+         if (x%krakro) then
             ! Send eta to zero and replace Im[1/(x + i0+)] by -pi delta(x):
 
             !$omp parallel do private(n1, n2)
@@ -214,7 +214,7 @@ contains
 
       if (x%readjust) call dos(oc%n0, .true.)
 
-      if (x%eta0Im) then
+      if (x%krakro) then
          !$omp parallel do private(cernel)
          do n = 0, no - 1
             cernel(:) = weight / cmplx(-re%omega, im%omega(n), dp)

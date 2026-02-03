@@ -11,7 +11,7 @@ ebmb.chain_a2F(a2f, dw=1e-2, wlog=2.0, l=1.0)
 
 fig, ax = plt.subplots(3, 2, sharex='col', sharey='row')
 
-for (realgw, eta0Im, style, label) in [
+for (realgw, krakro, style, label) in [
     (True, True, 'm', 'Kramers-Kronig'),
     (True, False, 'c--', 'direct'),
     (False, False, 'k:', 'Pad\xe9'),
@@ -20,7 +20,7 @@ for (realgw, eta0Im, style, label) in [
         normal=True,
         chiC=True,
         realgw=realgw,
-        eta0Im=eta0Im,
+        krakro=krakro,
         dos=dos,
         a2F=a2f,
         muC=1.0,
