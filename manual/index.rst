@@ -17,6 +17,7 @@
    examples/dos
    examples/residue
    examples/realgw
+   examples/specfun
 
 .. toctree::
    :caption: More
