@@ -7,7 +7,7 @@ dos = 'dos.in'
 a2f = 'a2f.in'
 
 ebmb.chain_dos(dos, de=5e-3, t=1.0)
-ebmb.chain_a2F(a2f, dw=1e-2, wlog=2.0, l=1.0)
+ebmb.chain_a2F(a2f, dw=1e-2, l=1.0, wlog=2.0)
 
 fig, ax = plt.subplots(3, 2, sharex='col', sharey='row')
 
