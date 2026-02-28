@@ -468,7 +468,8 @@ def steplike_dos(file='dos.in', de=1e-3, t=0.25, bandwidth=None, ratio=6.0,
 
     return e, dos
 
-def gaussian_a2F(file='a2F.in', dw=1e-4, l=1.0, w0=0.02, s=0.002, replace=True):
+def gaussian_a2F(file='a2F.in', dw=1e-4, l=1.0, w0=0.02, s=0.002, wlog=None,
+        replace=True):
     """Calculate and save Gaussian example Eliashberg spectral function.
 
     Parameters
@@ -483,6 +484,8 @@ def gaussian_a2F(file='a2F.in', dw=1e-4, l=1.0, w0=0.02, s=0.002, replace=True):
         Center (expected value of Einstein frequency).
     s : float
         Broadening.
+    wlog : float
+        Logarithmic average phonon frequency. This is an alias for `w0`.
     replace : bool
         Overwrite existing output file?
 
@@ -495,6 +498,9 @@ def gaussian_a2F(file='a2F.in', dw=1e-4, l=1.0, w0=0.02, s=0.002, replace=True):
     """
     if not replace and path.exists(file):
         return
+
+    if wlog is not None:
+        w0 = wlog
 
     w = np.arange(w0 - 5 * s, w0 + 5 * s, dw)
     w = w[w >= 0]
