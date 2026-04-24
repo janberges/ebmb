@@ -296,7 +296,7 @@ def chain_a2F(file='a2F.in', dw=1e-4, l=1.0, w0=0.02, wlog=None, replace=True):
     if wlog is None:
         wlog = w0 / np.sqrt(2)
 
-    points = int(round(2 * wlog / dw)) + 1
+    points = int(round(2 * wlog / dw))
 
     w, dw = np.linspace(2 * wlog, 0, points, endpoint=False, retstep=True)
     w = w[::-1]
