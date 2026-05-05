@@ -302,7 +302,7 @@ contains
 
          if (re%omega(n) .gt. omega .and. n .gt. 1) then
             m = n - 1
-         else if (re%omega(n) .lt. omega .and. n .lt. size(re%omega)) then
+         else if (re%omega(n) .lt. omega .and. n .lt. x%points) then
             m = n + 1
          else
             m = n
