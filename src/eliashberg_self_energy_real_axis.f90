@@ -238,13 +238,14 @@ contains
             do i = 1, x%bands
                re%Z(n, i) = (1.0_dp, 0.0_dp) - sum(cernel * ImSigma(:, i))
             end do
+
+            cernel(:) = cernel * re%omega
+
+            do i = 1, x%bands
+               re%chi(n, i) = sum(cernel * ImSigma(:, i)) + im%chiC(i)
+            end do
          end do
          !$omp end parallel do
-
-         do i = 1, x%bands
-            re%chi(:, i) = re%Sigma(:, i) &
-               - omega * ((1.0_dp, 0.0_dp) - re%Z(:, i))
-         end do
       else
          G = G0 ! We do not want another iteration but Z and chi for current Sigma!
 
