@@ -92,8 +92,9 @@ module globals
       real(dp), allocatable :: chi  (:, :) ! energy shift (eV)
       real(dp), allocatable :: Delta(:, :) ! gap (eV)
       real(dp), allocatable :: phi  (:, :) ! order parameter (eV)
-      real(dp), allocatable :: chiC (:)    ! Coulomb part of energy shift (eV)
-      real(dp), allocatable :: phiC (:)    ! Coulomb part of order parameter (eV)
+
+      real(dp), allocatable :: chiC (:) ! Coulomb part of energy shift (eV)
+      real(dp), allocatable :: phiC (:) ! Coulomb part of order parameter (eV)
 
       complex(dp), allocatable :: Sigma(:, :) ! normal self-energy (eV)
 

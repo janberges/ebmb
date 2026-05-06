@@ -253,7 +253,7 @@ contains
          end do
          !$omp end parallel do
       else
-         G = G0 ! We do not want another iteration but Z and chi for current Sigma!
+         G = G0 ! Avoid another iteration. We want Z and chi for current Sigma!
 
          do j = 1, x%bands
             do m = 1, x%points
