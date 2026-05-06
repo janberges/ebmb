@@ -38,8 +38,8 @@ contains
          absent = 'density of states'
       else if (.not. x%la2F) then
          absent = 'Eliashberg spectral function'
-      else if (.not. x%chi) then
-         absent = 'considering energy shift'
+      else if (.not. x%chi .and. (x%lower .na. -x%upper)) then
+         absent = '"chi" unless "lower" is the negative of "upper"'
       else
          absent = 'none'
       end if
@@ -142,6 +142,9 @@ contains
             end do
             !$omp end parallel do
 
+            if (.not. x%chi) ImSigma(:, :) = 0.5_dp &
+               * (ImSigma + ImSigma(x%points:1:-1, :))
+
             ! Compute real part of self-energy via Kramers-Kronig relation:
 
             !$omp parallel do private(kernel)
@@ -176,11 +179,14 @@ contains
                   end do
                end do
             end do
+
+            if (.not. x%chi) re%Sigma(:, :) = (0.5_dp, 0.0_dp) &
+               * (re%Sigma - conjg(re%Sigma(x%points:1:-1, :)))
          end if
 
          im%chiC(:) = 0.0_dp
 
-         if (x%chiC) then
+         if (x%chi .and. x%chiC) then
             kernel(:) = weight * (0.5_dp - fermi)
 
             do j = 1, x%bands
@@ -262,7 +268,10 @@ contains
                      r2 = n2(:, i) / (w2 ** 2 + im%omega(n) ** 2)
 
                      im%Z(n, i) = im%Z(n, i) + sum(r1 + r2)
-                     im%chi(n, i) = im%chi(n, i) + sum(w1 * r1 + w2 * r2)
+
+                     if (x%chi) then
+                        im%chi(n, i) = im%chi(n, i) + sum(w1 * r1 + w2 * r2)
+                     end if
                   end do
                   !$omp end parallel do
 
@@ -272,7 +281,10 @@ contains
                      c2 = n2(:, i) / (w2 ** 2 - omega(n) ** 2)
 
                      re%Z(n, i) = re%Z(n, i) + sum(c1 + c2)
-                     re%chi(n, i) = re%chi(n, i) + sum(w1 * c1 + w2 * c2)
+
+                     if (x%chi) then
+                        re%chi(n, i) = re%chi(n, i) + sum(w1 * c1 + w2 * c2)
+                     end if
                   end do
                   !$omp end parallel do
                end do
@@ -280,10 +292,8 @@ contains
          end do
 
          do i = 1, x%bands
-            if (x%chiC) then
-               im%chi(:, i) = im%chi(:, i) + im%chiC(i)
-               re%chi(:, i) = re%chi(:, i) + im%chiC(i)
-            end if
+            im%chi(:, i) = im%chi(:, i) + im%chiC(i)
+            re%chi(:, i) = re%chi(:, i) + im%chiC(i)
 
             im%Sigma(:, i) = cmplx(im%chi(:, i), &
                im%omega * (1.0_dp - im%Z(:, i)), dp)
