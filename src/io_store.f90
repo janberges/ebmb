@@ -49,10 +49,10 @@ contains
          if (x%points .gt. 0) write (fun) 'inspect:', oc%inspect
 
          write (fun) 'n0:', oc%n0
-         write (fun) "n:", oc%n
+         write (fun) 'n:', oc%n
 
          write (fun) 'mu0:', oc%mu0
-         write (fun) "mu:", oc%mu
+         write (fun) 'mu:', oc%mu
       end if
 
       if (x%la2F) then
