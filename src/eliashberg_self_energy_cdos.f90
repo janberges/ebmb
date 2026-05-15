@@ -24,7 +24,7 @@ contains
       integer :: step, i, j, n, m, no, nC
 
       if (.not. x%normal .and. x%steps .le. 10) then
-         print "('Warning: Superconducting solution should be self-consistent')"
+         print '("Warning: Superconducting solution should be self-consistent")'
       end if
 
       nE = x%omegaE / (2.0_dp * pi * kB * x%T)

@@ -22,7 +22,7 @@ contains
          access='stream', iostat=error)
 
       if (error .ne. 0) then
-         print "('Error: Cannot open output file ""', A, '""')", trim(x%output)
+         print '("Error: Cannot open output file """, A, """")', trim(x%output)
          stop 1
       end if
 

@@ -65,7 +65,7 @@ program critical
       call solver(ev, x)
 
       if (ev .ap. ev0) then
-         print "('Error: Stationary point')"
+         print '("Error: Stationary point")'
          stop 1
       end if
 
@@ -79,7 +79,7 @@ program critical
             cycle
          end if
 
-         print "('Error: Local extremum')"
+         print '("Error: Local extremum")'
          stop 1
       end if
 
@@ -109,7 +109,7 @@ program critical
          access='stream', iostat=error)
 
       if (error .ne. 0) then
-         print "('Error: Cannot open output file ""', A, '""')", trim(x%output)
+         print '("Error: Cannot open output file """, A, """")', trim(x%output)
          stop 1
       end if
 

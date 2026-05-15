@@ -50,7 +50,7 @@ contains
          equals = index(setting, '=')
 
          if (equals .lt. 2 .or. equals .eq. len(setting)) then
-            print "('Error: Invalid argument ""', A, '""')", setting
+            print '("Error: Invalid argument """, A, """")', setting
             stop 1
          end if
 
@@ -129,12 +129,12 @@ contains
             case ('power'); read (rhs, *, iostat=error) x%power
 
             case default
-               print "('Error: Unknown parameter ""', A, '""')", lhs
+               print '("Error: Unknown parameter """, A, """")', lhs
                stop 1
          end select
 
          if (error .ne. 0) then
-            print "('Error: Invalid value for parameter ""', A, '""')", lhs
+            print '("Error: Invalid value for parameter """, A, """")', lhs
             stop 1
          end if
       end do
@@ -164,7 +164,7 @@ contains
          end if
 
          if (error .ne. 0) then
-            print "('Error: ""lambda"" needs ', I0, ' numbers')", size(x%lambda)
+            print '("Error: ""lambda"" needs ", I0, " numbers")', size(x%lambda)
             stop 1
          end if
       end if
@@ -184,7 +184,7 @@ contains
          end if
 
          if (error .ne. 0) then
-            print "('Error: ""muStar"" needs ', I0, ' numbers')", size(x%muStar)
+            print '("Error: ""muStar"" needs ", I0, " numbers")', size(x%muStar)
             stop 1
          end if
       end if
@@ -239,7 +239,7 @@ contains
       open (fun, file=filename, action='read', status='old', iostat=error)
 
       if (error .ne. 0) then
-         print "('Error: Cannot open DOS file ""', A, '""')", filename
+         print '("Error: Cannot open DOS file """, A, """")', filename
          stop 1
       end if
 
@@ -260,7 +260,7 @@ contains
          read (fun, *, iostat=error) x%energy(m), x%dos(m, :)
 
          if (error .ne. 0) then
-            print "('Error: DOS file needs ', I0, ' numbers per line')", &
+            print '("Error: DOS file needs ", I0, " numbers per line")', &
                x%bands + 1
             stop 1
          end if
@@ -281,7 +281,7 @@ contains
       open (fun, file=filename, action='read', status='old', iostat=error)
 
       if (error .ne. 0) then
-         print "('Error: Cannot open a2F file ""', A, '""')", filename
+         print '("Error: Cannot open a2F file """, A, """")', filename
          stop 1
       end if
 
@@ -311,7 +311,7 @@ contains
             end if
 
             if (error .ne. 0) then
-               print "('Error: a2F file needs ', I0, ' numbers per line')", &
+               print '("Error: a2F file needs ", I0, " numbers per line")', &
                   x%bands ** 2 + 1
                stop 1
             end if

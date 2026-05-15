@@ -45,7 +45,7 @@ contains
       end if
 
       if (absent .ne. 'none') then
-         print "('Error: Real-axis GW requires ', A)", absent
+         print '("Error: Real-axis GW requires ", A)', absent
          stop 1
       end if
 
@@ -121,7 +121,7 @@ contains
       end if
 
       do step = 1, x%steps
-         if (x%tell) print "('GW iteration ', I0)", step
+         if (x%tell) print '("GW iteration ", I0)', step
 
          if (x%krakro) then
             ! Send eta to zero and replace Im[1/(x + i0+)] by -pi delta(x):
@@ -357,7 +357,7 @@ contains
             oc%inspect = sum(w)
 
             if (oc%inspect .ap. 0.0_dp) then
-               print "('Error: Too small energy window has drifted away')"
+               print '("Error: Too small energy window has drifted away")'
                stop 1
             end if
 
@@ -369,7 +369,7 @@ contains
          end do
 
          if (abs(oc%inspect - oc%states) .gt. 0.1_dp) then
-            print "('Warning: Spectral function breaks sum rule')"
+            print '("Warning: Spectral function breaks sum rule")'
          end if
       end subroutine dos
 

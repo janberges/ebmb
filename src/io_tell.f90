@@ -27,7 +27,7 @@ contains
       body = edit('(99x)')
 
       if (x%output .eq. 'none') then
-         print "(/, 'imaginary-axis solution [', I0, ']:', /)", im%steps
+         print '(/, "imaginary-axis solution [", I0, "]:", /)', im%steps
 
          if (x%ldos) then
             print head, 'omega/eV', 'Z', 'Delta/eV', 'chi/eV'
@@ -56,49 +56,49 @@ contains
       more = edit('(x)')
 
       if (x%ldos) then
-         print "(/, 'integral of density of states:', /)"
+         print '(/, "integral of density of states:", /)'
          print more, oc%states
 
          if (x%points .gt. 0) then
-            print "(/, 'integral of spectral function:', /)"
+            print '(/, "integral of spectral function:", /)'
             print more, oc%inspect
          end if
 
-         print "(/, 'initial and final occupancy number:', /)"
+         print '(/, "initial and final occupancy number:", /)'
          print more, oc%n0, oc%n
 
-         print "(/, 'initial and final chemical potential (eV):', /)"
+         print '(/, "initial and final chemical potential (eV):", /)'
          print more, oc%mu0, oc%mu
       end if
 
       if (x%la2F) then
-         print "(/, 'effective electron-phonon coupling:', /)"
+         print '(/, "effective electron-phonon coupling:", /)'
          do i = 1, x%bands
             print body, x%lambda(:, i)
          end do
 
-         print "(/, 'effective phonon frequency (eV):', /)"
+         print '(/, "effective phonon frequency (eV):", /)'
          print more, x%omegaE
 
-         print "(/, 'logarithmic average phonon frequency (eV):', /)"
+         print '(/, "logarithmic average phonon frequency (eV):", /)'
          print more, x%omegaLog
 
-         print "(/, 'second-moment average phonon frequency (eV):', /)"
+         print '(/, "second-moment average phonon frequency (eV):", /)'
          print more, x%omega2nd
       end if
 
       if (x%ldos) then
-         print "(/, 'Coulomb part of energy shift (eV):', /)"
+         print '(/, "Coulomb part of energy shift (eV):", /)'
          print more, im%chiC
       end if
 
-      print "(/, 'Coulomb part of order parameter (eV):', /)"
+      print '(/, "Coulomb part of order parameter (eV):", /)'
       print more, im%phiC
 
       if (x%measurable) then
-         print "(/, 'measurable gap (eV):', /)"
+         print '(/, "measurable gap (eV):", /)'
 
-         more = edit("(x, ' [', I0, ']')")
+         more = edit('(x, " [", I0, "]")')
 
          do i = 1, x%bands
             print more, re%Delta0(i), re%steps(i)
@@ -106,7 +106,7 @@ contains
       end if
 
       if (x%output .eq. 'none' .and. x%points .gt. 0) then
-         print "(/, 'real-axis solution:', /)"
+         print '(/, "real-axis solution:", /)'
 
          if (x%ldos) then
             print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
@@ -138,7 +138,7 @@ contains
       end if
 
       if (x%output .ne. 'none') then
-         print "(/, 'The complete results are stored in ""', A, '""')", &
+         print '(/, "The complete results are stored in """, A, """")', &
             trim(x%output)
       end if
    end subroutine tell

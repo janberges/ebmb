@@ -20,7 +20,7 @@ contains
 
       x = trim(flomat)
 
-      write (test, "(" // x // ", '|')") pi
+      write (test, '(' // x // ', "|")') pi
       width = index(test, '|') - 1
 
       write (test, '(I0)') width
@@ -50,6 +50,6 @@ contains
       character(:), allocatable :: rule
       integer, intent(in) :: n
 
-      rule = "('" // repeat('_', n * width) // "')"
+      rule = '("' // repeat('_', n * width) // '")'
    end function rule
 end module formatting
