@@ -32,8 +32,9 @@ contains
       write (fun) 'REAL:DIM:', 1_i4, size(im%omega, kind=i4)
       write (fun) 'iomega:', im%omega
 
-      if (x%bands .gt. 1) &
+      if (x%bands .gt. 1) then
          write (fun) 'DIM:', 2_i4, x%bands, size(im%omega, kind=i4)
+      end if
 
       write (fun) 'domega:', aimag(im%Sigma)
       write (fun) 'Z:', im%Z
