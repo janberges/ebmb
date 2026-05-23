@@ -17,7 +17,7 @@ try:
 except ImportError:
     print('square_dos not available')
 
-def get(program='ebmb', file=None, replace=True, **parameters):
+def get(program='ebmb', file='~ebmb.tmp.dat', replace=True, **parameters):
     """Run 'ebmb', 'tc' or 'critical' and load results.
 
     Parameters
@@ -40,13 +40,6 @@ def get(program='ebmb', file=None, replace=True, **parameters):
         Returned otherwise.
         Critical parameter(s).
     """
-    if file is None:
-        file = '~ebmb.tmp.dat'
-        shm = '/dev/shm/'
-
-        if path.exists(shm):
-            file = shm + file
-
     if replace or not path.exists(file):
         run(program, file=file, **parameters)
 
