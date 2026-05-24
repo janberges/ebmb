@@ -216,8 +216,9 @@
          0                                & \text{otherwise,}
       \end{cases}
       &
-      \frac 1 {\mu^*_{i j}(\omega_{N \sub C})} &=
-      \frac 1 {\mu^*_{i j}} + \ln \frac{\omega \sub E}{\omega_{N \sub C}}
+      \mat \mu^*(\omega_{N \sub C}) &= \Bigl(
+          \mat 1 + \mat \mu^* \ln \frac{\omega \sub E}{\omega_{N \sub C}}
+      \Bigr)^{-1} \cdot \mat \mu^*
       \label{cDOS rescaling}
    \end{align}
    %
@@ -226,10 +227,11 @@
    if the density of states $n_i(\epsilon)$ per spin as a function of energy
    $\epsilon$ is given,
    %
-   \begin{equation}
-       \frac 1 {\mu^*_{i j}(\omega_{N \sub C})} =
-       \frac 1 {\mu_{i j}} +
-       \frac 1 \pi \int \from{-\infty} \till \infty \D \epsilon
+   \begin{align}
+       \mat \mu^*(\omega_{N \sub C}) &= \mat S^{-1} \cdot \mat \mu,
+       &
+       S_{i j} &= \delta_{i j} +
+       \frac {\mu_{i j}} \pi \int \from{-\infty} \till \infty \D \epsilon
        \frac{n_j(\epsilon)}{n_j(\mu_0)}
        \begin{cases}
            \frac 1 {\epsilon - \mu_0}
@@ -239,7 +241,7 @@
                & \text{otherwise,}
        \end{cases}
       \label{rescaling}
-   \end{equation}
+   \end{align}
    %
    where $D$ is the electronic bandwidth. $\mu_0$ and $\mu$ are the chemical
    potentials for free and interacting particles, whose number $n_0, n$

@@ -6,7 +6,30 @@ module tools
    implicit none
 
    private
-   public :: argument, bound, differential, interval, matches
+   public :: argument, bound, differential, interval, inverse, matches
+
+   interface
+      subroutine dgetrf(m, n, a, lda, ipiv, info)
+         use globals
+         implicit none
+
+         integer, intent(in) :: m, n, lda
+         integer, intent(out) :: ipiv(*), info
+
+         real(dp), intent(inout) :: a(lda, *)
+      end subroutine dgetrf
+
+      subroutine dgetri(n, a, lda, ipiv, work, lwork, info)
+         use globals
+         implicit none
+
+         integer, intent(in) :: n, lda, ipiv(*), lwork
+         integer, intent(out) :: info
+
+         real(dp), intent(inout) :: a(lda, *)
+         real(dp), intent(out) :: work(*)
+      end subroutine dgetri
+   end interface
 
 contains
 
@@ -123,6 +146,20 @@ contains
          loga = sign(log(abs(x * logscale) + 1.0_dp), x)
       end function loga
    end subroutine interval
+
+   function inverse(matrix)
+      real(dp), intent(in) :: matrix(:, :)
+      real(dp) :: inverse(size(matrix, 1), size(matrix, 1))
+
+      integer :: n, ipiv(size(matrix, 1)), info
+      real(dp) :: work(size(matrix))
+
+      n = size(matrix, 1)
+      inverse(:, :) = matrix(:, :n)
+
+      call dgetrf(n, n, inverse, n, ipiv, info)
+      call dgetri(n, inverse, n, ipiv, work, size(work), info)
+   end function inverse
 
    function matches(str, chr)
       integer :: matches

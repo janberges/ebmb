@@ -9,8 +9,7 @@ libs_ifort = -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
 libs_ifx = ${libs_ifort}
 
 FFLAGS = ${flags_$(FC)}
-
-bin/critical: LDLIBS = ${libs_$(FC)}
+LDLIBS = ${libs_$(FC)}
 
 needless = .DS_Store ebmb.pyc manual/ebmb.aux manual/.ebmb.lb manual/ebmb.log manual/ebmb.out manual/ebmb.synctex.gz ~ebmb.tmp.dat
 
@@ -53,7 +52,7 @@ build/eigenvalues.o: build/globals.o build/tools.o
 build/eliashberg_eigenvalue.o: build/eigenvalues.o build/eliashberg_self_energy.o build/globals.o
 build/eliashberg_eigenvalue_cdos.o: build/eigenvalues.o build/eliashberg_spectral_function.o build/globals.o
 build/eliashberg_self_energy.o: build/eliashberg_spectral_function.o build/globals.o build/tools.o
-build/eliashberg_self_energy_cdos.o: build/eliashberg_spectral_function.o build/globals.o
+build/eliashberg_self_energy_cdos.o: build/eliashberg_spectral_function.o build/globals.o build/tools.o
 build/eliashberg_self_energy_real_axis.o: build/eliashberg_self_energy.o build/eliashberg_spectral_function.o build/globals.o build/tools.o
 build/eliashberg_spectral_function.o: build/globals.o build/tools.o
 build/formatting.o: build/globals.o

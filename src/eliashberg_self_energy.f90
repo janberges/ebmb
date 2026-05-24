@@ -4,7 +4,7 @@
 module eliashberg_self_energy
    use eliashberg_spectral_function, only: lambda_from_a2F
    use globals
-   use tools, only: differential
+   use tools, only: differential, inverse
    implicit none
 
    private
@@ -26,7 +26,8 @@ contains
       real(dp) :: nE, domega, residue
 
       real(dp), allocatable :: g(:, :, :), U(:, :, :), dosef(:), residues(:)
-      real(dp), allocatable :: muC(:, :), muStar(:, :), A(:, :), B(:, :)
+      real(dp), allocatable :: muC(:, :), muStar(:, :), scaling(:, :)
+      real(dp), allocatable :: A(:, :), B(:, :)
       real(dp), allocatable :: Z(:, :), phi(:, :), chi(:, :)
 
       real(dp), allocatable :: integral_Z  (:, :)
@@ -120,6 +121,7 @@ contains
       end do
 
       allocate(muC(x%bands, x%bands))
+      allocate(scaling(x%bands, x%bands))
 
       if (x%unscale) then
          where (x%energy .ap. oc%mu)
@@ -132,8 +134,11 @@ contains
          do i = 1, x%bands
             residue = sum(weight(:, i) / dosef(i) * matsum) / pi
 
-            muC(i, :) = x%muStar(i, :) / (1.0_dp - x%muStar(i, :) * residue)
+            scaling(i, :) = -x%muStar(i, :) * residue
+            scaling(i, i) = scaling(i, i) + 1.0_dp
          end do
+
+         muC(:, :) = matmul(x%muStar, inverse(scaling))
       else
          muC(:, :) = x%muStar
       end if
@@ -151,8 +156,11 @@ contains
          do i = 1, x%bands
             residue = sum(weight(:, i) / dosef(i) * matsum) / pi
 
-            muStar(i, :) = muC(i, :) / (1.0_dp + muC(i, :) * residue)
+            scaling(i, :) = muC(i, :) * residue
+            scaling(i, i) = scaling(i, i) + 1.0_dp
          end do
+
+         muStar(:, :) = matmul(muC, inverse(scaling))
       else
          muStar(:, :) = muC
       end if

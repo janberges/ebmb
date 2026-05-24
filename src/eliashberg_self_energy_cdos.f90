@@ -4,6 +4,7 @@
 module eliashberg_self_energy_cdos
    use eliashberg_spectral_function
    use globals
+   use tools, only: inverse
    implicit none
 
    private
@@ -18,7 +19,7 @@ contains
       real(dp) :: nE
 
       real(dp), allocatable :: lambda(:, :, :), mu(:, :, :)
-      real(dp), allocatable :: muStar(:, :), A(:, :)
+      real(dp), allocatable :: muStar(:, :), scaling(:, :), A(:, :)
       real(dp), allocatable :: Z(:, :), Delta(:, :)
 
       integer :: step, i, j, n, m, no, nC
@@ -53,7 +54,13 @@ contains
       allocate(muStar(x%bands, x%bands))
 
       if (x%rescale) then
-         muStar(:, :) = x%muStar / (1.0_dp + x%muStar * log(nE / (nC + 0.5_dp)))
+         scaling = x%muStar * log(nE / (nC + 0.5_dp))
+
+         do i = 1, x%bands
+            scaling(i, i) = scaling(i, i) + 1.0_dp
+         end do
+
+         muStar(:, :) = matmul(x%muStar, inverse(scaling))
       else
          muStar(:, :) = x%muStar
       end if
