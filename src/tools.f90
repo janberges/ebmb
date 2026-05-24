@@ -23,7 +23,8 @@ contains
       call get_command_argument(n, value=argument)
    end function argument
 
-   real(dp) function bound(matrix)
+   function bound(matrix)
+      real(dp) :: bound
       real(dp), intent(in) :: matrix(:, :)
 
       real(dp) :: R, C, S
@@ -123,7 +124,8 @@ contains
       end function loga
    end subroutine interval
 
-   integer function matches(str, chr)
+   function matches(str, chr)
+      integer :: matches
       character(*), intent(in) :: str
       character(1), intent(in) :: chr
 

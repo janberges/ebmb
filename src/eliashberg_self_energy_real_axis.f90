@@ -304,7 +304,6 @@ contains
 
       function Ginter(omega)
          complex(dp) :: Ginter(x%bands)
-
          real(dp), intent(in) :: omega
 
          integer :: n, m
