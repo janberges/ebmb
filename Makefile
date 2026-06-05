@@ -41,9 +41,9 @@ $(programs):
 build/%.o: src/%.f90
 	$(FC) $(FFLAGS) -o $@ -c $<
 
-bin/critical: build/critical.o build/eigenvalues.o build/eliashberg_eigenvalue.o build/eliashberg_eigenvalue_cdos.o build/eliashberg_self_energy.o build/eliashberg_spectral_function.o build/globals.o build/io_load.o build/tools.o
+bin/critical: build/critical.o build/eigenvalues.o build/eliashberg_eigenvalue.o build/eliashberg_eigenvalue_cdos.o build/eliashberg_self_energy.o build/eliashberg_spectral_function.o build/globals.o build/io_load.o build/pade.o build/tools.o
 bin/ebmb: build/dos.o build/ebmb.o build/eliashberg_self_energy.o build/eliashberg_self_energy_cdos.o build/eliashberg_self_energy_real_axis.o build/eliashberg_spectral_function.o build/formatting.o build/globals.o build/io_load.o build/io_store.o build/io_tell.o build/pade.o build/real_axis.o build/tools.o
-bin/tc: build/eliashberg_self_energy.o build/eliashberg_self_energy_cdos.o build/eliashberg_spectral_function.o build/formatting.o build/globals.o build/io_load.o build/tc.o build/tools.o
+bin/tc: build/eliashberg_self_energy.o build/eliashberg_self_energy_cdos.o build/eliashberg_spectral_function.o build/formatting.o build/globals.o build/io_load.o build/pade.o build/tc.o build/tools.o
 
 build/critical.o: build/eliashberg_eigenvalue.o build/eliashberg_eigenvalue_cdos.o build/globals.o build/io_load.o
 build/dos.o: build/eliashberg_self_energy.o build/globals.o build/pade.o build/tools.o
@@ -51,7 +51,7 @@ build/ebmb.o: build/dos.o build/eliashberg_self_energy.o build/eliashberg_self_e
 build/eigenvalues.o: build/globals.o build/tools.o
 build/eliashberg_eigenvalue.o: build/eigenvalues.o build/eliashberg_self_energy.o build/globals.o
 build/eliashberg_eigenvalue_cdos.o: build/eigenvalues.o build/eliashberg_spectral_function.o build/globals.o
-build/eliashberg_self_energy.o: build/eliashberg_spectral_function.o build/globals.o build/tools.o
+build/eliashberg_self_energy.o: build/eliashberg_spectral_function.o build/globals.o build/pade.o build/tools.o
 build/eliashberg_self_energy_cdos.o: build/eliashberg_spectral_function.o build/globals.o build/tools.o
 build/eliashberg_self_energy_real_axis.o: build/eliashberg_self_energy.o build/eliashberg_spectral_function.o build/globals.o build/tools.o
 build/eliashberg_spectral_function.o: build/globals.o build/tools.o

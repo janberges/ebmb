@@ -186,13 +186,22 @@ contains
 
          im%chiC(:) = 0.0_dp
 
-         if (x%chi .and. x%chiC) then
-            kernel(:) = weight * (0.5_dp - fermi)
+         if (x%chi) then
+            if (x%chiC) then
+               kernel(:) = weight * (0.5_dp - fermi)
 
-            do j = 1, x%bands
-               im%chiC(:) = im%chiC &
-                  + sum(kernel * aimag(G(:, j))) / dosef(j) * x%muStar(j, :)
-            end do
+               do j = 1, x%bands
+                  im%chiC(:) = im%chiC &
+                     + sum(kernel * aimag(G(:, j))) / dosef(j) * x%muStar(j, :)
+               end do
+            end if
+
+            if (x%align0) then
+               n = minloc(abs(re%omega), 1)
+
+               im%chiC(:) = sum(real(re%Sigma(n, :)) + im%chiC) / x%bands &
+                  - real(re%Sigma(n, :))
+            end if
 
             do i = 1, x%bands
                re%Sigma(:, i) = re%Sigma(:, i) + im%chiC(i)

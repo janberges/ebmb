@@ -4,6 +4,7 @@
 module eliashberg_self_energy
    use eliashberg_spectral_function, only: lambda_from_a2F
    use globals
+   use pade
    use tools, only: differential, inverse
    implicit none
 
@@ -218,14 +219,30 @@ contains
             !$omp end parallel do
          end do
 
-         if (x%chi .and. x%chiC) then
-            call calculate_residue(nC, .false.)
+         if (x%chi) then
+            if (x%chiC) then
+               call calculate_residue(nC, .false.)
+
+               do i = 1, x%bands
+                  im%chiC(i) = sum( &
+                     (2.0_dp * kB * x%T * sum(integral_chi(:nC - 1, :), 1) &
+                        + residues / 2.0_dp) * muC(:, i) / dosef)
+               end do
+            end if
+
+            if (x%align0) then
+               if (.not. x%chiC) im%chiC(:) = 0.0_dp
+
+               do i = 1, x%bands
+                  call coefficients(im%omega, cmplx(im%chi(:, i), kind=dp))
+
+                  residues(i) = real(continuation(cmplx(0.0_dp, x%eta, dp)))
+               end do
+
+               im%chiC(:) = sum(residues + im%chiC) / x%bands - residues
+            end if
 
             do i = 1, x%bands
-               im%chiC(i) = sum( &
-                  (2.0_dp * kB * x%T * sum(integral_chi(:nC - 1, :), 1) &
-                     + residues / 2.0_dp) * muC(:, i) / dosef)
-
                im%chi(:, i) = im%chi(:, i) + im%chiC(i)
             end do
          end if

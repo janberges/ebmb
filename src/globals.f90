@@ -82,6 +82,7 @@ module globals
       logical :: normal = .false. ! enforce normal state?
       logical :: realgw = .false. ! do real-axis GW0 calculation?
       logical :: krakro = .true.  ! send broadening to zero in imaginary part?
+      logical :: align0 = .false. ! avoid relative bands shift at zero energy?
 
       logical :: power = .true. ! use power method for single band?
    end type parameters

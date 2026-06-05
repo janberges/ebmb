@@ -125,6 +125,7 @@ contains
             case ('normal'); read (rhs, *, iostat=error) x%normal
             case ('realgw'); read (rhs, *, iostat=error) x%realgw
             case ('krakro'); read (rhs, *, iostat=error) x%krakro
+            case ('align0'); read (rhs, *, iostat=error) x%align0
 
             case ('power'); read (rhs, *, iostat=error) x%power
 
