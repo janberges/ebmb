@@ -72,7 +72,12 @@ contains
       end if
 
       if (x%la2F) then
-         print '(/, "effective electron-phonon coupling:", /)'
+         if (x%divdos) then
+            print '(/, "effective electron-phonon coupling:", /)'
+         else
+            print '(/, "effective electron-phonon interaction (eV):", /)'
+         end if
+
          do i = 1, x%bands
             print body, x%lambda(:, i)
          end do
