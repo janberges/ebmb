@@ -138,8 +138,7 @@ contains
       allocate(im%Sigma(0:no - 1, x%bands))
 
       do i = 1, x%bands
-         im%Sigma(:, i) = cmplx(im%Delta(:, i) * im%Z(:, i), &
-            im%omega * (1.0_dp - im%Z(:, i)), dp)
+         im%Sigma(:, i) = cmplx(0.0_dp, im%omega * (1.0_dp - im%Z(:, i)), dp)
       end do
    end subroutine self_energy_cdos
 end module eliashberg_self_energy_cdos
