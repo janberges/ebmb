@@ -227,7 +227,7 @@ contains
       re%chi(:, :) = (0.0_dp, 0.0_dp)
       re%Delta(:, :) = (0.0_dp, 0.0_dp)
 
-      if (x%readjust) call dos(oc%n0, .true.)
+      if (x%restoren) call dos(oc%n0, .true.)
 
       if (x%krakro) then
          !$omp parallel do private(cernel)

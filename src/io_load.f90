@@ -93,7 +93,7 @@ contains
             case ('mu'); read (rhs, *, iostat=error) x%mu
 
             case ('conserve'); read (rhs, *, iostat=error) x%conserve
-            case ('readjust'); read (rhs, *, iostat=error) x%readjust
+            case ('restoren'); read (rhs, *, iostat=error) x%restoren
             case ('chi');      read (rhs, *, iostat=error) x%chi
             case ('chiC');     read (rhs, *, iostat=error) x%chiC
 

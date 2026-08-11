@@ -51,7 +51,7 @@ module globals
       real(dp) :: mu =  0.0_dp ! initial chemical potential (eV)
 
       logical :: conserve = .true.  ! conserve particle number?
-      logical :: readjust = .false. ! readjust chemical potential?
+      logical :: restoren = .false. ! or restore it at the end?
       logical :: chi      = .true.  ! consider energy shift?
       logical :: chiC     = .false. ! consider Coulomb part of energy shift?
 

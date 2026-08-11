@@ -292,7 +292,7 @@ contains
          end do
       end if
 
-      if (x%conserve .or. x%readjust) call dos(oc%n0, .true., .false.)
+      if (x%conserve .or. x%restoren) call dos(oc%n0, .true., .false.)
 
    contains
 
