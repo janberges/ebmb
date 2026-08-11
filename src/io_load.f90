@@ -118,7 +118,7 @@ contains
 
             case ('unscale'); read (rhs, *, iostat=error) x%unscale
             case ('rescale'); read (rhs, *, iostat=error) x%rescale
-            case ('imitate'); read (rhs, *, iostat=error) x%imitate
+            case ('cdosfix'); read (rhs, *, iostat=error) x%cdosfix
 
             case ('divdos'); read (rhs, *, iostat=error) x%divdos
             case ('qppade'); read (rhs, *, iostat=error) x%qppade

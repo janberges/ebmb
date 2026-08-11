@@ -103,16 +103,16 @@ contains
       do i = 0, x%bands - 1
          p = i * no
 
-         if (x%imitate) then
-            do n = 0, no - 1
-               diag(p + n) = sum &
-                  (lambda(n:n - no + 1:-1, :, i) - lambda(n + 1:n + no, :, i))
-            end do
-         else
+         if (x%cdosfix) then
             diag(p) = sum(lambda(0, :, i))
 
             do n = 1, no - 1
                diag(p + n) = diag(p + n - 1) + 2.0_dp * sum(lambda(n, :, i))
+            end do
+         else
+            do n = 0, no - 1
+               diag(p + n) = sum &
+                  (lambda(n:n - no + 1:-1, :, i) - lambda(n + 1:n + no, :, i))
             end do
          end if
       end do

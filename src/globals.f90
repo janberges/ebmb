@@ -73,9 +73,9 @@ module globals
 
       logical :: gap = .false. ! find measurable gap?
 
-      logical :: unscale = .true.  ! unscale Coulomb pseudo-potential?
-      logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
-      logical :: imitate = .false. ! cut off renormalization function?
+      logical :: unscale = .true. ! unscale Coulomb pseudo-potential?
+      logical :: rescale = .true. ! rescale Coulomb pseudo-potential?
+      logical :: cdosfix = .true. ! converge renormalization function?
 
       logical :: divdos = .true.  ! divide by DOS at chemical potential?
       logical :: qppade = .true.  ! analytically continue quasiparticle DOS?
