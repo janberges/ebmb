@@ -29,7 +29,7 @@ contains
       do i = 1, x%bands
          !$omp parallel do private(omg, eps)
          do n = 1, x%points
-            omg = re%Z(n, i) * cmplx(re%omega(n), x%eta, dp)
+            omg = cmplx(re%omega(n), x%eta, dp) - re%Sigma(n, i) + re%chi(n, i)
 
             eps(:) = x%energy - oc%mu + re%chi(n, i)
 
