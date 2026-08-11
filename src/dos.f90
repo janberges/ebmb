@@ -21,21 +21,20 @@ contains
       integer :: i, n
 
       real(dp) :: weight(x%points)
-      complex(dp) :: omg, phi
+      complex(dp) :: omg
       complex(dp) :: eps(size(x%energy))
 
       allocate(re%dos(x%points, x%bands))
 
       do i = 1, x%bands
-         !$omp parallel do private(omg, phi, eps)
+         !$omp parallel do private(omg, eps)
          do n = 1, x%points
             omg = re%Z(n, i) * cmplx(re%omega(n), x%eta, dp)
-            phi = re%Z(n, i) * re%Delta(n, i)
 
             eps(:) = x%energy - oc%mu + re%chi(n, i)
 
             re%dos(n, i) = -sum(weight_dos(:, i) / pi &
-               * aimag((omg + eps) / (omg ** 2 - eps ** 2 - phi ** 2)))
+               * aimag((omg + eps) / (omg ** 2 - eps ** 2 - re%phi(n, i) ** 2)))
          end do
          !$omp end parallel do
       end do
