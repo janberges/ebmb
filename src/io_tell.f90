@@ -115,28 +115,29 @@ contains
 
          if (x%ldos) then
             print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
-               'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[chi]/eV', 'Im[chi]/eV', &
-               'Re[Sigma]/eV', 'Im[Sigma]/eV', 'DOS/(1/eV)'
+               'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[phi]/eV', 'Im[phi]/eV', &
+               'Re[chi]/eV', 'Im[chi]/eV', 'Re[Sigma]/eV', 'Im[Sigma]/eV', &
+               'DOS/(1/eV)'
 
             do i = 1, x%bands
-               print rule(10)
+               print rule(12)
 
                do n = 1, x%points
                   print body, re%omega(n), re%Z(n, i), re%Delta(n, i), &
-                     re%chi(n, i), re%Sigma(n, i), re%dos(n, i)
+                     re%phi(n, i), re%chi(n, i), re%Sigma(n, i), re%dos(n, i)
                end do
             end do
          else
             print head, 'omega/eV', 'Re[Z]', 'Im[Z]', &
-               'Re[Delta]/eV', 'Im[Delta]/eV', &
+               'Re[Delta]/eV', 'Im[Delta]/eV', 'Re[phi]/eV', 'Im[phi]/eV', &
                'Re[Sigma]/eV', 'Im[Sigma]/eV'
 
             do i = 1, x%bands
-               print rule(7)
+               print rule(9)
 
                do n = 1, x%points
                   print body, re%omega(n), re%Z(n, i), re%Delta(n, i), &
-                     re%Sigma(n, i)
+                     re%phi(n, i), re%Sigma(n, i)
                end do
             end do
          end if

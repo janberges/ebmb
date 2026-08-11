@@ -105,6 +105,7 @@ module globals
    type continued
       real   (dp), allocatable :: omega (:)    ! frequency (eV)
       complex(dp), allocatable :: Z     (:, :) ! renormalization
+      complex(dp), allocatable :: phi   (:, :) ! order parameter (eV)
       complex(dp), allocatable :: chi   (:, :) ! energy shift (eV)
       complex(dp), allocatable :: Sigma (:, :) ! normal self-energy (eV)
       complex(dp), allocatable :: Delta (:, :) ! gap (eV)

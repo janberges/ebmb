@@ -39,6 +39,7 @@ contains
       write (fun) 'domega:', aimag(im%Sigma)
       write (fun) 'Z:', im%Z
       write (fun) 'Delta:', im%Delta
+      write (fun) 'phi:', im%phi
 
       if (x%ldos) then
          write (fun) 'chi:', im%chi
@@ -102,6 +103,9 @@ contains
 
          write (fun) 'Re[Delta]:', real(re%Delta)
          write (fun) 'Im[Delta]:', aimag(re%Delta)
+
+         write (fun) 'Re[phi]:', real(re%phi)
+         write (fun) 'Im[phi]:', aimag(re%phi)
 
          if (x%ldos) then
             write (fun) 'Re[chi]:', real(re%chi)

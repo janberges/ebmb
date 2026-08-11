@@ -67,6 +67,7 @@ contains
       allocate(re%chi(x%points, x%bands))
       allocate(re%Sigma(x%points, x%bands))
       allocate(re%Delta(x%points, x%bands))
+      allocate(re%phi(x%points, x%bands))
       allocate(re%dos(x%points, x%bands))
 
       allocate(weight(x%points))
@@ -226,6 +227,7 @@ contains
       re%Z(:, :) = (1.0_dp, 0.0_dp)
       re%chi(:, :) = (0.0_dp, 0.0_dp)
       re%Delta(:, :) = (0.0_dp, 0.0_dp)
+      re%phi(:, :) = (0.0_dp, 0.0_dp)
 
       if (x%restoren) call dos(oc%n0, .true.)
 

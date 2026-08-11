@@ -146,7 +146,7 @@
       \mat \Sigma_i(n)
       = \I \! \underbrace{\omega_n [1 - Z_i(n)]}
       _{\displaystyle (\delta \omega_n)_i} \mat 1
-      + \underbrace{Z_i(n) \, \Delta_i(n)}
+      + \underbrace{\Delta_i(n) \, Z_i(n)}
       _{\displaystyle \phi_i(n)} \mat \sigma_1
       + \chi_i(n) \mat \sigma_3,
    \end{equation*}
@@ -597,6 +597,7 @@
          \tt domega & frequency shift                         & $(\delta \omega_n)_i$ \\
          \tt Z      & renormalization                             & $Z_i(n)$          \\
          \tt Delta  & gap                                         & $\Delta_i(n)$     \\
+         \tt phi    & order parameter                             & $\phi_i(n)$       \\
          \tt chi    & energy shift \s                             & $\chi_i(n)$       \\
          \tt phiC   & \textsc{Coulomb} part of order parameter    & ${\phi \sub C}_i$ \\
          \tt chiC   & \textsc{Coulomb} part of energy shift \s    & ${\chi \sub C}_i$ \\
@@ -621,6 +622,7 @@
          \tt omega                           & frequency                                           & $\omega$           \\
          \tt \stack{l}{Re[Z]}    {Im[Z]}     & \stack{r}{real}{imaginary} $\Big\}$ renormalization & $Z_i(\omega)$      \\
          \tt \stack{l}{Re[Delta]}{Im[Delta]} & \stack{r}{real}{imaginary} $\Big\}$ gap             & $\Delta_i(\omega)$ \\
+         \tt \stack{l}{Re[phi]}  {Im[phi]}   & \stack{r}{real}{imaginary} $\Big\}$ order parameter & $\phi_i(\omega)$   \\
          \tt \stack{l}{Re[chi]}  {Im[chi]}   & \stack{r}{real}{imaginary} $\Big\}$ energy shift \s & $\chi_i(\omega)$   \\
          \tt \stack{l}{Re[Sigma]}{Im[Sigma]} & \stack{r}{real}{imaginary} $\Big\}$ normal self-energy & $\Sigma_{1 1 i}(\omega)$ \\
          \tt DOS                             & quasiparticle density of states \s                  & $A_i(\omega)$      \\

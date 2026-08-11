@@ -31,6 +31,7 @@ contains
          allocate(omega(x%points))
          allocate(re%Delta(x%points, x%bands))
          allocate(re%Z(x%points, x%bands))
+         allocate(re%phi(x%points, x%bands))
 
          if (x%ldos) allocate(re%chi(x%points, x%bands))
 
@@ -73,6 +74,14 @@ contains
                !$omp parallel do
                do n = 1, x%points
                   re%Z(n, i) = continuation(omega(n))
+               end do
+               !$omp end parallel do
+
+               call coefficients(im%omega, cmplx(im%phi(:, i), kind=dp))
+
+               !$omp parallel do
+               do n = 1, x%points
+                  re%phi(n, i) = continuation(omega(n))
                end do
                !$omp end parallel do
 

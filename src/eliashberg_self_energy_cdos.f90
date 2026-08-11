@@ -129,6 +129,10 @@ contains
          end if
       end do
 
+      allocate(im%phi(0:no - 1, x%bands))
+
+      im%phi(:, :) = im%Delta * im%Z
+
       allocate(im%phiC(x%bands))
 
       do i = 1, x%bands
