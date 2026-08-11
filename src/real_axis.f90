@@ -21,7 +21,7 @@ contains
       real(dp) :: Delta0
       complex(dp), allocatable :: omega(:)
 
-      if (x%measurable) then
+      if (x%gap) then
          allocate(re%Delta0(x%bands))
          allocate(re%steps(x%bands))
       end if
@@ -42,11 +42,11 @@ contains
          omega(:) = cmplx(re%omega, x%eta, dp)
       end if
 
-      if (x%measurable .or. x%points .gt. 0) then
+      if (x%gap .or. x%points .gt. 0) then
          do i = 1, x%bands
             call coefficients(im%omega, cmplx(im%Delta(:, i), kind=dp))
 
-            if (x%measurable) then
+            if (x%gap) then
                re%Delta0(i) = 1.0_dp
                re%steps(i) = -1
 

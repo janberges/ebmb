@@ -114,7 +114,7 @@ contains
 
             case ('eta', '0+'); read (rhs, *, iostat=error) x%eta
 
-            case ('measurable'); read (rhs, *, iostat=error) x%measurable
+            case ('measurable', 'gap'); read (rhs, *, iostat=error) x%gap
 
             case ('unscale'); read (rhs, *, iostat=error) x%unscale
             case ('rescale'); read (rhs, *, iostat=error) x%rescale

@@ -85,7 +85,7 @@ contains
 
       if (x%ldos) write (fun) 'chiC:', im%chiC
 
-      if (x%measurable) then
+      if (x%gap) then
          write (fun) 'INT:status0:', re%steps
          write (fun) 'REAL:Delta0:', re%Delta0
       end if

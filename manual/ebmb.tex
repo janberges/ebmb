@@ -547,7 +547,7 @@
          \tt points        & 0           & 1                & --                  & number of real-axis frequencies            & $+$ & $-$ & $-$ & $-$ \\
          \tt logscale      & 1           & 1/eV             & --                  & scaling of logarithmic sampling            & $+$ & $-$ & $-$ & $-$ \\
          \tt eta, 0+       & $10^{-3}$   & eV               & $\eta$              & broadening of retarded objects             & $+$ & $-$ & $-$ & $-$ \\
-         \tt measurable    & \tt false   & --               & --                  & find measurable gap?                       & $+$ & $-$ & $-$ & $-$ \\[\gap]
+         \tt gap           & \tt false   & --               & --                  & find measurable gap?                       & $+$ & $-$ & $-$ & $-$ \\[\gap]
          \tt unscale       & \tt true    & --               & --                  & estimate missing {\tt muC} from {\tt mu*}? & $+$ & $+$ & $+$ & $-$ \\
          \tt rescale       & \tt true    & --               & --                  & use $\mu^*_{i j}$ rescaled for cutoff?     & $+$ & $+$ & $+$ & $-$ \\
          \tt imitate       & \tt false   & --               & --                  & use $Z_i(n)$ biased by cutoff?             & $-$ & $-$ & $+$ & $-$ \\[\gap]
@@ -600,7 +600,7 @@
          \tt chi    & energy shift \s                             & $\chi_i(n)$       \\
          \tt phiC   & \textsc{Coulomb} part of order parameter    & ${\phi \sub C}_i$ \\
          \tt chiC   & \textsc{Coulomb} part of energy shift \s    & ${\chi \sub C}_i$ \\
-         \tt status & status (steps until convergence or $-1$)    & --                \\
+         \tt status & steps until convergence or $-1$             & --                \\
          \hline
          \multicolumn3l{\textbf{occupancy results}} \hfill \s~\texttt{DOS given} \\
          \hline
@@ -625,10 +625,10 @@
          \tt \stack{l}{Re[Sigma]}{Im[Sigma]} & \stack{r}{real}{imaginary} $\Big\}$ normal self-energy & $\Sigma_{1 1 i}(\omega)$ \\
          \tt DOS                             & quasiparticle density of states \s                  & $A_i(\omega)$      \\
          \hline
-         \multicolumn3l{\textbf{measurable results} \hfill \texttt{measurable=true}} \\
+         \multicolumn3l{\textbf{gap results} \hfill \texttt{gap=true}} \\
          \hline
-         \tt Delta0  & measurable gap           & \llap{${\Delta_0}_i = \operatorname{Re}[\Delta_i({\Delta_0}_i)]$} \\
-         \tt status0 & status of measurable gap & --
+         \tt Delta0  & measurable gap                  & \llap{${\Delta_0}_i = \operatorname{Re}[\Delta_i({\Delta_0}_i)]$} \\
+         \tt status0 & steps until convergence or $-1$ & --
       \end{tabular}
       \caption{Keys used in binary output.}
       \label{identifiers}

@@ -100,7 +100,7 @@ contains
       print '(/, "Coulomb part of order parameter (eV):", /)'
       print more, im%phiC
 
-      if (x%measurable) then
+      if (x%gap) then
          print '(/, "measurable gap (eV):", /)'
 
          more = edit('(x, " [", I0, "]")')

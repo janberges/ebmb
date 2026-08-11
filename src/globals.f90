@@ -71,7 +71,7 @@ module globals
 
       real(dp) :: eta = 1e-3_dp ! broadening of retarded objects (eV)
 
-      logical :: measurable = .false. ! find measurable gap?
+      logical :: gap = .false. ! find measurable gap?
 
       logical :: unscale = .true.  ! unscale Coulomb pseudo-potential?
       logical :: rescale = .true.  ! rescale Coulomb pseudo-potential?
