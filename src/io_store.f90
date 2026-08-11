@@ -110,12 +110,12 @@ contains
          if (x%ldos) then
             write (fun) 'Re[chi]:', real(re%chi)
             write (fun) 'Im[chi]:', aimag(re%chi)
-
-            write (fun) 'DOS:', re%dos
          end if
 
          write (fun) 'Re[Sigma]:', real(re%Sigma)
          write (fun) 'Im[Sigma]:', aimag(re%Sigma)
+
+         if (x%ldos) write (fun) 'DOS:', re%dos
       end if
 
       close (fun)

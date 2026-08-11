@@ -30,24 +30,26 @@ contains
          print '(/, "imaginary-axis solution [", I0, "]:", /)', im%steps
 
          if (x%ldos) then
-            print head, 'omega/eV', 'Z', 'Delta/eV', 'chi/eV'
+            print head, 'omega/eV', 'domega/eV', 'Z', 'Delta/eV', 'phi/eV', &
+               'chi/eV'
 
             do i = 1, x%bands
-               print rule(4)
+               print rule(6)
 
                do n = 0, size(im%omega) - 1
-                  print body, im%omega(n), im%Z(n, i), im%Delta(n, i), &
-                     im%chi(n, i)
+                  print body, im%omega(n), aimag(im%Sigma(n, i)), im%Z(n, i), &
+                     im%Delta(n, i), im%phi(n, i), im%chi(n, i)
                end do
             end do
          else
-            print head, 'omega/eV', 'Z', 'Delta/eV'
+            print head, 'omega/eV', 'domega/eV', 'Z', 'Delta/eV', 'phi/eV'
 
             do i = 1, x%bands
-               print rule(3)
+               print rule(5)
 
                do n = 0, size(im%omega) - 1
-                  print body, im%omega(n), im%Z(n, i), im%Delta(n, i)
+                  print body, im%omega(n), aimag(im%Sigma(n, i)), im%Z(n, i), &
+                     im%Delta(n, i), im%phi(n, i)
                end do
             end do
          end if
