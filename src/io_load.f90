@@ -121,7 +121,7 @@ contains
             case ('imitate'); read (rhs, *, iostat=error) x%imitate
 
             case ('divdos'); read (rhs, *, iostat=error) x%divdos
-            case ('stable'); read (rhs, *, iostat=error) x%stable
+            case ('qppade'); read (rhs, *, iostat=error) x%qppade
             case ('normal'); read (rhs, *, iostat=error) x%normal
             case ('realgw'); read (rhs, *, iostat=error) x%realgw
             case ('krakro'); read (rhs, *, iostat=error) x%krakro

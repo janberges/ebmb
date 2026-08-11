@@ -17,7 +17,6 @@ results = ebmb.get(
    upper=+0.25,
    eta=1e-4,
    points=10001,
-   stable=True,
 )
 
 print('Integral of noninteracting DOS: %g' % results['states'])

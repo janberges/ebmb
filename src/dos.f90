@@ -9,7 +9,7 @@ module dos
    implicit none
 
    private
-   public :: density_of_states, density_of_states_stable
+   public :: density_of_states, density_of_states_pade
 
 contains
 
@@ -47,7 +47,7 @@ contains
       oc%inspect = sum(weight * sum(re%dos, 2))
    end subroutine density_of_states
 
-   subroutine density_of_states_stable(x, im, re, oc)
+   subroutine density_of_states_pade(x, im, re, oc)
       type(parameters), intent(in) :: x
       type(matsubara), intent(in) :: im
       type(continued), intent(inout) :: re
@@ -85,5 +85,5 @@ contains
       call differential(re%omega, weight)
 
       oc%inspect = sum(weight * sum(re%dos, 2))
-   end subroutine density_of_states_stable
+   end subroutine density_of_states_pade
 end module dos

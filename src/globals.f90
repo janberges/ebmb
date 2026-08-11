@@ -78,7 +78,7 @@ module globals
       logical :: imitate = .false. ! cut off renormalization function?
 
       logical :: divdos = .true.  ! divide by DOS at chemical potential?
-      logical :: stable = .false. ! calculate quasiparticle DOS differently?
+      logical :: qppade = .true.  ! analytically continue quasiparticle DOS?
       logical :: normal = .false. ! enforce normal state?
       logical :: realgw = .false. ! do real-axis GW0 calculation?
       logical :: krakro = .true.  ! send broadening to zero in imaginary part?
@@ -109,7 +109,7 @@ module globals
       complex(dp), allocatable :: Sigma (:, :) ! normal self-energy (eV)
       complex(dp), allocatable :: Delta (:, :) ! gap (eV)
       real   (dp), allocatable :: Delta0(:)    ! measurable gap (eV)
-      real   (dp), allocatable :: dos   (:, :) ! quasiparticle density (1/eV)
+      real   (dp), allocatable :: dos   (:, :) ! quasiparticle DOS (1/eV)
 
       integer(i4), allocatable :: steps(:) ! steps until convergence
    end type continued
