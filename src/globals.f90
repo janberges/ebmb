@@ -18,8 +18,8 @@ module globals
    integer, parameter :: fun = 11 ! file unit number
 
    type parameters
-      character(1024) :: output = 'none'   ! name of output file
-      character(50)   :: flomat = 'F16.12' ! number format
+      character(1024) :: output = 'none'  ! name of output file
+      character(50)   :: flomat = 'F14.9' ! number format
 
       logical :: tell = .true. ! use standard output?
 
