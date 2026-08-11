@@ -47,7 +47,7 @@ module globals
       logical :: la2F = .false. ! Eliashberg spectral function given?
       logical :: diag = .false. ! interaction diagonal?
 
-      real(dp) ::  n = -1.0_dp ! initial occupancy number
+      real(dp) ::  n = -1.0_dp ! initial particle number
       real(dp) :: mu =  0.0_dp ! initial chemical potential (eV)
 
       logical :: conserve = .true.  ! conserve particle number?
@@ -58,7 +58,7 @@ module globals
       integer(i4) :: steps = 250000 ! maximum number of iterations
 
       real(dp) :: error = 1e-05_dp ! bisection error (a.u.)
-      real(dp) :: toln  = 1e-10_dp ! tolerance for occupancy number
+      real(dp) :: toln  = 1e-10_dp ! tolerance for particle number
       real(dp) ::  zero = 1e-10_dp ! negligible gap at critical temperature (eV)
       real(dp) ::  rate = 1e-01_dp ! growth rate for bound search
 
@@ -117,7 +117,7 @@ module globals
    type occupancy
       real(dp) :: states  ! integral of density of states
       real(dp) :: inspect ! integral of spectral function
-      real(dp) :: n0, n   ! initial and final occupancy number
+      real(dp) :: n0, n   ! initial and final particle number
       real(dp) :: mu0, mu ! initial and final chemical potential (eV)
    end type occupancy
 

@@ -530,7 +530,7 @@
          \tt diag          & \tt false   & --               & --                  & only diagonal coupling given?              & $+$ & $+$ & $+$ & $-$ \\[\gap]
          \tt dos, DOS      & \tt none    & --               & --                  & file with density of states                & $+$ & $+$ & $+$ & $-$ \\
          \tt a2f, a2F      & \tt none    & --               & --                  & file with \textsc{Eliashberg} function     & $+$ & $+$ & $+$ & $-$ \\[\gap]
-         \tt n             & --          & 1                & $n_0$               & initial occupancy number                   & $+$ & $+$ & $+$ & $-$ \\
+         \tt n             & --          & 1                & $n_0$               & initial particle number                    & $+$ & $+$ & $+$ & $-$ \\
          \tt mu            & 0           & eV               & $\mu_0$             & initial chemical potential                 & $+$ & $+$ & $+$ & $-$ \\
          \tt conserve      & \tt true    & --               & --                  & conserve particle number?                  & $+$ & $+$ & $+$ & $-$ \\
          \tt readjust      & \tt false   & --               & --                  & readjust chemical potential?               & $+$ & $-$ & $-$ & $-$ \\
@@ -538,7 +538,7 @@
          \tt chiC          & \tt false   & --               & --           & consider \textsc{Coulomb} part ${\chi \sub C}_i$? & $+$ & $+$ & $+$ & $-$ \\[\gap]
          \tt steps         & 250000      & 1                & --                  & maximum number of iterations               & $+$ & $+$ & $+$ & $-$ \\[\gap]
          \tt epsilon       & $10^{-13}$  & a.u.             & --                  & negligible float difference                & $+$ & $+$ & $+$ & $-$ \\
-         \tt toln          & $10^{-10}$  & 1                & --                  & tolerance for occupancy number             & $+$ & $+$ & $+$ & $-$ \\
+         \tt toln          & $10^{-10}$  & 1                & --                  & tolerance for particle number              & $+$ & $+$ & $+$ & $-$ \\
          \tt error         & $10^{-5}$   & a.u.             & --                  & bisection error                            & $-$ & $+$ & $+$ & $-$ \\
          \tt zero          & $10^{-10}$  & eV               & --                  & negligible gap at $T \sub c$ (threshold)   & $-$ & $+$ & $-$ & $-$ \\
          \tt rate          & $10^{-1}$   & 1                & --                  & growth rate for bound search               & $-$ & $+$ & $+$ & $-$ \\[\gap]
@@ -606,7 +606,7 @@
          \hline
          \tt states             & integral of density of states        & $\sum_i \int \D \epsilon \, n_i(\epsilon)$ \\
          \tt inspect            & integral of spectral function \st        & $\sum_i \int \D \omega \, A_i(\omega)$ \\
-         \tt \stack{l}{n0} {n}  & \stack{r}{initial}{final} $\Big\}$ occupancy number   & \stack{r}{$n_0$}  {$n$}   \\
+         \tt \stack{l}{n0} {n}  & \stack{r}{initial}{final} $\Big\}$ particle number    & \stack{r}{$n_0$}  {$n$}   \\
          \tt \stack{l}{mu0}{mu} & \stack{r}{initial}{final} $\Big\}$ chemical potential & \stack{r}{$\mu_0$}{$\mu$} \\
          \hline
          \multicolumn3l{\textbf{effective parameters} \hfill \texttt{a2F given}} \\

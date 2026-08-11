@@ -64,7 +64,7 @@ contains
             print more, oc%inspect
          end if
 
-         print '(/, "initial and final occupancy number:", /)'
+         print '(/, "initial and final particle number:", /)'
          print more, oc%n0, oc%n
 
          print '(/, "initial and final chemical potential (eV):", /)'
