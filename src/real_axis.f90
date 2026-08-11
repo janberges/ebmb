@@ -29,8 +29,8 @@ contains
       if (x%points .gt. 0) then
          allocate(re%omega(x%points))
          allocate(omega(x%points))
-         allocate(re%Delta(x%points, x%bands))
          allocate(re%Z(x%points, x%bands))
+         allocate(re%Delta(x%points, x%bands))
          allocate(re%phi(x%points, x%bands))
 
          if (x%ldos) allocate(re%chi(x%points, x%bands))

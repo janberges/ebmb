@@ -92,13 +92,13 @@ contains
          print more, x%omega2nd
       end if
 
+      print '(/, "Coulomb part of order parameter (eV):", /)'
+      print more, im%phiC
+
       if (x%ldos) then
          print '(/, "Coulomb part of energy shift (eV):", /)'
          print more, im%chiC
       end if
-
-      print '(/, "Coulomb part of order parameter (eV):", /)'
-      print more, im%phiC
 
       if (x%gap) then
          print '(/, "measurable gap (eV):", /)'
