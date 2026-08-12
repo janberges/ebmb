@@ -47,7 +47,7 @@ module globals
       logical :: la2F = .false. ! Eliashberg spectral function given?
       logical :: diag = .false. ! interaction diagonal?
 
-      real(dp) ::  n = -1.0_dp ! initial particle number
+      real(dp) :: n  = -1.0_dp ! initial particle number
       real(dp) :: mu =  0.0_dp ! initial chemical potential (eV)
 
       logical :: conserve = .true.  ! conserve particle number?
@@ -59,8 +59,8 @@ module globals
 
       real(dp) :: error = 1e-05_dp ! bisection error (a.u.)
       real(dp) :: toln  = 1e-10_dp ! tolerance for particle number
-      real(dp) ::  zero = 1e-10_dp ! negligible gap at critical temperature (eV)
-      real(dp) ::  rate = 1e-01_dp ! growth rate for bound search
+      real(dp) :: zero  = 1e-10_dp ! negligible gap at critical temperature (eV)
+      real(dp) :: rate  = 1e-01_dp ! growth rate for bound search
 
       real(dp) :: lower =  0.0_dp ! minimum real-axis frequency (eV)
       real(dp) :: upper = -1.0_dp ! maximum real-axis frequency (eV)
