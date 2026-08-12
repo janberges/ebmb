@@ -31,6 +31,7 @@ contains
 
       integer :: i, j ! band indices
       integer :: n ! argument number
+      integer :: p, c ! letter position and code
 
       integer :: error ! I/O status
 
@@ -59,32 +60,38 @@ contains
 
          error = 0
 
+         do p = 1, len(lhs)
+            c = iachar(lhs(p:p))
+
+            if (c .ge. 65 .and. c .le. 90) lhs(p:p) = achar(c + 32)
+         end do
+
          select case (lhs)
             case ('tell'); read (rhs, *, iostat=error) x%tell
 
             case ('form'); x%flomat = rhs
             case ('file'); x%output = rhs
 
-            case ('T'); read (rhs, *, iostat=error) x%T
+            case ('t'); read (rhs, *, iostat=error) x%T
 
-            case ('omegaE');  read (rhs, *, iostat=error) x%omegaE
+            case ('omegae');  read (rhs, *, iostat=error) x%omegaE
             case ('cutoff');  read (rhs, *, iostat=error) x%cutoff
-            case ('cutoffC'); read (rhs, *, iostat=error) x%cutoffC
+            case ('cutoffc'); read (rhs, *, iostat=error) x%cutoffC
 
             case ('lambda', 'lamda')
                lambda = rhs
                elements = matches(rhs, ',') + 1
 
-            case ('muStar', 'mu*')
+            case ('mustar', 'mu*')
                muStar = rhs
                elements = matches(rhs, ',') + 1
 
-            case ('muC')
+            case ('muc')
                muC = rhs
                elements = matches(rhs, ',') + 1
 
-            case ('dos', 'DOS'); dos_file = rhs
-            case ('a2f', 'a2F'); a2F_file = rhs
+            case ('dos'); dos_file = rhs
+            case ('a2f'); a2F_file = rhs
 
             case ('bands');  read (rhs, *, iostat=error) x%bands
             case ('diag');   read (rhs, *, iostat=error) x%diag
@@ -97,7 +104,7 @@ contains
             case ('restoren'); read (rhs, *, iostat=error) x%restoren
 
             case ('chi');    read (rhs, *, iostat=error) x%chi
-            case ('chiC');   read (rhs, *, iostat=error) x%chiC
+            case ('chic');   read (rhs, *, iostat=error) x%chiC
             case ('align0'); read (rhs, *, iostat=error) x%align0
             case ('normal'); read (rhs, *, iostat=error) x%normal
 
