@@ -60,10 +60,10 @@ contains
          error = 0
 
          select case (lhs)
-            case ('file'); x%output = rhs
-            case ('form'); x%flomat = rhs
-
             case ('tell'); read (rhs, *, iostat=error) x%tell
+
+            case ('form'); x%flomat = rhs
+            case ('file'); x%output = rhs
 
             case ('T'); read (rhs, *, iostat=error) x%T
 
@@ -83,27 +83,31 @@ contains
                muC = rhs
                elements = matches(rhs, ',') + 1
 
-            case ('bands'); read (rhs, *, iostat=error) x%bands
-            case ('diag');  read (rhs, *, iostat=error) x%diag
-
             case ('dos', 'DOS'); dos_file = rhs
             case ('a2f', 'a2F'); a2F_file = rhs
+
+            case ('bands');  read (rhs, *, iostat=error) x%bands
+            case ('diag');   read (rhs, *, iostat=error) x%diag
+            case ('divdos'); read (rhs, *, iostat=error) x%divdos
 
             case ('n');  read (rhs, *, iostat=error) x%n
             case ('mu'); read (rhs, *, iostat=error) x%mu
 
             case ('conserve'); read (rhs, *, iostat=error) x%conserve
             case ('restoren'); read (rhs, *, iostat=error) x%restoren
-            case ('chi');      read (rhs, *, iostat=error) x%chi
-            case ('chiC');     read (rhs, *, iostat=error) x%chiC
+
+            case ('chi');    read (rhs, *, iostat=error) x%chi
+            case ('chiC');   read (rhs, *, iostat=error) x%chiC
+            case ('align0'); read (rhs, *, iostat=error) x%align0
+            case ('normal'); read (rhs, *, iostat=error) x%normal
 
             case ('steps', 'limit'); read (rhs, *, iostat=error) x%steps
 
             case ('epsilon'); read (rhs, *, iostat=error) eps
             case ('toln');    read (rhs, *, iostat=error) x%toln
             case ('error');   read (rhs, *, iostat=error) x%error
-            case ('zero');    read (rhs, *, iostat=error) x%zero
             case ('rate');    read (rhs, *, iostat=error) x%rate
+            case ('zero');    read (rhs, *, iostat=error) x%zero
 
             case ('lower'); read (rhs, *, iostat=error) x%lower
             case ('upper'); read (rhs, *, iostat=error) x%upper
@@ -120,14 +124,11 @@ contains
             case ('rescale'); read (rhs, *, iostat=error) x%rescale
             case ('cdosfix'); read (rhs, *, iostat=error) x%cdosfix
 
-            case ('divdos'); read (rhs, *, iostat=error) x%divdos
             case ('qppade'); read (rhs, *, iostat=error) x%qppade
-            case ('normal'); read (rhs, *, iostat=error) x%normal
+            case ('power');  read (rhs, *, iostat=error) x%power
+
             case ('realgw'); read (rhs, *, iostat=error) x%realgw
             case ('krakro'); read (rhs, *, iostat=error) x%krakro
-            case ('align0'); read (rhs, *, iostat=error) x%align0
-
-            case ('power'); read (rhs, *, iostat=error) x%power
 
             case default
                print '("Error: Unknown parameter """, A, """")', lhs

@@ -18,10 +18,10 @@ module globals
    integer, parameter :: fun = 11 ! file unit number
 
    type parameters
-      character(1024) :: output = 'none'  ! name of output file
-      character(50)   :: flomat = 'F14.9' ! number format
-
       logical :: tell = .true. ! use standard output?
+
+      character(50)   :: flomat = 'F14.9' ! number format
+      character(1024) :: output = 'none'  ! name of output file
 
       real(dp) :: T = 10.0_dp ! temperature (K)
 
@@ -31,8 +31,6 @@ module globals
 
       real(dp) :: omegaLog = 0.0_dp ! logarithmic avarage frequency (eV)
       real(dp) :: omega2nd = 0.0_dp ! second-moment avarage frequency (eV)
-
-      integer(i4) :: bands = 1 ! number of electronic bands
 
       real(dp), allocatable :: lambda(:, :) ! electron-phonon coupling
       real(dp), allocatable :: muStar(:, :) ! Coulomb pseudo-potential
@@ -45,22 +43,29 @@ module globals
 
       logical :: ldos = .false. ! density of states given?
       logical :: la2F = .false. ! Eliashberg spectral function given?
-      logical :: diag = .false. ! interaction diagonal?
+
+      integer(i4) :: bands = 1 ! number of electronic bands
+
+      logical :: diag   = .false. ! interaction diagonal?
+      logical :: divdos = .true.  ! divide by DOS at chemical potential?
 
       real(dp) :: n  = -1.0_dp ! initial particle number
       real(dp) :: mu =  0.0_dp ! initial chemical potential (eV)
 
       logical :: conserve = .true.  ! conserve particle number?
       logical :: restoren = .false. ! or restore it at the end?
-      logical :: chi      = .true.  ! consider energy shift?
-      logical :: chiC     = .false. ! consider Coulomb part of energy shift?
+
+      logical :: chi    = .true.  ! consider energy shift?
+      logical :: chiC   = .false. ! consider Coulomb part of energy shift?
+      logical :: align0 = .false. ! avoid relative bands shift at zero energy?
+      logical :: normal = .false. ! enforce normal state?
 
       integer(i4) :: steps = 250000 ! maximum number of iterations
 
-      real(dp) :: error = 1e-05_dp ! bisection error (a.u.)
       real(dp) :: toln  = 1e-10_dp ! tolerance for particle number
-      real(dp) :: zero  = 1e-10_dp ! negligible gap at critical temperature (eV)
+      real(dp) :: error = 1e-05_dp ! bisection error (a.u.)
       real(dp) :: rate  = 1e-01_dp ! growth rate for bound search
+      real(dp) :: zero  = 1e-10_dp ! negligible gap at critical temperature (eV)
 
       real(dp) :: lower =  0.0_dp ! minimum real-axis frequency (eV)
       real(dp) :: upper = -1.0_dp ! maximum real-axis frequency (eV)
@@ -77,14 +82,11 @@ module globals
       logical :: rescale = .true. ! rescale Coulomb pseudo-potential?
       logical :: cdosfix = .true. ! converge renormalization function?
 
-      logical :: divdos = .true.  ! divide by DOS at chemical potential?
-      logical :: qppade = .true.  ! analytically continue quasiparticle DOS?
-      logical :: normal = .false. ! enforce normal state?
+      logical :: qppade = .true. ! analytically continue quasiparticle DOS?
+      logical :: power  = .true. ! use power method for single band?
+
       logical :: realgw = .false. ! do real-axis GW0 calculation?
       logical :: krakro = .true.  ! send broadening to zero in imaginary part?
-      logical :: align0 = .false. ! avoid relative bands shift at zero energy?
-
-      logical :: power = .true. ! use power method for single band?
    end type parameters
 
    type matsubara
