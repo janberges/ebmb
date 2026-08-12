@@ -54,7 +54,7 @@ program ebmb
       call realize(x, im, re)
 
       if (x%ldos .and. x%points .gt. 0) then
-         if (x%qppade) then
+         if (x%apade) then
             call density_of_states_pade(x, im, re, oc)
          else
             call density_of_states(x, re, oc)

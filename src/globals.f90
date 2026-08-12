@@ -82,8 +82,8 @@ module globals
       logical :: rescale = .true. ! rescale Coulomb pseudo-potential?
       logical :: cdosfix = .true. ! converge renormalization function?
 
-      logical :: qppade = .true. ! analytically continue quasiparticle DOS?
-      logical :: power  = .true. ! use power method for single band?
+      logical :: apade = .true. ! analytically continue quasiparticle DOS?
+      logical :: power = .true. ! use power method for single band?
 
       logical :: realgw = .false. ! do real-axis GW0 calculation?
       logical :: krakro = .true.  ! send broadening to zero in imaginary part?

@@ -124,8 +124,8 @@ contains
             case ('rescale'); read (rhs, *, iostat=error) x%rescale
             case ('cdosfix'); read (rhs, *, iostat=error) x%cdosfix
 
-            case ('qppade'); read (rhs, *, iostat=error) x%qppade
-            case ('power');  read (rhs, *, iostat=error) x%power
+            case ('apade'); read (rhs, *, iostat=error) x%apade
+            case ('power'); read (rhs, *, iostat=error) x%power
 
             case ('realgw'); read (rhs, *, iostat=error) x%realgw
             case ('krakro'); read (rhs, *, iostat=error) x%krakro
