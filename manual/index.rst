@@ -23,4 +23,5 @@
    :caption: More
    :hidden:
 
+   changelog
    genindex
