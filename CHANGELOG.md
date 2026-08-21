@@ -14,7 +14,7 @@ See Git commit history for more detailed list of changes.
 * Model input data for one-dimensional chain
 * Improved documentation including website with examples
 * Case-insensitive input parameters
-* New inputs: `diag`, `divdos`, `restoren`, `toln`, `chiC`, `align0`,
+* New inputs: `cutoffP`, `diag`, `divdos`, `restoren`, `toln`, `chiC`, `align0`,
   `logscale`, `apade`, `realgw`, `krakro` (aliases: `steps`, `points`, `gap`)
 * Changed inputs: `upper` replaces `clip`, `cdosfix` replaces `imitate`
 * New outputs: `domega`, `Re[Sigma]`, `Im[Sigma]`, `phi`, `Re[phi]`, `Im[phi]`,
