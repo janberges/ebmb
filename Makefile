@@ -3,12 +3,17 @@ FC = gfortran
 flags_gfortran = -std=f2003 -pedantic -Wall -Wno-maybe-uninitialized -fopenmp
 flags_ifort = -O0 -stand f03 -warn all -qopenmp
 flags_ifx = ${flags_ifort}
+flags_flang = -Werror -fopenmp
+flags_flang-new = ${flags_flang}
 
 libs_gfortran = -llapack -lblas
 libs_ifort = -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
 libs_ifx = ${libs_ifort}
+libs_flang = ${libs_gfortran}
+libs_flang-new = ${libs_flang}
 
 FFLAGS = ${flags_$(FC)}
+LDFLAGS := ${FFLAGS}
 LDLIBS = ${libs_$(FC)}
 
 needless = .DS_Store ebmb.pyc manual/ebmb.aux manual/.ebmb.lb manual/ebmb.log manual/ebmb.out manual/ebmb.synctex.gz ~ebmb.tmp.dat
@@ -18,6 +23,8 @@ needless = .DS_Store ebmb.pyc manual/ebmb.aux manual/.ebmb.lb manual/ebmb.log ma
 modules_gfortran = -Jbuild
 modules_ifort = -module build
 modules_ifx = ${modules_ifort}
+modules_flang = -module-dir build
+modules_flang-new = ${modules_flang}
 
 override FFLAGS += ${modules_$(FC)}
 
@@ -36,7 +43,7 @@ cleaner: clean
 	rm -f $(programs)
 
 $(programs):
-	$(FC) $(FFLAGS) -o $@ $^ $(LDLIBS)
+	$(FC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 build/%.o: src/%.f90
 	$(FC) $(FFLAGS) -o $@ -c $<

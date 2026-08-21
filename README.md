@@ -7,7 +7,7 @@ For further information typeset `manual/ebmb.tex` or read it
 
 ## Installation
 
-The makefile is designed for the GNU or Intel Fortran compiler:
+The makefile is designed for the GNU, Intel, and LLVM Fortran compilers:
 
     make FC=gfortran FFLAGS='-O3 -fopenmp'
     python3 -m pip install -e .
