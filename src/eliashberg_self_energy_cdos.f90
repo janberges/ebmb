@@ -33,7 +33,9 @@ contains
       no = ceiling(x%cutoff  * nE - 0.5_dp)
       nC = ceiling(x%cutoffC * nE - 0.5_dp)
 
-      if (no .lt. 1)  no = 1
+      if (no .lt. 1) no = 1
+      if (nC .lt. 1) nC = 1
+      if (nC .gt. no) nC = no
 
       allocate(im%omega(0:no - 1))
 
