@@ -52,16 +52,22 @@ contains
       type(continued), intent(inout) :: re
       type(occupancy), intent(inout) :: oc
 
-      integer :: i, n
+      integer :: i, n, nP
 
       real(dp) :: omg, eps(size(x%energy)), weight(x%points)
-      complex(dp) :: green(0:size(im%omega) - 1)
+      complex(dp), allocatable :: green(:)
 
+      nP = ceiling(x%cutoffP * x%omegaE / (2.0_dp * pi * kB * x%T) - 0.5_dp)
+
+      if (nP .lt. 1) nP = 1
+      if (nP .gt. size(im%omega)) nP = size(im%omega)
+
+      allocate(green(0:nP - 1))
       allocate(re%dos(x%points, x%bands))
 
       do i = 1, x%bands
          !$omp parallel do private(omg, eps)
-         do n = 0, size(im%omega) - 1
+         do n = 0, nP - 1
             omg = im%Z(n, i) * im%omega(n)
 
             eps(:) = x%energy - oc%mu + im%chi(n, i)
@@ -71,7 +77,7 @@ contains
          end do
          !$omp end parallel do
 
-         call coefficients(im%omega, green)
+         call coefficients(im%omega(:nP - 1), green)
 
          !$omp parallel do
          do n = 1, x%points

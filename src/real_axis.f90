@@ -17,9 +17,14 @@ contains
       type(matsubara), intent(in) :: im
       type(continued), intent(out) :: re
 
-      integer :: i, n
+      integer :: i, n, nP
       real(dp) :: Delta0
       complex(dp), allocatable :: omega(:)
+
+      nP = ceiling(x%cutoffP * x%omegaE / (2.0_dp * pi * kB * x%T) - 0.5_dp)
+
+      if (nP .lt. 1) nP = 1
+      if (nP .gt. size(im%omega)) nP = size(im%omega)
 
       if (x%gap) then
          allocate(re%Delta0(x%bands))
@@ -45,7 +50,8 @@ contains
 
       if (x%gap .or. x%points .gt. 0) then
          do i = 1, x%bands
-            call coefficients(im%omega, cmplx(im%Delta(:, i), kind=dp))
+            call coefficients(im%omega(:nP - 1), &
+               cmplx(im%Delta(:nP - 1, i), kind=dp))
 
             if (x%gap) then
                re%Delta0(i) = 1.0_dp
@@ -69,7 +75,8 @@ contains
                end do
                !$omp end parallel do
 
-               call coefficients(im%omega, cmplx(im%Z(:, i), kind=dp))
+               call coefficients(im%omega(:nP - 1), &
+                  cmplx(im%Z(:nP - 1, i), kind=dp))
 
                !$omp parallel do
                do n = 1, x%points
@@ -77,7 +84,8 @@ contains
                end do
                !$omp end parallel do
 
-               call coefficients(im%omega, cmplx(im%phi(:, i), kind=dp))
+               call coefficients(im%omega(:nP - 1), &
+                  cmplx(im%phi(:nP - 1, i), kind=dp))
 
                !$omp parallel do
                do n = 1, x%points
@@ -86,7 +94,8 @@ contains
                !$omp end parallel do
 
                if (x%ldos) then
-                  call coefficients(im%omega, cmplx(im%chi(:, i), kind=dp))
+                  call coefficients(im%omega(:nP - 1), &
+                     cmplx(im%chi(:nP - 1, i), kind=dp))
 
                   !$omp parallel do
                   do n = 1, x%points
@@ -95,7 +104,7 @@ contains
                   !$omp end parallel do
                end if
 
-               call coefficients(im%omega, im%Sigma(:, i))
+               call coefficients(im%omega(:nP - 1), im%Sigma(:nP - 1, i))
 
                !$omp parallel do
                do n = 1, x%points

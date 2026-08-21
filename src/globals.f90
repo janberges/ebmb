@@ -28,6 +28,7 @@ module globals
       real(dp) :: omegaE  = 0.02_dp ! Einstein frequency (eV)
       real(dp) :: cutoff  = 15.0_dp ! overall cutoff frequency (omegaE)
       real(dp) :: cutoffC = -1.0_dp ! Coulomb cutoff frequency (omegaE)
+      real(dp) :: cutoffP = -1.0_dp ! Pade cutoff frequency (omegaE)
 
       real(dp) :: omegaLog = 0.0_dp ! logarithmic avarage frequency (eV)
       real(dp) :: omega2nd = 0.0_dp ! second-moment avarage frequency (eV)

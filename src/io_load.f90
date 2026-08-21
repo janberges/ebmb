@@ -77,6 +77,7 @@ contains
             case ('omegae');  read (rhs, *, iostat=error) x%omegaE
             case ('cutoff');  read (rhs, *, iostat=error) x%cutoff
             case ('cutoffc'); read (rhs, *, iostat=error) x%cutoffC
+            case ('cutoffp'); read (rhs, *, iostat=error) x%cutoffP
 
             case ('lambda', 'lamda')
                lambda = rhs
@@ -232,6 +233,7 @@ contains
       end if
 
       if (x%cutoffC .lt. 0.0_dp) x%cutoffC = x%cutoff
+      if (x%cutoffP .lt. 0.0_dp) x%cutoffP = x%cutoff
 
       if (x%upper .lt. x%lower) x%upper = x%cutoff * x%omegaE
    end subroutine load

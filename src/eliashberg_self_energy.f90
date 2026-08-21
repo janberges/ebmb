@@ -35,7 +35,7 @@ contains
       real(dp), allocatable :: integral_phi(:, :)
       real(dp), allocatable :: integral_chi(:, :)
 
-      integer :: step, i, j, n, m, p, q, no, nC
+      integer :: step, i, j, n, m, p, q, no, nC, nP
 
       if (.not. x%normal .and. x%steps .le. 10) then
          print '("Warning: Superconducting solution should be self-consistent")'
@@ -47,10 +47,13 @@ contains
 
       no = ceiling(x%cutoff  * nE - 0.5_dp)
       nC = ceiling(x%cutoffC * nE - 0.5_dp)
+      nP = ceiling(x%cutoffP * nE - 0.5_dp)
 
       if (no .lt. 1) no = 1
       if (nC .lt. 1) nC = 1
       if (nC .gt. no) nC = no
+      if (nP .lt. 1) nP = 1
+      if (nP .gt. no) nP = no
 
       allocate(im%omega(0:no - 1))
 
@@ -236,7 +239,8 @@ contains
                if (.not. x%chiC) im%chiC(:) = 0.0_dp
 
                do i = 1, x%bands
-                  call coefficients(im%omega, cmplx(im%chi(:, i), kind=dp))
+                  call coefficients(im%omega(:nP - 1), &
+                     cmplx(im%chi(:nP - 1, i), kind=dp))
 
                   residues(i) = real(continuation(cmplx(0.0_dp, x%eta, dp)))
                end do
