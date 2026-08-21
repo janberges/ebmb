@@ -2,7 +2,6 @@
 
 \usepackage[margin=35mm]{geometry}
 
-\usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 
 \usepackage[math]{iwona}
@@ -73,7 +72,7 @@
          \texttt{ebmb} itself solves the multiband \textsc{Eliashberg} equations
          (Eqs.~\ref{Eliashberg equations} or \ref{cDOS Eliashberg equations}) on
          a cut-off imaginary axis and optionally continues the results to the
-         real axis via \textsc{Padé} approximants. The normal-state equations
+         real axis via \textsc{Pad\'e} approximants. The normal-state equations
          (Eq.~\ref{real-axis equations}) can also be solved on the real axis.
 
          A material is defined by nothing but an \textsc{Eliashberg} spectral
@@ -159,7 +158,7 @@
       G. M. \textsc{Eliashberg}, Soviet Phys.\@ JETP \textbf{11}, 696 (1960).
       \newline
       A comprehensive review is given by P. B. \textsc{Allen} and B.
-      \textsc{Mitrović} in Solid state physics \textbf{37} (1982)
+      \textsc{Mitrovi\'c} in Solid state physics \textbf{37} (1982)
       }
    %
    \begin{equation}
@@ -189,7 +188,7 @@
    \end{equation}
    %
    and may then be analytically continued to the real-axis ($\I \omega_n
-   \rightarrow \omega + \I \eta$) by means of \textsc{Padé} approximants.%
+   \rightarrow \omega + \I \eta$) by means of \textsc{Pad\'e} approximants.%
    %
    \footnote{%
       H. J. \textsc{Vidberg} and J. W. \textsc{Serene}, J. Low Temp.\@ Phys.\@
@@ -369,8 +368,8 @@
       \textsc{Louie}, Phys.\@ Rev.\@ B \textbf{66}, 085116 (2002)
       }
    %
-   which allows for exact analytic continuation without Padé approximants. They
-   are implemented for the normal state:
+   which allows for exact analytic continuation without Pad\'e approximants.
+   They are implemented for the normal state:
    %
    \begin{equation}
       \Sigma_{1 1 i}(\omega) = \underbrace{
@@ -502,7 +501,7 @@
       024505 (2013)
       }
    %
-   and work of Malte Rösner.
+   and work of Malte R\"osner.
 
    \headline{Contact}
 
@@ -526,7 +525,7 @@
          \tt omegaE        & 0.02        & eV               & $\omega \sub E$     & \textsc{Einstein} frequency                & $+$ & $+$ & $+$ & $+$ \\
          \tt cutoff        & 15          & $\omega \sub E$  & $\omega_N$          & overall cutoff frequency                   & $+$ & $+$ & $+$ & $-$ \\
          \tt cutoffC       & $\omega_N$  & $\omega \sub E$  & $\omega_{N \sub C}$ & \textsc{Coulomb} cutoff frequency          & $+$ & $+$ & $+$ & $-$ \\
-         \tt cutoffP       & $\omega_N$  & $\omega \sub E$  & --                  & Padé cutoff frequency                      & $+$ & $+$ & $+$ & $-$ \\
+         \tt cutoffP       & $\omega_N$  & $\omega \sub E$  & --                  & Pad\'e cutoff frequency                    & $+$ & $+$ & $+$ & $-$ \\
          [\gap]
          \tt lambda, lamda & 1           & 1                & $\lambda_{i j}$     & electron-phonon coupling                   & $+$ & $+$ & $+$ & $+$ \\
          \tt muStar, mu*   & 0           & 1                & $\mu^*_{i j}$       & rescaled \textsc{Coulomb} potential        & $+$ & $+$ & $+$ & $+$ \\
