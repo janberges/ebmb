@@ -54,13 +54,12 @@ contains
 
       integer :: i, n, nP
 
-      real(dp) :: omg, eps(size(x%energy)), weight(x%points)
+      real(dp) :: nE, omg, eps(size(x%energy)), weight(x%points)
       complex(dp), allocatable :: green(:)
 
-      nP = ceiling(x%cutoffP * x%omegaE / (2.0_dp * pi * kB * x%T) - 0.5_dp)
+      nE = x%omegaE / (2.0_dp * pi * kB * x%T)
 
-      if (nP .lt. 1) nP = 1
-      if (nP .gt. size(im%omega)) nP = size(im%omega)
+      nP = min(max(1, ceiling(x%cutoffP * nE - 0.5_dp)), size(im%omega))
 
       allocate(green(0:nP - 1))
       allocate(re%dos(x%points, x%bands))

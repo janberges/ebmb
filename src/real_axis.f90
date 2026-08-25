@@ -18,13 +18,12 @@ contains
       type(continued), intent(out) :: re
 
       integer :: i, n, nP
-      real(dp) :: Delta0
+      real(dp) :: nE, Delta0
       complex(dp), allocatable :: omega(:)
 
-      nP = ceiling(x%cutoffP * x%omegaE / (2.0_dp * pi * kB * x%T) - 0.5_dp)
+      nE = x%omegaE / (2.0_dp * pi * kB * x%T)
 
-      if (nP .lt. 1) nP = 1
-      if (nP .gt. size(im%omega)) nP = size(im%omega)
+      nP = min(max(1, ceiling(x%cutoffP * nE - 0.5_dp)), size(im%omega))
 
       if (x%gap) then
          allocate(re%Delta0(x%bands))

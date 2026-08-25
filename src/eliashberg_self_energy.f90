@@ -45,15 +45,9 @@ contains
 
       nE = x%omegaE / domega
 
-      no = ceiling(x%cutoff  * nE - 0.5_dp)
-      nC = ceiling(x%cutoffC * nE - 0.5_dp)
-      nP = ceiling(x%cutoffP * nE - 0.5_dp)
-
-      if (no .lt. 1) no = 1
-      if (nC .lt. 1) nC = 1
-      if (nC .gt. no) nC = no
-      if (nP .lt. 1) nP = 1
-      if (nP .gt. no) nP = no
+      no = max(1, ceiling(x%cutoff * nE - 0.5_dp))
+      nC = min(max(1, ceiling(x%cutoffC * nE - 0.5_dp)), no)
+      nP = min(max(1, ceiling(x%cutoffP * nE - 0.5_dp)), no)
 
       allocate(im%omega(0:no - 1))
 

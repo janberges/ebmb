@@ -21,7 +21,7 @@ contains
 
       integer :: step, i, j, n, m, no
       real(dp), parameter :: xmax = log(huge(1.0_dp) / 2.0_dp - 1.0_dp)
-      real(dp) :: beta, domega
+      real(dp) :: nE, domega, beta
       real(dp), allocatable :: weight(:), fermi(:), bose(:), dosef(:), kernel(:)
       real(dp), allocatable :: ReSigma(:, :), ImSigma(:, :)
       real(dp), allocatable :: w1(:), w2(:), n1(:, :), n2(:, :), r1(:), r2(:)
@@ -51,7 +51,9 @@ contains
 
       domega = 2.0_dp * pi * kB * x%T
 
-      no = max(1, ceiling(x%cutoff * x%omegaE / domega - 0.5_dp))
+      nE = x%omegaE / domega
+
+      no = max(1, ceiling(x%cutoff * nE - 0.5_dp))
 
       allocate(im%omega(0:no - 1))
       allocate(im%Z(0:no - 1, x%bands))
