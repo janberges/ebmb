@@ -18,7 +18,7 @@ program ebmb
    type(continued) :: re
    type(occupancy) :: oc
 
-   character(*), parameter :: version = '2.0.0'
+   character(*), parameter :: version = '3.0.0'
 
    integer :: omp_num_threads
 

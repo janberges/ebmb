@@ -2,7 +2,11 @@
 
 See Git commit history for more detailed list of changes.
 
-## v3.0.0/upcoming release
+## v3.0.0/2026-09-16
+
+This is the version of the code used for the paper *Unified treatment of local
+dynamical interactions in correlated metals using Eliashberg theory*
+by J. Berges, S. Ponc&eacute;, M. Caserta, N. Marzari, and T. Chiarotti (2026).
 
 * Real-axis implementation of normal-state equations
 * Logarithmic sampling of real axis
