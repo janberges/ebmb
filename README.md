@@ -10,17 +10,19 @@ For further information typeset `manual/ebmb.tex` or read it
 The makefile is designed for the GNU, Intel, and LLVM Fortran compilers:
 
     make FC=gfortran FFLAGS='-O3 -fopenmp'
+
+LAPACK and BLAS are required. To also install the Python wrapper:
+
     python3 -m pip install -e .
 
 ## Acknowledgment
 
-Parts of the program are inspired by the EPW code and work of Malte Roesner.
+Parts of the program are inspired by the EPW code and work of Malte R&ouml;sner.
 
-## Reference
+## References
 
-ebmb is stored on Zenodo: <https://doi.org/10.5281/zenodo.13341224>.
-
-The theory is described here: <https://scipost.org/theses/132/>.
+- ebmb is stored on Zenodo: <https://doi.org/10.5281/zenodo.13341224>.
+- The theory is described here: <https://scipost.org/theses/132/>.
 
 ## Licence
 

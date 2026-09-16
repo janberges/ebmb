@@ -98,20 +98,30 @@
 
    \headline{Installation}
 
-   The makefile is designed for the \emph{GNU} or \emph{Intel} Fortran compiler:
+   The makefile is designed for the \emph{GNU}, \emph{Intel}, and \emph{LLVM}
+   Fortran compilers:
    %
    \begin{quote}
-      \verb|$ make FC=gfortran FFLAGS='-O3 -fopenmp'| \\
+      \verb|$ make FC=gfortran FFLAGS='-O3 -fopenmp'|
+   \end{quote}
+   %
+   \emph{LAPACK} and \emph{BLAS} are required. To also install the \emph{Python}
+   wrapper:
+   %
+   \begin{quote}
       \verb|$ python3 -m pip install -e .|
    \end{quote}
 
-   \headline{Reference}
+   \headline{References}
 
-   \texttt{ebmb} is stored on \textit{Zenodo:}
-   \url{https://doi.org/10.5281/zenodo.13341224}.
-
-   The theory is described here:
-   \url{https://scipost.org/theses/132/}.
+   \begin{itemize}[itemsep=0pt]
+      \item
+         \texttt{ebmb} is stored on \textit{Zenodo:}
+         \url{https://doi.org/10.5281/zenodo.13341224}.
+      \item
+         The theory is described here:
+         \url{https://scipost.org/theses/132/}.
+   \end{itemize}
 
    \headline{Licence}
 
