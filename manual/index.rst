@@ -15,6 +15,7 @@
    examples/selfen
    examples/gap
    examples/dos
+   examples/renorm
    examples/residue
    examples/realgw
    examples/specfun
