@@ -9,7 +9,7 @@ authors = [{name = "Jan Berges"}]
 description = "Solve multiband Eliashberg equations"
 readme = "README.md"
 license = {file = "LICENSE"}
-urls = {Homepage = "https://bitbucket.org/berges/ebmb"}
+urls = {Homepage = "https://codeberg.org/janberges/ebmb"}
 classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python",
