@@ -3,11 +3,8 @@
 import ebmb
 import matplotlib.pyplot as plt
 
-dos = 'dos.in'
-a2f = 'a2f.in'
-
-ebmb.chain_dos(dos, de=5e-3, t=1.0)
-ebmb.chain_a2F(a2f, dw=1e-2, l=1.0, wlog=2.0)
+ebmb.chain_dos('dos.in', de=5e-3, t=1.0)
+ebmb.chain_a2F('a2f.in', dw=1e-2, l=1.0, wlog=2.0)
 
 fig, ax = plt.subplots(3, 2, sharex='col', sharey='row')
 
@@ -21,8 +18,8 @@ for (realgw, krakro, style, label) in [
         chiC=True,
         realgw=realgw,
         krakro=krakro,
-        dos=dos,
-        a2F=a2f,
+        dos='dos.in',
+        a2F='a2f.in',
         muC=1.0,
         cutoff=10.0,
         lower=-20.0,

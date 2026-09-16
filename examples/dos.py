@@ -28,4 +28,6 @@ plt.plot(results['omega'], results['DOS'])
 plt.xlabel(r'Energy (eV)')
 plt.ylabel(r'Density of states (1/eV)')
 
+plt.ylim(0.0, 2.0)
+
 plt.savefig('dos.png')
