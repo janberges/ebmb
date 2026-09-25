@@ -2,19 +2,19 @@ FC := gfortran
 
 flags_gfortran := -std=f2003 -pedantic -Wall -Wno-maybe-uninitialized -fopenmp
 flags_ifort := -O0 -stand f03 -warn all -qopenmp
-flags_ifx := ${flags_ifort}
+flags_ifx := $(flags_ifort)
 flags_flang := -Werror -fopenmp
-flags_flang-new := ${flags_flang}
+flags_flang-new := $(flags_flang)
 
 libs_gfortran := -llapack -lblas
 libs_ifort := -lmkl_core -lmkl_intel_lp64 -lmkl_sequential
-libs_ifx := ${libs_ifort}
-libs_flang := ${libs_gfortran}
-libs_flang-new := ${libs_flang}
+libs_ifx := $(libs_ifort)
+libs_flang := $(libs_gfortran)
+libs_flang-new := $(libs_flang)
 
-FFLAGS := ${flags_$(FC)}
-LDFLAGS := ${FFLAGS}
-LDLIBS := ${libs_$(FC)}
+FFLAGS := $(flags_$(FC))
+LDFLAGS := $(FFLAGS)
+LDLIBS := $(libs_$(FC))
 
 needless := .DS_Store ebmb.pyc manual/ebmb.aux manual/.ebmb.lb manual/ebmb.log manual/ebmb.out manual/ebmb.synctex.gz ~ebmb.tmp.dat
 
@@ -22,11 +22,11 @@ needless := .DS_Store ebmb.pyc manual/ebmb.aux manual/.ebmb.lb manual/ebmb.log m
 
 modules_gfortran := -Jbuild
 modules_ifort := -module build
-modules_ifx := ${modules_ifort}
+modules_ifx := $(modules_ifort)
 modules_flang := -module-dir build
-modules_flang-new := ${modules_flang}
+modules_flang-new := $(modules_flang)
 
-override FFLAGS += ${modules_$(FC)}
+override FFLAGS += $(modules_$(FC))
 
 needless += build/critical.o build/dos.o build/ebmb.o build/eigenvalues.o build/eliashberg_eigenvalue.o build/eliashberg_eigenvalue_cdos.o build/eliashberg_self_energy.o build/eliashberg_self_energy_cdos.o build/eliashberg_self_energy_real_axis.o build/eliashberg_spectral_function.o build/formatting.o build/globals.o build/io_load.o build/io_store.o build/io_tell.o build/pade.o build/real_axis.o build/tc.o build/tools.o build/*.mod
 
