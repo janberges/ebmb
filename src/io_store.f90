@@ -67,11 +67,11 @@ contains
          end if
 
          write (fun) 'lambda:', x%lambda
-         write (fun) 'omegaLog:', x%omegaLog
-         write (fun) 'omega2nd:', x%omega2nd
 
          write (fun) 'DIM:', 0_i4
          write (fun) 'omegaE:', x%omegaE
+         write (fun) 'omegaLog:', x%omegaLog
+         write (fun) 'omega2nd:', x%omega2nd
       end if
 
       write (fun) 'DIM:'

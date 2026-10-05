@@ -30,8 +30,8 @@ module globals
       real(dp) :: cutoffC = -1.0_dp ! Coulomb cutoff frequency (omegaE)
       real(dp) :: cutoffP = -1.0_dp ! Pade cutoff frequency (omegaE)
 
-      real(dp), allocatable :: omegaLog(:, :) ! logarithmic average freq. (eV)
-      real(dp), allocatable :: omega2nd(:, :) ! second-moment average freq. (eV)
+      real(dp) :: omegaLog = 0.0_dp ! logarithmic avarage frequency (eV)
+      real(dp) :: omega2nd = 0.0_dp ! second-moment avarage frequency (eV)
 
       real(dp), allocatable :: lambda(:, :) ! electron-phonon coupling
       real(dp), allocatable :: muStar(:, :) ! Coulomb pseudo-potential
