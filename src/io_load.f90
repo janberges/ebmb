@@ -212,6 +212,10 @@ contains
             x%la2F = .true.
             call load_a2F(a2F_file, x)
             call initialize_a2F(x)
+
+            allocate(x%omegaLog(x%bands, x%bands))
+            allocate(x%omega2nd(x%bands, x%bands))
+
             call integrate_a2F(x)
          end if
       end if

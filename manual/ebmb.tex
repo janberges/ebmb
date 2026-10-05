@@ -287,31 +287,31 @@
       \mu_{i j}.
    \end{equation*}
    %
-   For a given scalar $\alpha^2 F(\omega)$, an effective phonon frequency can be
-   calculated in different ways. We follow \textsc{Allen} and \textsc{Dynes},%
+   For a given $\alpha^2 F_{i j}(\omega)$, an effective phonon frequency can be
+   calculated in different ways. Following \textsc{Allen} and \textsc{Dynes},%
    %
    \footnote{%
       P. B. \textsc{Allen} and R. C. \textsc{Dynes}, Phys.\@ Rev.\@ B
       \textbf{12}, 905 (1975)
       }
    %
-   who define the logarithmic and the second-moment average frequency and use
-   the latter as $\omega \sub E$ in Eqs.~\ref{cDOS rescaling} and
-   \ref{rescaling} for rescaling $\mu^*$:
+   we define the logarithmic and the second-moment average frequency and use
+   the latter (more precisely, its maximum matrix element) as $\omega \sub E$
+   in Eqs.~\ref{cDOS rescaling} and \ref{rescaling} for rescaling $\mu^*$:
    %
    \begin{align*}
-       \omega \sub{log} &= \exp
+       {\omega \sub{log}}_{i j} &= \exp
        \Biggl[
-          \frac 2 \lambda \int_0^\infty
+          \frac 2 \lambda_{i j} \int_0^\infty
           \frac{\D \omega} \omega
-          \alpha^2 F(\omega) \ln(\omega)
+          \alpha^2 F_{i j}(\omega) \ln(\omega)
        \Biggr],
        &
-       \overline \omega_2 &= \sqrt
+       {\overline \omega_2}_{i j} &= \sqrt
        {
-          \frac 2 \lambda \int_0^\infty
+          \frac 2 \lambda_{i j} \int_0^\infty
           \D \omega \,
-          \alpha^2 F(\omega) \, \omega
+          \alpha^2 F_{i j}(\omega) \, \omega
        }.
    \end{align*}
    %
@@ -640,10 +640,10 @@
          \hline
          \multicolumn3l{\textbf{effective parameters} \hfill \texttt{a2F given}} \\
          \hline
-         \tt lambda   & electron-phonon coupling        & $\lambda_{i j}$      \\
-         \tt omegaE   & \textsc{Einstein} frequency     & $\omega \sub E$      \\
-         \tt omegaLog & logarithmic average frequency   & $\omega \sub{log}$   \\
-         \tt omega2nd & second-moment average frequency & $\overline \omega_2$ \\
+         \tt lambda   & electron-phonon coupling        & $\lambda_{i j}$              \\
+         \tt omegaE   & \textsc{Einstein} frequency     & $\omega \sub E$              \\
+         \tt omegaLog & logarithmic average frequency   & ${\omega \sub{log}}_{i j}$   \\
+         \tt omega2nd & second-moment average frequency & ${\overline \omega_2}_{i j}$ \\
          \hline
          \multicolumn3l{\textbf{real-axis results} \hfill \st~\texttt{points} > 0} \\
          \hline

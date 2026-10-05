@@ -88,10 +88,14 @@ contains
          print more, x%omegaE
 
          print '(/, "logarithmic average phonon frequency (eV):", /)'
-         print more, x%omegaLog
+         do i = 1, x%bands
+            print body, x%omegaLog(:, i)
+         end do
 
          print '(/, "second-moment average phonon frequency (eV):", /)'
-         print more, x%omega2nd
+         do i = 1, x%bands
+            print body, x%omega2nd(:, i)
+         end do
       end if
 
       print '(/, "Coulomb part of order parameter (eV):", /)'

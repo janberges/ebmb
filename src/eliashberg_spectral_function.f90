@@ -16,17 +16,26 @@ contains
    subroutine integrate_a2F(x)
       type(parameters), intent(inout) :: x
 
-      integer :: i
+      integer :: i, j
 
       real(dp) :: omegaMax
 
       call lambda_from_a2F(x, x%lambda, 0)
 
-      x%omegaLog = exp(2.0_dp / sum(x%lambda) &
-         * sum(sum(sum(weight, 2), 2) * log(x%omega) / x%omega))
+      do i = 1, x%bands
+         do j = 1, x%bands
+            if (x%lambda(j, i) .ap. 0.0_dp) then
+               x%omegaLog(j, i) = 0.0
+               x%omega2nd(j, i) = 0.0
+            else
+               x%omegaLog(j, i) = exp(2.0_dp / x%lambda(j, i) &
+                  * sum(weight(:, j, i) * log(x%omega) / x%omega))
 
-      x%omega2nd = sqrt(2.0_dp / sum(x%lambda) &
-         * sum(sum(sum(weight, 2), 2) * x%omega))
+               x%omega2nd(j, i) = sqrt(2.0_dp / x%lambda(j, i) &
+                  * sum(weight(:, j, i) * x%omega))
+            end if
+         end do
+      end do
 
       do i = size(x%omega), 1, -1
          if (any(x%a2F(i, :, :) .gt. 0.0_dp)) then
@@ -35,8 +44,8 @@ contains
          end if
       end do
 
-      !x%omegaE = x%omegaLog
-      x%omegaE = x%omega2nd ! choice by Allen and Dynes
+      !x%omegaE = maxval(x%omegaLog)
+      x%omegaE = maxval(x%omega2nd) ! choice by Allen and Dynes
       !x%omegaE = x%omegaMax
    end subroutine integrate_a2F
 
